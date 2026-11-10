@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>المعادلة الموزونة</title>
+<base href="../">
+<style>
+@font-face{font-family:"PCB Naskh";font-style:normal;font-weight:400 700;font-display:swap;src:url("fonts/naskh-arabic.woff2") format("woff2");unicode-range:U+0600-06FF,U+0750-077F,U+0870-0891,U+0897-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC}
+@font-face{font-family:"PCB Naskh";font-style:normal;font-weight:400 700;font-display:swap;src:url("fonts/naskh-latin.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+:root{--ink:#1b2620;--muted:#4e5d55;--bg:#E5EADF;--card:#F7F9F4;--accent:#D32F2F;--accent-ink:#fff;--soft:#DBE5D5;--line:#C2CBBC;--ok:#2E7D32;--bad:#D32F2F;--r:18px;--edge:rgba(0,0,0,.28);--sh:rgba(20,40,30,.22)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#EEF3EE;--muted:#A9B9B0;--bg:#202D29;--card:#2A3A35;--accent:#EF5350;--accent-ink:#1b0a0a;--soft:#33463F;--line:#41554D;--ok:#66BB6A;--bad:#EF5350;--edge:rgba(0,0,0,.5);--sh:rgba(0,0,0,.5)}}
+:root[data-theme="dark"]{--ink:#EEF3EE;--muted:#A9B9B0;--bg:#202D29;--card:#2A3A35;--accent:#EF5350;--accent-ink:#1b0a0a;--soft:#33463F;--line:#41554D;--ok:#66BB6A;--bad:#EF5350;--edge:rgba(0,0,0,.5);--sh:rgba(0,0,0,.5)}
+*{box-sizing:border-box}
+html,body{margin:0;max-width:100%;overflow-x:hidden}
+body{background:var(--bg);color:var(--ink);font-family:"PCB Naskh","Noto Naskh Arabic","Amiri",system-ui,sans-serif;font-weight:600;font-size:17px;line-height:1.8;-webkit-tap-highlight-color:transparent}
+main{max-width:880px;margin:0 auto;padding:10px 12px 28px}
+h1{font-size:1.15rem;margin:0}
+b,h1,h2,h3,th{font-weight:800}
+sub{font-size:.72em;line-height:0}
+button{font:inherit;cursor:pointer;color:var(--ink);border:1px solid var(--line);background:var(--card);border-radius:12px;padding:9px 14px;font-weight:700;box-shadow:0 4px 0 var(--edge),0 8px 14px -6px var(--sh);transition:transform .12s,box-shadow .12s,background .2s;touch-action:manipulation}
+button:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--edge),0 12px 18px -6px var(--sh)}
+button:active{transform:translateY(4px);box-shadow:0 0 0 var(--edge),0 2px 4px var(--sh)}
+button:disabled{transform:translateY(3px);box-shadow:0 1px 0 var(--edge);cursor:default;opacity:.75}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.main{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 82%,#fff),var(--accent) 55%,color-mix(in srgb,var(--accent) 82%,#000));border-color:var(--accent);color:var(--accent-ink)}
+.hidden{display:none!important}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:0 0 14px;box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 6px 0 -1px var(--edge),0 16px 26px -12px var(--sh)}
+.card h2{margin:0 0 6px;font-size:1.2rem;color:var(--accent)}
+.card h3{margin:0 0 4px;font-size:1.02rem;color:var(--accent)}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px;margin:6px 0 2px}
+.tabs button{flex:none;white-space:nowrap}
+.tabs button[aria-selected="true"]{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 82%,#fff),var(--accent) 55%,color-mix(in srgb,var(--accent) 82%,#000));color:var(--accent-ink);border-color:var(--accent)}
+.hint{color:var(--muted);margin:2px 0 10px;font-size:.95rem}
+.pane{animation:rise .5s ease both}
+@keyframes rise{from{opacity:0;transform:perspective(900px) rotateX(-10deg) translateY(18px)}to{opacity:1;transform:none}}
+.stage3{position:relative;height:300px;touch-action:pan-y;cursor:grab;direction:ltr;border-radius:16px;background:radial-gradient(ellipse at 50% 85%,color-mix(in srgb,var(--accent) 16%,var(--card)) 0,var(--card) 72%);border:1px solid var(--line);overflow:hidden}
+.stage3 canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chips button{padding:5px 12px;font-size:.92rem;border-radius:999px;box-shadow:0 3px 0 var(--edge)}
+.chips button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.eq{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:12px 0;direction:ltr}
+.sp{display:flex;align-items:center;gap:4px;background:var(--soft);border-radius:14px;padding:4px 6px}
+.sp .f{font-size:1.1rem;font-weight:800;padding:0 4px}
+.sp button{width:32px;height:32px;padding:0;border-radius:50%;font-size:1.1rem;box-shadow:0 3px 0 var(--edge)}
+.sp .n{min-width:26px;text-align:center;font-weight:800;font-size:1.15rem;color:var(--accent)}
+.op{font-size:1.3rem;font-weight:800;color:var(--muted)}
+.counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;margin:8px 0}
+.ct{border-radius:12px;padding:6px 10px;background:var(--soft);display:flex;align-items:center;justify-content:space-between;gap:6px;border:2px solid transparent;direction:ltr}
+.ct i{width:14px;height:14px;border-radius:50%;display:inline-block;box-shadow:inset -2px -2px 3px rgba(0,0,0,.3)}
+.ct.ok{border-color:var(--ok)}.ct.no{border-color:var(--bad)}
+.fb{margin-top:8px;padding:8px 12px;border-radius:12px;background:var(--soft)}
+.toast{display:inline-block;padding:4px 12px;border-radius:12px;font-weight:800}
+.toast.ok{background:color-mix(in srgb,var(--ok) 20%,var(--card));color:var(--ok)}
+.toast.bad{background:color-mix(in srgb,var(--bad) 18%,var(--card));color:var(--bad)}
+.steps{display:grid;gap:8px;counter-reset:s}
+.steps div{counter-increment:s;background:var(--soft);border-radius:12px;padding:8px 12px 8px 12px;position:relative}
+.steps div:before{content:counter(s);display:inline-flex;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);align-items:center;justify-content:center;font-weight:800;margin-inline-end:8px}
+.sel{width:100%;padding:9px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:700}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+.row label{font-weight:800}
+.row input[type=range]{flex:1;min-width:140px;accent-color:var(--accent)}
+.val{font-weight:800;color:var(--accent);min-width:90px;text-align:center}
+.warn{background:rgba(255,183,3,.16);border:1px dashed #b7791f;border-radius:12px;padding:6px 12px;font-size:.93rem;margin:6px 0}
+.opts{display:grid;gap:8px;margin:10px 0}
+.opts button{text-align:start}
+.opts button.ok{background:color-mix(in srgb,var(--ok) 20%,var(--card));border-color:var(--ok)}
+.opts button.bad{background:color-mix(in srgb,var(--bad) 18%,var(--card));border-color:var(--bad)}
+.score{text-align:center;font-weight:800;font-size:1.1rem;color:var(--accent);margin:6px 0}
+.leg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;direction:ltr;justify-content:center}
+.leg span{direction:rtl;background:var(--soft);border-radius:10px;padding:2px 10px;font-size:.88rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <h1>⚖️ المعادلة الموزونة</h1>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-t="bal" aria-selected="true">⚖️ وازن المعادلة</button>
+    <button role="tab" data-t="calc" aria-selected="false">🧮 احسب بالمعادلة</button>
+  </div>
+
+  <section id="bal" class="pane">
+    <div class="card">
+      <h2>⚖️ ميزان الذرّات</h2>
+      <p class="hint" style="margin:0">اضبط المعاملات حتى يتعادل الميزان وتتساوى أعداد الذرات في الطرفين. لكل معادلة محاولة واحدة فقط.</p>
+      <div class="chips" id="eqs"></div>
+      <div class="stage3" id="bst"></div>
+      <div class="eq" id="eqline"></div>
+      <div class="counts" id="counts"></div>
+      <button class="main" id="bCheck">تحقّق (مرة واحدة)</button>
+      <div class="fb hidden" id="bfb"></div>
+    </div>
+  </section>
+
+  <section id="calc" class="pane hidden">
+    <div class="card">
+      <h2>🧭 خطوات الحل</h2>
+      <div class="steps">
+        <div>تأكد أن المعادلة موزونة.</div>
+        <div>حوّل المعطى (كتلة أو حجم) إلى موالت.</div>
+        <div>استخدم نسبة المعاملات لإيجاد موالت المادة المطلوبة.</div>
+        <div>حوّل الموالت إلى المطلوب: كتلة (× الكتلة المولية) أو حجم (× 22.4 لتر).</div>
+      </div>
+      <div class="warn" style="margin-top:10px">المعاملات في المعادلة الموزونة تمثل نسب الموالت، وفي الغازات تمثل أيضاً نسب الحجوم.</div>
+    </div>
+    <div class="card">
+      <h2>📊 جرّب بنفسك</h2>
+      <select class="sel" id="rsel"></select>
+      <div class="row"><label>المعطى:</label><select class="sel" id="gsel" style="flex:1;min-width:120px;width:auto"></select></div>
+      <div class="row"><label>الكمية:</label><input type="range" id="amt" min="1" max="100" value="10"><span class="val" id="aval"></span></div>
+      <div class="stage3" id="cst" style="height:250px"></div>
+      <div class="leg" id="cleg"></div>
+      <div class="steps" id="cstep"></div>
+    </div>
+    <div class="card">
+      <h2>✍️ تدرّب على الحساب</h2>
+      <p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p>
+      <div id="pq"></div>
+      <div class="score" id="pscore"></div>
+    </div>
+  </section>
+</main>
+
+<script src="lib/three.min.js"></script>
+<script>
+/* ---------- حفظ الإجابات + جسر التطبيق ---------- */
+const ANS={};
+try{Object.assign(ANS,JSON.parse(localStorage.getItem('balAns')||'{}'))}catch(e){}
+window.addEventListener('message',e=>{const d=e.data;if(!d)return;
+  if(d.pcb==='answers'){Object.assign(ANS,d.m||{});refresh()}
+  else if(d.pcb==='theme'){document.documentElement.setAttribute('data-theme',d.t==='dark'?'dark':'light');VW.forEach(v=>v.dirty=true)}});
+function ansSave(k,v){ANS[k]=v;try{localStorage.setItem('balAns',JSON.stringify(ANS))}catch(e){}try{parent.postMessage({pcb:'ans',k:k,v:v},'*')}catch(e){}}
+try{parent.postMessage({pcb:'ready'},'*')}catch(e){}
+const $=id=>document.getElementById(id);
+function mk(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+function tick(){try{AC=window.AC||(window.AC=new(window.AudioContext||window.webkitAudioContext)());const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type='square';o.frequency.setValueAtTime(1500,t);o.frequency.exponentialRampToValueAtTime(700,t+.06);g.gain.setValueAtTime(.04,t);g.gain.exponentialRampToValueAtTime(.001,t+.06);o.connect(g).connect(AC.destination);o.start(t);o.stop(t+.07)}catch(e){}}
+document.addEventListener('click',e=>{if(e.target.closest('button'))tick()},true);
+const fm=s=>s.replace(/(\d+)/g,'<sub>$1</sub>');
+
+/* ---------- محرّك ثلاثي الأبعاد مشترك ---------- */
+const T=window.THREE,VW=[];
+const EL={H:{c:0xf2f4f5,r:.6,m:1},C:{c:0x33363a,r:.92,m:12},N:{c:0x3f6fe0,r:.88,m:14},O:{c:0xe53935,r:.86,m:16},Mg:{c:0x7cb342,r:1.15,m:24},Al:{c:0xb0bec5,r:1.1,m:27},Fe:{c:0xa8582a,r:1.15,m:56},Ca:{c:0xe0e0e0,r:1.2,m:40}};
+function viewer(box,cfg){
+  if(!T)return null;
+  try{
+    const cv=document.createElement('canvas');box.insertBefore(cv,box.firstChild);
+    const R=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:true,powerPreference:'high-performance'});
+    if(!R.getContext())return null;
+    R.outputColorSpace=T.SRGBColorSpace;R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=1.05;R.shadowMap.enabled=true;R.shadowMap.type=T.PCFSoftShadowMap;R.setClearColor(0,0);
+    const scene=new T.Scene();
+    const es=new T.Scene();es.add(new T.Mesh(new T.BoxGeometry(40,40,40),new T.MeshBasicMaterial({color:new T.Color(.5,.53,.55),side:T.BackSide})));
+    const pn=(x,y,z,w,h,rx,ry,I)=>{const m=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({color:new T.Color(I,I,I),side:T.DoubleSide}));m.position.set(x,y,z);m.rotation.set(rx,ry,0);es.add(m)};
+    pn(0,19,0,18,18,Math.PI/2,0,10);pn(-19,4,6,10,18,0,Math.PI/2,6);pn(19,2,-4,8,14,0,-Math.PI/2,3.5);pn(0,2,-19,22,12,0,0,2.2);
+    scene.environment=new T.PMREMGenerator(R).fromScene(es,.03).texture;
+    const cam=new T.PerspectiveCamera(30,1,.5,400);
+    const key=new T.DirectionalLight(0xffffff,2.2);key.position.set(10,24,18);key.castShadow=true;key.shadow.mapSize.set(1024,1024);const sc=key.shadow.camera;sc.left=-24;sc.right=24;sc.top=24;sc.bottom=-24;sc.near=5;sc.far=90;key.shadow.bias=-.0008;scene.add(key);
+    scene.add(new T.HemisphereLight(0xeaf3ff,0x778080,.6));
+    const floor=new T.Mesh(new T.PlaneGeometry(200,200),new T.ShadowMaterial({opacity:.25}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+    const v={R,scene,cam,dirty:true,yaw:cfg.yaw||0,pitch:cfg.pitch||12,r:cfg.r||46,ty:cfg.ty||6,drag:null,onframe:null};
+    const resize=()=>{const w=box.clientWidth||300,h=box.clientHeight||260;R.setPixelRatio(Math.min(2,devicePixelRatio||1));R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();v.dirty=true};
+    new ResizeObserver(resize).observe(box);resize();
+    box.addEventListener('pointerdown',e=>{v.drag={x:e.clientX,y:e.clientY,a:v.yaw,p:v.pitch};try{box.setPointerCapture(e.pointerId)}catch(_){}});
+    box.addEventListener('pointermove',e=>{if(!v.drag)return;v.yaw=Math.max(-(cfg.maxYaw||40),Math.min(cfg.maxYaw||40,v.drag.a+(e.clientX-v.drag.x)*.35));v.pitch=Math.max(2,Math.min(55,v.drag.p+(e.clientY-v.drag.y)*.2));v.dirty=true});
+    const up=()=>{v.drag=null};box.addEventListener('pointerup',up);box.addEventListener('pointercancel',up);
+    v.render=()=>{const a=v.yaw*Math.PI/180,p=v.pitch*Math.PI/180;cam.position.set(v.r*Math.cos(p)*Math.sin(a),v.ty+v.r*Math.sin(p),v.r*Math.cos(p)*Math.cos(a));cam.lookAt(0,v.ty,0);R.render(scene,cam)};
+    v.box=box;VW.push(v);return v;
+  }catch(e){return null}
+}
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function loop(){VW.forEach(v=>{if(!v.box.offsetParent)return;let ch=v.dirty;if(v.onframe&&v.onframe())ch=true;if(ch){v.render();v.dirty=false}});requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+const stdMat=(c,r,m)=>new T.MeshStandardMaterial({color:c,roughness:r==null?.4:r,metalness:m==null?0:m});
+
+/* ---------- الجزيئات ---------- */
+const MOL={
+ H2:[['H',-.62,0,0],['H',.62,0,0]],
+ O2:[['O',-.7,0,0],['O',.7,0,0]],
+ N2:[['N',-.62,0,0],['N',.62,0,0]],
+ H2O:[['O',0,0,0],['H',-.95,-.62,0],['H',.95,-.62,0]],
+ NH3:[['N',0,.3,0],['H',.98,-.25,0],['H',-.5,-.25,.85],['H',-.5,-.25,-.85]],
+ CH4:[['C',0,0,0],['H',.62,.62,.62],['H',.62,-.62,-.62],['H',-.62,.62,-.62],['H',-.62,-.62,.62]],
+ CO2:[['C',0,0,0],['O',-1.3,0,0],['O',1.3,0,0]],
+ C2H6:[['C',-.8,0,0],['C',.8,0,0],['H',-1.35,.9,0],['H',-1.35,-.45,.8],['H',-1.35,-.45,-.8],['H',1.35,.9,0],['H',1.35,-.45,.8],['H',1.35,-.45,-.8]],
+ Mg:[['Mg',0,0,0]],
+ MgO:[['Mg',-.85,0,0],['O',.9,0,0]],
+ Fe:[['Fe',0,0,0]],
+ Fe2O3:[['Fe',-1,.5,0],['Fe',1,.5,0],['O',-1.25,-.7,.2],['O',0,-.8,-.3],['O',1.25,-.7,.2]],
+ Al:[['Al',0,0,0]],
+ Al2O3:[['Al',-1,.5,0],['Al',1,.5,0],['O',-1.25,-.7,.2],['O',0,-.8,-.3],['O',1.25,-.7,.2]],
+ NO:[['N',-.62,0,0],['O',.7,0,0]],
+ CaCO3:[['Ca',-1.4,0,0],['C',0,0,0],['O',.85,.9,0],['O',.85,-.9,0],['O',-.85,0,.2]],
+ CaO:[['Ca',-.9,0,0],['O',.9,0,0]]
+};
+const sphGeo={};const sph=el=>sphGeo[el]||(sphGeo[el]=new T.SphereGeometry(EL[el].r,28,20));
+const bondGeo=new T.CylinderGeometry(.17,.17,1,12);
+const matCache={};const matOf=el=>matCache[el]||(matCache[el]=new T.MeshPhysicalMaterial({color:EL[el].c,roughness:.28,metalness:el==='Fe'||el==='Al'||el==='Mg'?.55:0,clearcoat:.8,clearcoatRoughness:.15}));
+function molecule(name,sc){const g=new T.Group(),a=MOL[name];
+  a.forEach(p=>{const m=new T.Mesh(sph(p[0]),matOf(p[0]));m.position.set(p[1],p[2],p[3]);m.castShadow=true;g.add(m)});
+  for(let i=0;i<a.length;i++)for(let j=i+1;j<a.length;j++){const A=new T.Vector3(a[i][1],a[i][2],a[i][3]),B=new T.Vector3(a[j][1],a[j][2],a[j][3]),d=A.distanceTo(B);
+    const lim=(EL[a[i][0]].r+EL[a[j][0]].r)*1.18;if(d<lim&&d>0.1&&!(a[i][0]==='Fe'&&a[j][0]==='Fe')&&!(a[i][0]==='Al'&&a[j][0]==='Al')){const b=new T.Mesh(bondGeo,stdMat(0xb9c0c4,.3,.6));b.scale.set(1,d,1);b.position.copy(A).add(B).multiplyScalar(.5);b.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),B.clone().sub(A).normalize());g.add(b)}}
+  g.scale.setScalar(sc||1);return g}
+
+/* ---------- المعادلات ---------- */
+const EQS=[
+ {l:[['H2'],['O2']],r:[['H2O']],c:[2,1,2]},
+ {l:[['N2'],['H2']],r:[['NH3']],c:[1,3,2]},
+ {l:[['CH4'],['O2']],r:[['CO2'],['H2O']],c:[1,2,1,2]},
+ {l:[['Mg'],['O2']],r:[['MgO']],c:[2,1,2]},
+ {l:[['Fe'],['O2']],r:[['Fe2O3']],c:[4,3,2]},
+ {l:[['C2H6'],['O2']],r:[['CO2'],['H2O']],c:[2,7,4,6]}
+];
+const SP=e=>e.l.concat(e.r).map(x=>x[0]);
+function atoms(name){const o={};MOL[name].forEach(p=>o[p[0]]=(o[p[0]]||0)+1);return o}
+function sums(e,co){const L={},Rr={};const n=e.l.length;SP(e).forEach((s,i)=>{const t=i<n?L:Rr,a=atoms(s);for(const k in a)t[k]=(t[k]||0)+a[k]*co[i]});return{L,R:Rr}}
+const massOf=(o)=>Object.keys(o).reduce((s,k)=>s+o[k]*EL[k].m,0);
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+let cur=0,co=[];
+let BV=null,beam=null,pans=[null,null],tilt=0,tgt=0,pg=[null,null];
+function buildBalance(){
+  const box=$('bst');BV=viewer(box,{yaw:0,pitch:10,r:68,ty:7,maxYaw:35});if(!BV){box.innerHTML='<p style="padding:20px;text-align:center">تعذّر تشغيل المجسّم على هذا الجهاز. يمكنك الاستمرار بالأعداد في الأسفل.</p>';return}
+  const sc=BV.scene,steel=new T.MeshStandardMaterial({color:0xcfd5da,roughness:.22,metalness:1}),dark=new T.MeshPhysicalMaterial({color:0x2d3236,roughness:.45,metalness:.5,clearcoat:.6});
+  const base=new T.Mesh(new T.CylinderGeometry(7,8.5,1.2,48),dark);base.position.y=.6;base.castShadow=base.receiveShadow=true;sc.add(base);
+  const col=new T.Mesh(new T.CylinderGeometry(.7,1,11.5,32),steel);col.position.y=6.9;col.castShadow=true;sc.add(col);
+  beam=new T.Group();beam.position.y=12.6;sc.add(beam);
+  const bm=new T.Mesh(new T.BoxGeometry(23,.9,1.1),steel);bm.castShadow=true;beam.add(bm);
+  const piv=new T.Mesh(new T.CylinderGeometry(.9,.9,1.6,32),dark);piv.rotation.x=Math.PI/2;sc.add(piv);piv.position.y=12.6;
+  const ptr=new T.Mesh(new T.ConeGeometry(.45,3,16),new T.MeshStandardMaterial({color:0xd32f2f,roughness:.4}));ptr.position.y=-2;ptr.rotation.x=Math.PI;beam.add(ptr);
+  [-1,1].forEach((s,i)=>{const kn=new T.Mesh(new T.SphereGeometry(.6,20,16),steel);kn.position.set(s*11.5,0,0);beam.add(kn);
+    const pan=new T.Group();sc.add(pan);const disc=new T.Mesh(new T.CylinderGeometry(6,5.4,.6,56),steel);disc.castShadow=disc.receiveShadow=true;pan.add(disc);
+    const rim=new T.Mesh(new T.TorusGeometry(6,.28,12,56),steel);rim.rotation.x=Math.PI/2;rim.position.y=.3;pan.add(rim);
+    [0,1,2].forEach(k=>{const a=k*Math.PI*2/3,ch=new T.Mesh(new T.CylinderGeometry(.06,.06,1,6),stdMat(0xaab2b8,.3,1));pan.add(ch);ch.userData.k=a});
+    pan.userData.s=s;pans[i]=pan;pg[i]=new T.Group();pg[i].position.y=.3;pan.add(pg[i])});
+  BV.onframe=()=>{let ch=false;const d=tgt-tilt;if(Math.abs(d)>.0004){tilt+=d*.09;ch=true}else tilt=tgt;if(ch||BV._init){BV._init=false;poseBalance();return true}return false};
+  BV._init=true;
+}
+function poseBalance(){beam.rotation.z=tilt;const L=11.5,H=7.2;
+  pans.forEach((pan,i)=>{const s=pan.userData.s,x=s*L*Math.cos(tilt),y=12.6+s*L*Math.sin(tilt);pan.position.set(x,y-H,0);
+    pan.children.forEach(c=>{if(c.userData.k!=null){const a=c.userData.k,px=Math.cos(a)*5.2,pz=Math.sin(a)*5.2,top=new T.Vector3(0,H-.2,0),bot=new T.Vector3(px,.2,pz),len=top.distanceTo(bot);c.scale.set(1,len,1);c.position.copy(top).add(bot).multiplyScalar(.5);c.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),top.clone().sub(bot).normalize())}})})}
+function fillPans(){
+  if(!BV)return;const e=EQS[cur],n=e.l.length;
+  [0,1].forEach(i=>{const g=pg[i];while(g.children.length)g.remove(g.children[0]);
+    const list=i===0?e.l:e.r,off=i===0?0:n;let k=0;
+    list.forEach((sp,j)=>{const cnt=co[off+j];for(let c=0;c<cnt;c++){const m=molecule(sp[0],.9);const ring=Math.floor(Math.sqrt(k)),idx=k-ring*ring,a=idx/(2*ring+1)*Math.PI*2+ring*.7,rad=ring*2.7;
+      m.position.set(Math.cos(a)*rad,1.3,Math.sin(a)*rad);m.rotation.set(k*.7,k*1.3,k*.4);g.add(m);k++}})});
+  const s=sums(e,co),ml=massOf(s.L),mr=massOf(s.R);tgt=Math.max(-.32,Math.min(.32,(ml-mr)/Math.max(ml+mr,1)*1.6));BV.dirty=true;BV._init=true}
+/* ---------- واجهة الموازنة ---------- */
+function eqKey(i){return 'b:eq:'+i}
+function renderEq(){const e=EQS[cur],saved=ANS[eqKey(cur)],n=e.l.length,sp=SP(e),box=$('eqline');box.innerHTML='';
+  sp.forEach((s,i)=>{if(i>0)box.appendChild(mk('span','op',i===n?'→':'+'));
+    const w=mk('div','sp');const m=mk('button','','−'),p=mk('button','','+'),v=mk('span','n',co[i]),f=mk('span','f',fm(s));
+    m.onclick=()=>{if(saved||co[i]<=1)return;co[i]--;renderEq();fillPans()};p.onclick=()=>{if(saved||co[i]>=9)return;co[i]++;renderEq();fillPans()};
+    if(saved){m.disabled=p.disabled=true}
+    w.appendChild(m);w.appendChild(v);w.appendChild(f);w.appendChild(p);box.appendChild(w)});
+  const S=sums(e,co),els=[...new Set(Object.keys(S.L).concat(Object.keys(S.R)))],cb=$('counts');cb.innerHTML='';
+  els.forEach(k=>{const a=S.L[k]||0,b=S.R[k]||0,ok=a===b,d=mk('div','ct '+(ok?'ok':'no'),'<span><i style="background:#'+EL[k].c.toString(16).padStart(6,'0')+'"></i> '+k+'</span><b>'+a+' = '+b+' '+(ok?'✓':'✗')+'</b>');cb.appendChild(d)});
+  $('bCheck').disabled=!!saved;
+  const fb=$('bfb');if(saved){fb.classList.remove('hidden');fb.innerHTML=feedback(saved)}else fb.classList.add('hidden');
+  document.querySelectorAll('#eqs button').forEach((b,i)=>{const r=ANS[eqKey(i)];b.classList.toggle('on',i===cur);b.textContent=(r?(r.ok?'✅ ':'❌ '):'')+(i+1)+') '+EQS[i].l.map(x=>x[0]).join('+').replace(/(\d+)/g,'$1')+'→'+EQS[i].r.map(x=>x[0]).join('+')})}
+function feedback(s){const e=EQS[cur],n=e.l.length,sp=SP(e);const eqs=sp.map((x,i)=>(e.c[i]>1?e.c[i]:'')+fm(x)).map((x,i)=>(i===n?'→ ':(i>0?'+ ':''))+x).join(' ');
+  return (s.ok?'<span class="toast ok">✔ معادلة موزونة بأبسط نسبة!</span>':'<span class="toast bad">✘ '+(s.why||'الموازنة غير صحيحة')+'</span>')+'<div style="direction:ltr;text-align:center;margin-top:8px;font-weight:800">'+eqs+'</div><div class="hint" style="margin:6px 0 0">🔒 لا يمكن إعادة هذه المعادلة.</div>'}
+function loadEq(i){cur=i;const saved=ANS[eqKey(i)];co=saved?saved.co.slice():EQS[i].l.map(()=>1).concat(EQS[i].r.map(()=>1));renderEq();fillPans()}
+$('bCheck').onclick=()=>{if(ANS[eqKey(cur)])return;const e=EQS[cur],S=sums(e,co);let bal=true;const ks=new Set(Object.keys(S.L).concat(Object.keys(S.R)));ks.forEach(k=>{if((S.L[k]||0)!==(S.R[k]||0))bal=false});
+  const g=co.reduce((a,b)=>gcd(a,b));let ok=bal&&g===1,why=ok?'':(bal?'معادلة موزونة لكن ليست بأبسط نسبة صحيحة':'عدد الذرات غير متساوٍ في الطرفين');
+  ansSave(eqKey(cur),{co:co.slice(),ok:ok,why:why});
+  if(!ok){co=e.c.slice();fillPans()}
+  renderEq();if(!ok){const f=$('bfb');f.classList.remove('hidden')}};
+function buildEqs(){const c=$('eqs');c.innerHTML='';EQS.forEach((e,i)=>{const b=mk('button','','');b.onclick=()=>loadEq(i);c.appendChild(b)})}
+
+/* ---------- الحساب بالمعادلة ---------- */
+const RXN=[
+ {n:'2H2 + O2 → 2H2O',sp:[['H2',2,2,1,'g'],['O2',1,32,1,'g'],['H2O',2,18,0,'l']],c:'H'},
+ {n:'N2 + 3H2 → 2NH3',sp:[['N2',1,28,1,'g'],['H2',3,2,1,'g'],['NH3',2,17,1,'g']],c:'N'},
+ {n:'5O2 + 4NH3 → 4NO + 6H2O',sp:[['O2',5,32,1,'g'],['NH3',4,17,1,'g'],['NO',4,30,1,'g'],['H2O',6,18,0,'l']],c:'O'},
+ {n:'CaCO3 → CaO + CO2',sp:[['CaCO3',1,100,0,'s'],['CaO',1,56,0,'s'],['CO2',1,44,1,'g']],c:'Ca'}
+];
+let CV=null,bars=[],rx=0,gi=0;
+const barCols=[0x1e88e5,0xe53935,0x43a047,0xfb8c00];
+function buildCalc(){const s=$('rsel');RXN.forEach((r,i)=>{const o=mk('option','',r.n.replace(/(\d+)(?=[A-Za-z]|$)/g,m=>m));o.value=i;o.textContent=r.n;s.appendChild(o)});
+  s.onchange=()=>{rx=+s.value;gi=0;fillG();upd()};
+  $('gsel').onchange=()=>{gi=+$('gsel').value;upd()};$('amt').oninput=upd;
+  const box=$('cst');CV=viewer(box,{yaw:-14,pitch:16,r:30,ty:3.2,maxYaw:45});
+  if(CV){const dark=new T.MeshPhysicalMaterial({color:0x2d3236,roughness:.5,metalness:.4});const bs=new T.Mesh(new T.BoxGeometry(24,.7,9),dark);bs.position.y=-.35;bs.receiveShadow=true;CV.scene.add(bs);CV.onframe=()=>{let ch=false;bars.forEach(b=>{const d=b.t-b.h;if(Math.abs(d)>.01){b.h+=d*.12;ch=true}else b.h=b.t;b.m.scale.y=Math.max(.01,b.h);b.m.position.y=b.h/2});return ch}}
+  fillG();upd()}
+function fillG(){const g=$('gsel');g.innerHTML='';RXN[rx].sp.forEach((x,i)=>{const o=mk('option','');o.value=i;o.innerHTML=x[0];o.textContent=x[0];g.appendChild(o)});g.value=gi}
+function nf(x){return (Math.round(x*100)/100).toString()}
+function upd(){const r=RXN[rx],g=r.sp[gi],a=+$('amt').value,isGas=g[3]===1;
+  const mass=a;const molG=mass/g[2];$('aval').textContent=a+' غم';
+  const moles=r.sp.map(x=>molG*x[1]/g[1]);
+  // أعمدة ثلاثية الأبعاد
+  if(CV){while(bars.length){const b=bars.pop();CV.scene.remove(b.m)}const mx=Math.max(...moles,.01),n=r.sp.length;
+    r.sp.forEach((x,i)=>{const m=new T.Mesh(new T.CylinderGeometry(1.5,1.5,1,40),new T.MeshPhysicalMaterial({color:barCols[i%4],roughness:.3,clearcoat:.8,metalness:.05}));m.castShadow=true;m.position.set((i-(n-1)/2)*5.6,.005,0);m.scale.y=.01;CV.scene.add(m);bars.push({m,h:.01,t:Math.max(.05,moles[i]/mx*9)})});CV.dirty=true}
+  const L=$('cleg');L.innerHTML='';r.sp.forEach((x,i)=>{const mm=moles[i];L.appendChild(mk('span','','<b style="color:#'+barCols[i%4].toString(16)+'">■</b> '+fm(x[0])+': '+nf(mm)+' مول'+(x[3]===1?' = '+nf(mm*22.4)+' لتر':'')+' = '+nf(mm*x[2])+' غم'))});
+  const st=$('cstep');st.innerHTML='';const o=r.sp.findIndex((x,i)=>i!==gi);
+  st.appendChild(mk('div','','عدد موالت '+fm(g[0])+' = '+nf(mass)+' ÷ '+g[2]+' = <b>'+nf(molG)+' مول</b>'));
+  const p=r.sp[o];st.appendChild(mk('div','','نسبة المعاملات '+fm(g[0])+' : '+fm(p[0])+' = '+g[1]+' : '+p[1]+' ⇒ موالت '+fm(p[0])+' = '+nf(molG)+' × '+p[1]+' ÷ '+g[1]+' = <b>'+nf(moles[o])+' مول</b>'));
+  st.appendChild(mk('div','','كتلة '+fm(p[0])+' = '+nf(moles[o])+' × '+p[2]+' = <b>'+nf(moles[o]*p[2])+' غم</b>'+(p[3]===1?'، وحجمها = '+nf(moles[o])+' × 22.4 = <b>'+nf(moles[o]*22.4)+' لتر</b>':'')))}
+const PQ=[
+ {q:'في التفاعل 5O₂ + 4NH₃ → 4NO + 6H₂O: كم مولاً من NO يتكوّن من 2 مول NH₃؟',o:['1 مول','2 مول','4 مول','8 مول'],a:1,e:'نسبة المعاملات 4 : 4 فتكون 2 مول.'},
+ {q:'2H₂ + O₂ → 2H₂O: ما كتلة الماء الناتجة من 4 غم H₂؟ (H₂ = 2، H₂O = 18)',o:['18 غم','72 غم','36 غم','9 غم'],a:2,e:'موالت H₂ = 4 ÷ 2 = 2 مول، وموالت H₂O = 2 مول، والكتلة = 2 × 18 = 36 غم.'},
+ {q:'N₂ + 3H₂ → 2NH₃: ما حجم NH₃ الناتج من 10 لتر N₂ (نفس الظروف)؟',o:['10 لتر','20 لتر','30 لتر','5 لتر'],a:1,e:'نسبة الحجوم 1 : 2 فالحجم = 10 × 2 = 20 لتر.'},
+ {q:'CaCO₃ → CaO + CO₂: ما كتلة CO₂ الناتجة من تحلل 50 غم CaCO₃؟ (CaCO₃ = 100، CO₂ = 44)',o:['44 غم','50 غم','11 غم','22 غم'],a:3,e:'موالت CaCO₃ = 50 ÷ 100 = 0.5، وموالت CO₂ = 0.5، والكتلة = 0.5 × 44 = 22 غم.'},
+ {q:'5O₂ + 4NH₃ → 4NO + 6H₂O: ما كتلة O₂ اللازمة لتفاعل 17 غم NH₃؟ (NH₃ = 17، O₂ = 32)',o:['32 غم','25.6 غم','40 غم','160 غم'],a:2,e:'موالت NH₃ = 1، وموالت O₂ = 1 × 5 ÷ 4 = 1.25، والكتلة = 1.25 × 32 = 40 غم.'}
+];
+function buildPQ(){const box=$('pq');box.innerHTML='';
+  PQ.forEach((q,qi)=>{const key='b:pq:'+qi,card=mk('div','card');card.style.marginTop='10px';card.innerHTML='<h3>'+(qi+1)+'. '+q.q+'</h3>';
+    const o=mk('div','opts'),fb=mk('div','fb hidden');
+    const lock=k=>{o.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q.a)x.classList.add('ok');else if(j===k)x.classList.add('bad')});fb.innerHTML=(k===q.a?'<b style="color:var(--ok)">✔ إجابة صحيحة!</b> ':'<b style="color:var(--bad)">✘ إجابة غير صحيحة.</b> ')+q.e+'<br>🔒 لا يمكن إعادة هذا السؤال.';fb.classList.remove('hidden')};
+    q.o.forEach((t,k)=>{const b=mk('button','',t);b.onclick=()=>{if(ANS[key])return;ansSave(key,{k:k});lock(k);score()};o.appendChild(b)});
+    if(ANS[key])lock(ANS[key].k);card.appendChild(o);card.appendChild(fb);box.appendChild(card)});score()}
+function score(){let sc=0,an=0;PQ.forEach((q,i)=>{const r=ANS['b:pq:'+i];if(r){an++;if(r.k===q.a)sc++}});$('pscore').textContent=an===PQ.length?'نتيجتك: '+sc+' من '+PQ.length+' 🔒':''}
+function refresh(){buildPQ();renderEq()}
+
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',String(x===b)));['bal','calc'].forEach(id=>{const s=$(id);s.classList.toggle('hidden',id!==b.dataset.t);if(id===b.dataset.t){s.classList.remove('pane');void s.offsetWidth;s.classList.add('pane')}});VW.forEach(v=>v.dirty=true);window.scrollTo({top:0,behavior:'smooth'})});
+buildEqs();buildBalance();buildCalc();buildPQ();
+loadEq(Math.max(0,EQS.findIndex((e,i)=>!ANS[eqKey(i)])));
+</script>
+</body>
+</html>

@@ -1502,7 +1502,7 @@ sel.split(',').map(function(x){return x+' *'}).join(',')+'{color:var(--gt)!impor
 ':root[data-theme="dark"] .rd h4,:root[data-theme="dark"] .tab:not(.on),:root[data-theme="dark"] .lvc .tx2 b{color:color-mix(in srgb,var(--k,var(--c,#fff)) 45%,#fff)!important}';
 document.head.appendChild(st)})();
 /*PCB-CELLX: الدرس التفاعلي لوحدة الخلية*/
-var LX={"2-0":"lessons/microscope.html","2-1":"lessons/cell.html","2-2":"lessons/genetic.html"};
+var LX={"1-3":"lessons/balance.html","2-0":"lessons/microscope.html","2-1":"lessons/cell.html","2-2":"lessons/genetic.html"};
 (function(){
 var sy=document.createElement("style");sy.textContent=".cxr{display:flex;gap:8px;margin:0 0 8px}.cxr button{flex:1;border:1.5px solid var(--pri);background:var(--card);color:var(--text);border-radius:12px;padding:8px 6px;font:inherit;font-weight:800;font-size:13px;line-height:1.5;cursor:pointer}.cxy{flex:1;display:block;text-align:center;text-decoration:none;border-radius:12px;padding:8px 6px;font-weight:800;font-size:13px;line-height:1.5;background:#0d9488;color:#fff}.cxy small,.cxr button small{font-weight:600;opacity:.9}.cxf{display:block;width:calc(100% + 32px);margin:0 -16px;height:calc(100vh - 232px);height:calc(100dvh - 232px);border:0;background:var(--bg)}";document.head.appendChild(sy);
 function curTheme(){var d=document.documentElement.getAttribute("data-theme");return(d=="dark"||(d!="light"&&matchMedia("(prefers-color-scheme:dark)").matches))?"dark":"light"}
