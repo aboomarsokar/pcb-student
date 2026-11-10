@@ -505,7 +505,7 @@ var TEACH=false,ART=null;
 function esc(x){return String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
 function ldA(k){try{return localStorage.getItem("pcbA:"+k)||""}catch(e){return ""}}
 function sA(k,v){try{localStorage.setItem("pcbA:"+k,v)}catch(e){}}
-function RQ(a,k){if(!a.length)return '<p>—</p>';return a.map(function(l,i){var q=l.replace(/^- /,"");return '<div class="qa"><b style="color:'+PAL[i%5]+'">'+(i+1)+'. '+q+'</b><textarea placeholder="'+(rtl()?"اكتب إجابتك هنا...":"Write your answer...")+'" oninput="sA(\''+k+i+'\',this.value)">'+esc(ldA(k+i))+'</textarea></div>'}).join("")}
+function RQ(a,k){if(!a.length)return '<p>—</p>';return a.map(function(l,i){var q=l.replace(/^- /,"");return '<div class="qa"><b style="color:'+PAL[i%5]+'">'+(i+1)+'. '+q+'</b>'+(window.kxHas&&kxHas(q)?'<button class="kxb" style="margin:6px 0" onclick="kxAsk('+JSON.stringify(q).replace(/"/g,'&quot;')+')"><img alt="" src="'+KXMS+'"><span>اسأل كينيكس</span></button>':'')+'<textarea placeholder="'+(rtl()?"اكتب إجابتك هنا...":"Write your answer...")+'" oninput="sA(\''+k+i+'\',this.value)">'+esc(ldA(k+i))+'</textarea></div>'}).join("")}
 function pub(){if(!ART){toast("النشر غير متاح");return}
   var o={DATA:DATA,U:U},c=document.documentElement.cloneNode(true);
   c.querySelector("#app").innerHTML="";var m=c.querySelector("#menu");m.innerHTML="";m.className="menu";c.querySelector("#veil").className="veil";
@@ -1358,7 +1358,7 @@ var sy=document.createElement("style");sy.textContent=".kxb{display:flex;align-i
 window.kxFind=function(q){if(!q)return null;if(KH[q])return KH[q];var ks=Object.keys(KH);for(var i=0;i<ks.length;i++){var k=ks[i];if(q.length>=k.length&&q.lastIndexOf(k)==q.length-k.length)return KH[k]}return null};
 window.kxHas=function(q){return !!kxFind(q)};
 window.kxAsk=function(t){var h=kxFind(typeof t=="string"?t:(Q[qi]||{}).q);if(!h)return;var o=document.getElementById("kx");if(o)o.remove();var d=document.createElement("div");d.id="kx";d.onclick=function(e){if(e.target===d)kxClose()};
-d.innerHTML='<div class="kb"><div class="hd"><img alt="" src="'+KXMS+'"><div><b>كينيكس يشرح لك 💡</b><small>أوضّح الفكرة وأنت تختار الإجابة</small></div></div>'+h.split("\n").map(function(x){return "<p>"+x+"</p>"}).join("")+'<div class="nt2">🎯 الآن فكّر بهدوء واختر إجابتك بنفسك، فأنت قادر!</div><button onclick="kxClose()">فهمت، سأحلّ بنفسي</button></div>';document.body.appendChild(d)};
+d.innerHTML='<div class="kb"><div class="hd"><img alt="" src="'+KXMS+'"><div><b>كينيكس يشرح لك 💡</b><small>أوضّح الفكرة وأنت تجيب بنفسك</small></div></div>'+h.split("\n").map(function(x){return "<p>"+x+"</p>"}).join("")+'<div class="nt2">🎯 الآن فكّر بهدوء وأجب بنفسك، فأنت قادر!</div><button onclick="kxClose()">فهمت، سأجيب بنفسي</button></div>';document.body.appendChild(d)};
 window.kxClose=function(){var o=document.getElementById("kx");if(o)o.remove()};
 })();
 </script>
