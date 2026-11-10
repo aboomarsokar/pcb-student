@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>المجاهر وأنواعها</title>
+<base href="../">
+<style>
+@font-face{font-family:"PCB Naskh";font-style:normal;font-weight:400 700;font-display:swap;src:url("fonts/naskh-arabic.woff2") format("woff2");unicode-range:U+0600-06FF,U+0750-077F,U+0870-0891,U+0897-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC}
+@font-face{font-family:"PCB Naskh";font-style:normal;font-weight:400 700;font-display:swap;src:url("fonts/naskh-latin.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+:root{--ink:#1b2620;--muted:#4e5d55;--bg:#E5EADF;--card:#F7F9F4;--accent:#2E7D32;--accent-ink:#fff;--soft:#DBE5D5;--line:#C2CBBC;--ok:#2E7D32;--bad:#D32F2F;--blue:#1565C0;--r:18px;--edge:rgba(0,0,0,.28);--sh:rgba(20,40,30,.22)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#EEF3EE;--muted:#A9B9B0;--bg:#202D29;--card:#2A3A35;--accent:#66BB6A;--accent-ink:#0b1f17;--soft:#33463F;--line:#41554D;--ok:#66BB6A;--bad:#EF5350;--blue:#64B5F6;--edge:rgba(0,0,0,.5);--sh:rgba(0,0,0,.5)}}
+:root[data-theme="dark"]{--ink:#EEF3EE;--muted:#A9B9B0;--bg:#202D29;--card:#2A3A35;--accent:#66BB6A;--accent-ink:#0b1f17;--soft:#33463F;--line:#41554D;--ok:#66BB6A;--bad:#EF5350;--blue:#64B5F6;--edge:rgba(0,0,0,.5);--sh:rgba(0,0,0,.5)}
+*{box-sizing:border-box}
+html,body{margin:0;max-width:100%;overflow-x:hidden}
+body{background:var(--bg);color:var(--ink);font-family:"PCB Naskh","Noto Naskh Arabic","Amiri",system-ui,sans-serif;font-weight:600;font-size:17px;line-height:1.8;-webkit-tap-highlight-color:transparent}
+main{max-width:880px;margin:0 auto;padding:10px 12px 28px}
+h1{font-size:1.15rem;margin:0}
+b,h1,h2,h3,th{font-weight:800}
+button{font:inherit;cursor:pointer;color:var(--ink);border:1px solid var(--line);background:var(--card);border-radius:12px;padding:9px 14px;font-weight:700;box-shadow:0 4px 0 var(--edge),0 8px 14px -6px var(--sh);transition:transform .12s,box-shadow .12s,background .2s;touch-action:manipulation}
+button:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--edge),0 12px 18px -6px var(--sh)}
+button:active{transform:translateY(4px);box-shadow:0 0 0 var(--edge),0 2px 4px var(--sh)}
+button:disabled{transform:translateY(3px);box-shadow:0 1px 0 var(--edge);cursor:default}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.main{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 82%,#fff),var(--accent) 55%,color-mix(in srgb,var(--accent) 82%,#000));border-color:var(--accent);color:var(--accent-ink)}
+.hidden{display:none!important}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:0 0 14px;box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 6px 0 -1px var(--edge),0 16px 26px -12px var(--sh)}
+.card h2{margin:0 0 6px;font-size:1.2rem;color:var(--accent)}
+.card h3{margin:0 0 4px;font-size:1.05rem;color:var(--accent)}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px;margin:6px 0 2px}
+.tabs button{flex:none;white-space:nowrap}
+.tabs button[aria-selected="true"]{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 82%,#fff),var(--accent) 55%,color-mix(in srgb,var(--accent) 82%,#000));color:var(--accent-ink);border-color:var(--accent)}
+.hint{color:var(--muted);margin:2px 0 10px;font-size:.95rem}
+.pane{animation:rise .5s ease both}
+@keyframes rise{from{opacity:0;transform:perspective(900px) rotateX(-10deg) translateY(18px)}to{opacity:1;transform:none}}
+
+/* ======= المجهر المجسّم ======= */
+.stage3{position:relative;height:350px;perspective:1000px;perspective-origin:50% 35%;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;direction:ltr;border-radius:16px;background:radial-gradient(ellipse at 50% 85%,color-mix(in srgb,var(--accent) 22%,var(--card)) 0,var(--card) 70%);border:1px solid var(--line);overflow:hidden}
+.stage3:active{cursor:grabbing}
+.world{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;transform:rotateX(-10deg) rotateY(-28deg)}
+.model{position:absolute;left:0;top:0;transform-style:preserve-3d;transform:scale(.86) translateY(135px)}
+.pt{position:absolute;left:0;top:0;transform-style:preserve-3d;cursor:pointer}
+.g{position:absolute;left:0;top:0;transform-style:preserve-3d}
+.f{position:absolute;left:0;top:0;backface-visibility:hidden;transition:filter .2s,box-shadow .2s}
+.f.cap{border-radius:50%}
+.pt.sel .f{filter:brightness(1.55) saturate(1.3);box-shadow:0 0 16px 3px #ffd54f}
+.pt:hover .f{filter:brightness(1.2)}
+.floor{position:absolute;left:-110px;top:20px;width:220px;height:170px;margin-top:0;transform:rotateX(90deg) translateZ(-3px);background:radial-gradient(ellipse,rgba(0,0,0,.28),transparent 68%);pointer-events:none}
+.lbl{position:absolute;left:8px;bottom:8px;direction:rtl;background:color-mix(in srgb,var(--card) 92%,transparent);border:1px solid var(--line);border-radius:10px;padding:2px 10px;font-size:.85rem;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 6px}
+.chips button{padding:5px 12px;font-size:.92rem;border-radius:999px;box-shadow:0 3px 0 var(--edge)}
+.chips button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.info h2{margin-bottom:2px}
+.info .en{direction:ltr;text-align:right;color:var(--muted);font-size:.9rem}
+.info p{margin:6px 0 0}
+.tag{display:inline-block;background:var(--soft);border-radius:999px;padding:1px 12px;font-size:.85rem;margin-inline-end:6px}
+.toast{padding:6px 14px;border-radius:12px;font-weight:700;display:inline-block;margin:6px 0}
+.toast.ok{background:color-mix(in srgb,var(--ok) 20%,var(--card));color:var(--ok)}
+.toast.bad{background:color-mix(in srgb,var(--bad) 18%,var(--card));color:var(--bad)}
+.toast.ask{background:var(--soft)}
+
+/* ======= المقارنة ======= */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;perspective:1100px}
+.fc{position:relative;height:232px;cursor:pointer;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.fc.flip{transform:rotateY(180deg)}
+.fc .s{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:2px solid var(--c);background:linear-gradient(160deg,color-mix(in srgb,var(--c) 22%,var(--card)),var(--card));box-shadow:0 6px 0 -1px var(--edge),0 14px 22px -10px var(--sh)}
+.fc .s.bk{transform:rotateY(180deg);justify-content:flex-start;align-items:flex-start;text-align:start;font-size:.84rem;line-height:1.55;overflow:auto}
+.fc .ic{font-size:34px;filter:drop-shadow(0 4px 3px rgba(0,0,0,.3))}
+.fc .nm{font-weight:800;color:var(--c);margin-top:4px;line-height:1.4}
+.fc small{color:var(--muted)}
+.fc .bk b{color:var(--c)}
+.fc .bk .btn2{margin-top:6px;padding:3px 10px;font-size:.82rem}
+.cls{display:grid;gap:10px;margin:10px 0}
+.cls .it{background:var(--soft);border-radius:12px;padding:10px 12px}
+.cls .it.good{outline:2px solid var(--ok)}.cls .it.wrong{outline:2px solid var(--bad)}
+.cls .bks{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.cls .bks button{padding:4px 12px;font-size:.9rem;box-shadow:0 3px 0 var(--edge)}
+.cls .bks button.sel{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.zoom{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.88);overflow:auto;padding:8px}
+.zoom img{width:240%;max-width:none;display:block;background:#fff;border-radius:8px}
+.zoom button{position:fixed;top:10px;left:10px;z-index:61}
+
+/* ======= قوة التكبير ======= */
+.mag{display:grid;gap:12px}
+.lens{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.lens b{min-width:110px}
+.lens button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.res{text-align:center;font-size:1.25rem;font-weight:800;color:var(--accent);margin:4px 0}
+.field{width:210px;height:210px;margin:6px auto;border-radius:50%;overflow:hidden;position:relative;background:radial-gradient(circle,#fff 0,#e9f3ff 70%,#c9ddf2 100%);border:8px solid #263238;box-shadow:inset 0 0 22px rgba(0,0,0,.35),0 10px 0 -2px var(--edge),0 18px 24px -10px var(--sh)}
+.field svg{position:absolute;inset:0;width:100%;height:100%;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.warn{background:rgba(255,183,3,.16);border:1px dashed #b7791f;border-radius:12px;padding:6px 12px;font-size:.92rem}
+.opts{display:grid;gap:8px;margin:10px 0}
+.opts button{text-align:start}
+.opts button.ok{background:color-mix(in srgb,var(--ok) 20%,var(--card));border-color:var(--ok)}
+.opts button.bad{background:color-mix(in srgb,var(--bad) 18%,var(--card));border-color:var(--bad)}
+.fb{margin-top:8px;padding:8px 12px;border-radius:12px;background:var(--soft)}
+.score{text-align:center;font-weight:800;font-size:1.1rem;color:var(--accent);margin:6px 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+    <h1>🔬 المجاهر وأنواعها</h1>
+  </div>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-t="parts" aria-selected="true">🔬 أجزاء المجهر</button>
+    <button role="tab" data-t="types" aria-selected="false">⚖️ أنواع المجاهر</button>
+    <button role="tab" data-t="mag" aria-selected="false">🧮 قوة التكبير</button>
+  </div>
+
+  <section id="parts" class="pane">
+    <p class="hint">اسحب المجهر بإصبعك لتديره، واضغط على أي جزء لتعرف وظيفته.</p>
+    <div class="stage3" id="stage"><div class="world" id="world"><div class="model" id="model"></div></div><span class="lbl" id="lbl">اسحب لتدوير المجهر 🔄</span></div>
+    <div class="chips" id="chips"></div>
+    <div class="card info" id="info"></div>
+    <div class="card">
+      <h2>🎯 اختبر نفسك</h2>
+      <p class="hint" style="margin:0 0 6px">اضغط على الجزء المطلوب في المجهر المجسّم. لكل جزء محاولة واحدة فقط، ولا يمكن إعادة السؤال.</p>
+      <button class="main" id="bQuiz">ابدأ الاختبار</button>
+      <div id="qbox" style="margin-top:8px"></div>
+    </div>
+  </section>
+
+  <section id="types" class="pane hidden">
+    <p class="hint">اضغط على أي بطاقة لتنقلب وتعرف التفاصيل.</p>
+    <div class="cmp" id="cmp"></div>
+    <div class="card" style="margin-top:14px">
+      <h2>🧩 صنّف المجهر</h2>
+      <p class="hint" style="margin:0 0 4px">اختر نوع المجهر المناسب لكل وصف، ثم اضغط تحقّق. محاولة واحدة فقط.</p>
+      <div class="cls" id="cls"></div>
+      <button class="main" id="bCls">تحقّق (مرة واحدة)</button>
+      <div class="fb hidden" id="clsfb"></div>
+    </div>
+  </section>
+
+  <section id="mag" class="pane hidden">
+    <div class="card">
+      <h2>🧮 التكبير الكلي</h2>
+      <div class="warn">التكبير الكلي = تكبير العينية × تكبير الشيئية</div>
+      <div class="mag">
+        <div class="lens"><b>العدسة العينية:</b><span id="eyes"></span></div>
+        <div class="lens"><b>العدسة الشيئية:</b><span id="objs"></span></div>
+        <div class="res" id="res"></div>
+        <div class="field"><svg viewBox="-100 -100 200 200" id="cell" aria-label="خلية مكبّرة"></svg></div>
+        <div class="warn hidden" id="oil">💧 العدسة الشيئية الكبرى (الزيتية) تُستخدم معها نقطة زيت لزيادة وضوح الصورة وتجميع الضوء ومنع تشتته.</div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>✍️ تدرّب على الحساب</h2>
+      <p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p>
+      <div id="pq"></div>
+      <div class="score" id="pscore"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ---------- حفظ الإجابات (مرة واحدة فقط) + جسر التطبيق ---------- */
+const ANS={};
+try{Object.assign(ANS,JSON.parse(localStorage.getItem('micAns')||'{}'))}catch(e){}
+window.addEventListener('message',e=>{const d=e.data;if(!d)return;
+  if(d.pcb==='answers'){Object.assign(ANS,d.m||{});refreshLocked()}
+  else if(d.pcb==='theme'){document.documentElement.setAttribute('data-theme',d.t==='dark'?'dark':'light')}});
+function ansSave(k,v){ANS[k]=v;try{localStorage.setItem('micAns',JSON.stringify(ANS))}catch(e){}try{parent.postMessage({pcb:'ans',k:k,v:v},'*')}catch(e){}}
+try{parent.postMessage({pcb:'ready'},'*')}catch(e){}
+const $=id=>document.getElementById(id);
+function mk(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+function tick(){try{AC=window.AC||(window.AC=new(window.AudioContext||window.webkitAudioContext)());const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type='square';o.frequency.setValueAtTime(1500,t);o.frequency.exponentialRampToValueAtTime(700,t+.06);g.gain.setValueAtTime(.04,t);g.gain.exponentialRampToValueAtTime(.001,t+.06);o.connect(g).connect(AC.destination);o.start(t);o.stop(t+.07)}catch(e){}}
+document.addEventListener('click',e=>{if(e.target.closest('button'))tick()},true);
+
+/* ---------- بيانات الأجزاء ---------- */
+const INFO={
+ eyepiece:{ar:'العدسة العينية',en:'Eyepiece (Ocular lens)',fn:'ينظر من خلالها الفاحص.',more:'تكبيرها يدخل في حساب التكبير الكلي: التكبير الكلي = تكبير العينية × تكبير الشيئية.'},
+ objective:{ar:'العدسة الشيئية',en:'Objective lens',fn:'مثبتة على قرص متحرك وقريبة من الشيء المفحوص، وتتفاوت في قوة تكبيرها.',more:'العدسة الشيئية الكبرى (الزيتية) تُستخدم معها نقطة زيت لزيادة وضوح الصورة وتجميع الضوء ومنع تشتته.'},
+ nosepiece:{ar:'القرص الدوار',en:'Revolving nosepiece',fn:'تُثبَّت عليه العدسات الشيئية، ويُدار لتبديل العدسة وتغيير قوة التكبير.',more:'العدسات الشيئية مثبتة على قرص متحرك.'},
+ stage:{ar:'المنضدة',en:'Stage',fn:'سطح توضع عليه الشريحة، وفي وسطه فتحة يمر منها الضوء.',more:'تتحرك لأعلى ولأسفل بالضابطين لتوضيح الرؤية.'},
+ slide:{ar:'الشريحة',en:'Slide',fn:'توضع عليها العينة الرقيقة على المنضدة ليمر الضوء من خلالها.',more:'المجهر المركب يفحص العينات الرقيقة جداً التي تسمح بمرور الضوء.'},
+ coarse:{ar:'الضابط الكبير',en:'Coarse adjustment knob',fn:'يحرّك المنضدة لأعلى ولأسفل لتوضيح الرؤية (ضبط سريع).',more:'يُستعمل أولاً للحصول على صورة تقريبية.'},
+ fine:{ar:'الضابط الصغير',en:'Fine adjustment knob',fn:'يحرّك المنضدة لأعلى ولأسفل لتوضيح الرؤية (ضبط دقيق).',more:'يُستعمل بعد الكبير لإتمام وضوح الصورة.'},
+ condenser:{ar:'المكثف (مجمّع الضوء)',en:'Condenser',fn:'يوجّه الضوء نحو العينة.',more:'يعمل مع مصدر الضوء.'},
+ light:{ar:'مصدر الضوء',en:'Light source',fn:'يوجّه الضوء نحو العينة مع المكثف.',more:'المجهر الضوئي يستعمل الضوء المرئي والعدسات الزجاجية.'},
+ armbase:{ar:'الذراع والقاعدة',en:'Arm and base',fn:'يحملان أجزاء المجهر.',more:'القاعدة تثبّت المجهر، والذراع يربط الأجزاء العلوية بالقاعدة.'}
+};
+const ORDER=['eyepiece','objective','nosepiece','stage','slide','coarse','fine','condenser','light','armbase'];
+const ALIAS={base:'armbase',arm:'armbase',head:'armbase',tube:'eyepiece'};
+const TARGETS=['eyepiece','objective','nosepiece','stage','coarse','fine','condenser','light','armbase'];
+
+/* ---------- بناء المجسّم ثلاثي الأبعاد ---------- */
+const shade=(c,k)=>'color-mix(in srgb,'+c+' '+k+'%,#000)';
+const tint=(c,k)=>'color-mix(in srgb,'+c+' '+k+'%,#fff)';
+function face(g,w,h,tf,bg,cls){const f=mk('div','f'+(cls?' '+cls:''));f.style.cssText='width:'+w+'px;height:'+h+'px;margin-left:'+(-w/2)+'px;margin-top:'+(-h/2)+'px;transform:'+tf+';background:'+bg;g.appendChild(f)}
+function box(w,h,d,c){const g=mk('div','g');
+  face(g,w,h,'translateZ('+d/2+'px)',shade(c,100));
+  face(g,w,h,'rotateY(180deg) translateZ('+d/2+'px)',shade(c,60));
+  face(g,d,h,'rotateY(90deg) translateZ('+w/2+'px)',shade(c,78));
+  face(g,d,h,'rotateY(-90deg) translateZ('+w/2+'px)',shade(c,68));
+  face(g,w,d,'rotateX(90deg) translateZ('+h/2+'px)',tint(c,82));
+  face(g,w,d,'rotateX(-90deg) translateZ('+h/2+'px)',shade(c,45));
+  return g}
+function cyl(r,h,c,n){n=n||14;const g=mk('div','g'),w=2*r*Math.sin(Math.PI/n),ap=r*Math.cos(Math.PI/n);
+  for(let i=0;i<n;i++){const th=i*360/n,rad=th*Math.PI/180,k=48+52*(.5+.5*Math.cos(rad+0.75));face(g,w+.6,h,'rotateY('+th+'deg) translateZ('+ap+'px)',shade(c,k))}
+  face(g,2*r,2*r,'rotateX(90deg) translateZ('+h/2+'px)',tint(c,78),'cap');
+  face(g,2*r,2*r,'rotateX(-90deg) translateZ('+h/2+'px)',shade(c,40),'cap');
+  return g}
+const PT={};
+function part(id,x,y,z,rx,ry,rz){const p=mk('div','pt');p.dataset.part=id;p.style.transform='translate3d('+x+'px,'+y+'px,'+z+'px) rotateX('+(rx||0)+'deg) rotateY('+(ry||0)+'deg) rotateZ('+(rz||0)+'deg)';(PT[id]=PT[id]||[]).push(p);return p}
+function put(p,g,x,y,z,rx,ry,rz){const w=mk('div','g');w.style.transform='translate3d('+(x||0)+'px,'+(y||0)+'px,'+(z||0)+'px) rotateX('+(rx||0)+'deg) rotateY('+(ry||0)+'deg) rotateZ('+(rz||0)+'deg)';w.appendChild(g);p.appendChild(w);return p}
+function buildScope(){
+  const m=$('model');m.innerHTML='';
+  const fl=mk('div','floor');m.appendChild(fl);
+  // القاعدة والذراع
+  let p=part('base',0,10,0);put(p,box(150,20,122,'#455a64'));m.appendChild(p);
+  p=part('arm',0,-95,-44);put(p,box(28,190,30,'#546e7a'));m.appendChild(p);
+  p=part('head',0,-193,-30);put(p,box(32,28,60,'#546e7a'));m.appendChild(p);
+  // الأنبوب والعدسة العينية (مائلان للأمام)
+  p=part('tube',0,-196,-12,-32,0,0);put(p,cyl(14,74,'#607d8b'),0,-37,0);m.appendChild(p);
+  p=part('eyepiece',0,-196,-12,-32,0,0);put(p,cyl(10,32,'#263238'),0,-90,0);put(p,cyl(7,3,'#90caf9'),0,-107.5,0);m.appendChild(p);
+  // القرص الدوار والعدسات الشيئية
+  p=part('tube',0,-166,8);put(p,cyl(11,26,'#607d8b'));m.appendChild(p);
+  p=part('nosepiece',0,-148,12);put(p,cyl(27,9,'#78909c'));m.appendChild(p);
+  [[ -17,26,'#e53935'],[0,34,'#fdd835'],[17,44,'#1e88e5']].forEach((o,i)=>{const q=part('objective',o[0],-143+o[1]/2,12+(i==1?9:0));put(q,cyl(6.5,o[1],'#212121'));put(q,cyl(7,4,o[2]),0,-o[1]/2+8,0);m.appendChild(q)});
+  // المنضدة والشريحة
+  p=part('stage',0,-70,14);put(p,box(112,8,88,'#37474f'));m.appendChild(p);
+  p=part('slide',0,-76,14);put(p,box(46,2.5,20,'#81d4fa'));put(p,cyl(3,2.6,'#d81b60'),0,-.2,0);m.appendChild(p);
+  // الضابطان
+  [-1,1].forEach(s=>{
+    p=part('coarse',s*21,-110,-44,0,0,90);put(p,cyl(17,12,'#90a4ae'));m.appendChild(p);
+    p=part('fine',s*31,-110,-44,0,0,90);put(p,cyl(10,10,'#cfd8dc'));m.appendChild(p)});
+  // المكثف ومصدر الضوء
+  p=part('condenser',0,-52,14);put(p,cyl(13,16,'#8d6e63'));m.appendChild(p);
+  p=part('light',0,-8,14);put(p,cyl(15,10,'#ffd54f'));m.appendChild(p);
+}
+let sel=null;
+function select(id){id=ALIAS[id]||id;sel=id;
+  document.querySelectorAll('.pt.sel').forEach(e=>e.classList.remove('sel'));
+  const names=id==='armbase'?['base','arm','head']:id==='eyepiece'?['eyepiece','tube']:[id];
+  names.forEach(n=>(PT[n]||[]).forEach(e=>e.classList.add('sel')));
+  document.querySelectorAll('#chips button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
+  const d=INFO[id];
+  $('info').innerHTML=d?'<h2>'+d.ar+'</h2><div class="en">'+d.en+'</div><p><span class="tag">الوظيفة</span>'+d.fn+'</p><p>'+d.more+'</p>':'';
+  $('lbl').textContent=d?d.ar:'اسحب لتدوير المجهر 🔄';
+}
+function buildChips(){const c=$('chips');c.innerHTML='';ORDER.forEach(id=>{const b=mk('button','',INFO[id].ar);b.dataset.id=id;b.onclick=()=>{auto=false;if(quiz)return;select(id)};c.appendChild(b)})}
+
+/* ---------- تدوير وسحب ---------- */
+let ang=-28,tilt=-10,auto=true,drag=null,moved=0,lastT=0;
+const world=$('world'),stage=$('stage');
+const apply=()=>{world.style.transform='rotateX('+tilt+'deg) rotateY('+ang+'deg)'};
+stage.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,a:ang,t:tilt};moved=0;auto=false;try{stage.setPointerCapture(e.pointerId)}catch(_){}});
+stage.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;moved=Math.max(moved,Math.abs(dx)+Math.abs(dy));ang=drag.a+dx*.6;tilt=Math.max(-55,Math.min(25,drag.t-dy*.25));apply()});
+stage.addEventListener('pointerup',e=>{const was=moved<6&&drag;drag=null;if(was){const t=document.elementFromPoint(e.clientX,e.clientY),pt=t&&t.closest&&t.closest('.pt');if(pt){const id=pt.dataset.part;if(quiz)answerQuiz(id);else select(id)}}});
+stage.addEventListener('pointercancel',()=>{drag=null});
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function loop(t){if(auto&&!drag&&!reduce&&!document.hidden&&!$('parts').classList.contains('hidden')){ang+=(lastT?(t-lastT):0)*0.018;apply()}lastT=t;requestAnimationFrame(loop)}
+
+/* ---------- اختبر نفسك: اضغط على الجزء ---------- */
+let quiz=null;
+function qStat(){let sc=0,tt=0;TARGETS.forEach(t=>{const a=ANS['m:q:'+t];if(a){tt++;if(a.ok)sc++}});return{sc,tt}}
+function nextTarget(prev){const left=TARGETS.filter(t=>!ANS['m:q:'+t]&&t!==prev);return left.length?left[Math.floor(Math.random()*left.length)]:null}
+function renderQ(msg){const s=qStat();
+  if(!quiz){$('qbox').innerHTML=(s.tt===TARGETS.length?'<span class="toast ok">🏁 أنهيتَ الاختبار: '+s.sc+' من '+TARGETS.length+' 🔒</span>':'');return}
+  $('qbox').innerHTML=(msg||'')+'<div><span class="toast ask">اضغط على: <b>'+INFO[quiz].ar+'</b></span> <b>'+s.sc+'/'+s.tt+'</b></div>'}
+function startQuiz(){const s=qStat();if(s.tt===TARGETS.length){renderQ();return}quiz=nextTarget();select(null);renderQ();$('bQuiz').textContent='جارٍ الاختبار...';$('bQuiz').disabled=true;auto=false}
+function answerQuiz(id){if(!quiz)return;id=ALIAS[id]||id;const t=quiz,ok=id===t;ansSave('m:q:'+t,{ok:ok});
+  select(ok?id:t);quiz=null;const s=qStat();
+  const msg=ok?'<span class="toast ok">✔ أحسنت! هذا هو '+INFO[t].ar+'</span> ':'<span class="toast bad">✘ هذا هو «'+INFO[id].ar+'». الصحيح: '+INFO[t].ar+'</span> ';
+  const n=nextTarget(t);
+  if(!n){$('qbox').innerHTML=msg+'<div><span class="toast ok">🏁 أنهيتَ الاختبار: '+s.sc+' من '+TARGETS.length+' 🔒</span></div>';$('bQuiz').textContent='انتهى الاختبار 🔒';return}
+  $('qbox').innerHTML=msg;setTimeout(()=>{quiz=n;renderQ();},1500)}
+
+/* ---------- أنواع المجاهر ---------- */
+const TYPES=[
+ {id:'compound',ic:'🔬',nm:'المجهر الضوئي المركب',c:'#1565C0',img:'images/mic-compound.webp',kind:'ضوئي (ضوء مرئي وعدسات زجاجية)',use:'لفحص العينات الرقيقة جداً التي تسمح بمرور الضوء.',look:'يسمح برؤية الخلايا وهي حية، ويعطي صورة ثنائية الأبعاد.'},
+ {id:'dissect',ic:'🔍',nm:'المجهر الضوئي التشريحي',c:'#2E7D32',img:'images/mic-dissect.webp',kind:'ضوئي (ضوء مرئي وعدسات زجاجية)',use:'يُستعمل في تشريح الكائنات الصغيرة أو بعض أجزائها الخارجية.',look:'لرؤية الأجسام بأبعادها الثلاثة.'},
+ {id:'sem',ic:'⚡',nm:'المجهر الإلكتروني الماسح (SEM)',c:'#D32F2F',img:'images/mic-sem.webp',kind:'إلكتروني (حزمة إلكترونات بدل الضوء)',use:'لدراسة التفاصيل السطحية للعينة وتكبيرها.',look:'يُظهر الصورة بأبعادها الثلاثية، ولا يمكن من خلاله مشاهدة عينات حية.'},
+ {id:'tem',ic:'🧬',nm:'المجهر الإلكتروني النافذ (TEM)',c:'#6A1B9A',img:'images/mic-tem.webp',kind:'إلكتروني (حزمة إلكترونات بدل الضوء)',use:'لدراسة التفاصيل الداخلية للخلية وبنيتها.',look:'تصل قوة التكبير في المجاهر الإلكترونية إلى أكثر من مليون مرة.'}
+];
+function buildTypes(){const g=$('cmp');g.innerHTML='';
+  TYPES.forEach(t=>{const c=mk('div','fc');c.style.setProperty('--c',t.c);c.tabIndex=0;
+    c.innerHTML='<div class="s"><span class="ic">'+t.ic+'</span><span class="nm">'+t.nm+'</span><small>اضغط للتفاصيل</small></div><div class="s bk"><div><b>النوع:</b> '+t.kind+'</div><div><b>الاستعمال:</b> '+t.use+'</div><div><b>ملاحظة:</b> '+t.look+'</div><button class="btn2" data-img="'+t.img+'">🖼️ الرسم التوضيحي</button></div>';
+    c.onclick=e=>{const b=e.target.closest('button[data-img]');if(b){openZoom(b.dataset.img);return}c.classList.toggle('flip')};
+    c.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();c.classList.toggle('flip')}};
+    g.appendChild(c)})}
+function openZoom(src){const z=mk('div','zoom');z.innerHTML='<button>✕ إغلاق</button><img alt="" src="'+src+'">';z.onclick=e=>{if(e.target.tagName!=='IMG')z.remove()};document.body.appendChild(z)}
+const CLS=[
+ {t:'يدرس التفاصيل الداخلية للخلية وبنيتها',a:'tem'},
+ {t:'يدرس التفاصيل السطحية للعينة',a:'sem'},
+ {t:'يُستعمل في تشريح الكائنات الصغيرة',a:'dissect'},
+ {t:'يسمح برؤية الخلايا وهي حية',a:'compound'}
+];
+const SHORT={compound:'المركب',dissect:'التشريحي',sem:'الماسح SEM',tem:'النافذ TEM'};
+let clsSel=CLS.map(()=>null),clsLocked=false;
+function buildCls(){const l=$('cls');l.innerHTML='';
+  CLS.forEach((it,k)=>{const r=mk('div','it','<div>'+it.t+'</div>');const b=mk('div','bks');
+    TYPES.forEach(t=>{const x=mk('button','',SHORT[t.id]);x.dataset.v=t.id;x.onclick=()=>{if(clsLocked)return;clsSel[k]=t.id;b.querySelectorAll('button').forEach(y=>y.classList.toggle('sel',y===x))};b.appendChild(x)});
+    r.appendChild(b);l.appendChild(r)});
+  const s=ANS['m:cls'];if(s){clsSel=s.sel.slice();applyCls(s.sel)}}
+function applyCls(sel){clsLocked=true;let good=0;const rows=[...$('cls').children];
+  CLS.forEach((it,k)=>{const ok=sel[k]===it.a;if(ok)good++;rows[k].classList.toggle('good',ok);rows[k].classList.toggle('wrong',!ok);rows[k].querySelectorAll('button').forEach(b=>{b.disabled=true;b.classList.toggle('sel',b.dataset.v===sel[k])})});
+  const fb=$('clsfb');fb.classList.remove('hidden');
+  fb.innerHTML='الإجابات الصحيحة: <b>'+good+' من '+CLS.length+'</b>'+(good<CLS.length?'<br>'+CLS.map((it,k)=>sel[k]===it.a?'':'• '+it.t+' ← '+SHORT[it.a]).filter(Boolean).join('<br>'):'')+'<br>🔒 لا يمكن إعادة هذا النشاط.';
+  $('bCls').disabled=true}
+$('bCls').onclick=()=>{if(clsLocked)return;if(clsSel.some(x=>x==null)){const f=$('clsfb');f.classList.remove('hidden');f.textContent='اختر نوعاً لكل وصف قبل التحقق.';return}ansSave('m:cls',{sel:clsSel.slice()});applyCls(clsSel)};
+
+/* ---------- قوة التكبير ---------- */
+const EYES=[5,10,15],OBJS=[4,10,40,100];
+let eye=10,obj=40;
+function buildMag(){
+  const mkb=(arr,get,set,box)=>{box.innerHTML='';arr.forEach(v=>{const b=mk('button','','×'+v);b.setAttribute('aria-pressed',String(get()===v));b.onclick=()=>{set(v);buildMag()};box.appendChild(b)})};
+  mkb(EYES,()=>eye,v=>eye=v,$('eyes'));mkb(OBJS,()=>obj,v=>obj=v,$('objs'));
+  const tot=eye*obj;$('res').textContent=eye+' × '+obj+' = '+tot+' مرة';
+  $('oil').classList.toggle('hidden',obj!==100);
+  const sc=Math.max(.18,Math.min(6,tot/160));
+  $('cell').innerHTML='<g style="transform:scale('+sc+');transform-origin:0 0"><circle r="34" fill="#a5d6a7" stroke="#2e7d32" stroke-width="2.2"/><circle cx="-4" cy="-3" r="12" fill="#7e57c2" stroke="#4527a0" stroke-width="1.6"/><circle cx="-4" cy="-3" r="4" fill="#4527a0"/><ellipse cx="16" cy="12" rx="8" ry="4" fill="#ffb74d" stroke="#e65100" stroke-width="1.2"/><ellipse cx="-18" cy="14" rx="7" ry="3.5" fill="#ffb74d" stroke="#e65100" stroke-width="1.2"/><circle cx="14" cy="-16" r="3" fill="#90caf9"/></g>'}
+const PQ=[
+ {q:'عدسة عينية (×10) وعدسة شيئية (×40). ما التكبير الكلي؟',o:['50 مرة','400 مرة','4000 مرة','40 مرة'],a:1,e:'التكبير الكلي = 10 × 40 = 400 مرة.'},
+ {q:'تكبير كلي (×1000) والعدسة العينية (×10). ما تكبير العدسة الشيئية؟',o:['×10','×1000','×100','×10000'],a:2,e:'تكبير الشيئية = 1000 ÷ 10 = ×100.'},
+ {q:'عدسة عينية (×15) وعدسة شيئية (×10). ما التكبير الكلي؟',o:['25 مرة','150 مرة','1500 مرة','15 مرة'],a:1,e:'15 × 10 = 150 مرة.'},
+ {q:'تكبير كلي (×600) والعدسة الشيئية (×40). ما تكبير العدسة العينية؟',o:['×15','×10','×20','×24000'],a:0,e:'تكبير العينية = 600 ÷ 40 = ×15.'},
+ {q:'أي المجاهر التالية تصل قوة تكبيره إلى أكثر من مليون مرة؟',o:['المجهر المركب','المجهر التشريحي','المجهر الإلكتروني','العدسة المكبّرة البسيطة'],a:2,e:'تصل قوة التكبير في المجاهر الإلكترونية إلى أكثر من مليون مرة.'},
+ {q:'لماذا تُستخدم نقطة زيت مع العدسة الشيئية الكبرى؟',o:['لتبريد العدسة','لزيادة وضوح الصورة وتجميع الضوء ومنع تشتته','لتثبيت الشريحة','لتقليل قوة التكبير'],a:1,e:'نقطة الزيت تزيد وضوح الصورة وتجمّع الضوء وتمنع تشتته.'}
+];
+function buildPQ(){const box=$('pq');box.innerHTML='';
+  PQ.forEach((q,qi)=>{const key='m:mag:'+qi,card=mk('div','card');card.style.marginTop='10px';card.innerHTML='<h3>'+(qi+1)+'. '+q.q+'</h3>';
+    const o=mk('div','opts');const fb=mk('div','fb hidden');
+    const lock=k=>{o.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q.a)x.classList.add('ok');else if(j===k)x.classList.add('bad')});fb.innerHTML=(k===q.a?'<b style="color:var(--ok)">✔ إجابة صحيحة!</b> ':'<b style="color:var(--bad)">✘ إجابة غير صحيحة.</b> ')+q.e+'<br>🔒 لا يمكن إعادة هذا السؤال.';fb.classList.remove('hidden')};
+    q.o.forEach((t,k)=>{const b=mk('button','',t);b.onclick=()=>{if(ANS[key])return;ansSave(key,{k:k});lock(k);score()};o.appendChild(b)});
+    if(ANS[key])lock(ANS[key].k);
+    card.appendChild(o);card.appendChild(fb);box.appendChild(card)});
+  score()}
+function score(){let sc=0,an=0;PQ.forEach((q,i)=>{const r=ANS['m:mag:'+i];if(r){an++;if(r.k===q.a)sc++}});$('pscore').textContent=an===PQ.length?'نتيجتك: '+sc+' من '+PQ.length+' 🔒':''}
+
+/* ---------- التبويبات والبدء ---------- */
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',String(x===b)));['parts','types','mag'].forEach(id=>{const s=$(id);s.classList.toggle('hidden',id!==b.dataset.t);if(id===b.dataset.t){s.classList.remove('pane');void s.offsetWidth;s.classList.add('pane')}});window.scrollTo({top:0,behavior:'smooth'})});
+function refreshLocked(){buildCls();buildPQ();renderQ();const s=qStat();if(s.tt===TARGETS.length){$('bQuiz').textContent='انتهى الاختبار 🔒';$('bQuiz').disabled=true}else if(s.tt>0&&!quiz){$('bQuiz').textContent='تابع الاختبار ('+s.tt+'/'+TARGETS.length+')'}}
+$('bQuiz').onclick=startQuiz;
+buildScope();buildChips();select('eyepiece');buildTypes();buildMag();refreshLocked();apply();requestAnimationFrame(loop);
+</script>
+</body>
+</html>
