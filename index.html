@@ -786,7 +786,7 @@ function lvCard(l,n,fn){return'<div class="gc" style="--c:'+(l>2?"#7c3aed":LVC[l
 var _dLQ=draw;draw=function(){if(V!="lsel"&&V!="qlev")return _dLQ();document.documentElement.lang=lang;document.documentElement.dir=rtl()?"rtl":"ltr";document.body.className="";
 if(V=="lsel"){var x=DATA[si][ui][li],A=LQL()||[],c=[0,0,0];A.forEach(function(r){c[r[0]]++});
 $("app").innerHTML=bar("🧠 اختبر نفسك",1)+'<div class="col"><div class="ban" style="background:linear-gradient(135deg,#7c3aed,#2563eb)"><b>'+x.t+'</b>اختر مستوى الأسئلة</div>'+[0,1,2].map(function(l){return lvCard(l,c[l],"goLQ")}).join("")+lvCard(3,null,"goLQ")+'</div>'+nvb("subs")}
-else{$("app").innerHTML=bar("📝 "+QSN[QSB][0],1)+'<div class="col"><p class="sub">اختر مستوى الاختبار — ٩ أسئلة تُسحب عشوائياً من بنك الأسئلة</p>'+[0,1,2,3].map(function(l){return lvCard(l,l>2?null:POOL(QSB,l).length,"startQL")}).join("")+'</div>'+nvb("quiz")}
+else{$("app").innerHTML=bar("📝 "+QSN[QSB][0],1)+'<div class="col"><p class="sub">اختر مستوى الاختبار — ٩ أسئلة تُسحب عشوائياً من بنك الأسئلة</p>'+[0,1,2,3].map(function(l){return lvCard(l,l>2?null:Math.min(9,POOL(QSB,l).length),"startQL")}).join("")+'</div>'+nvb("quiz")}
 window.scrollTo(0,0);mdraw()};
 var AV="";try{AV=localStorage.getItem("pcbAv")||""}catch(e){}
 var AVD=[["👦🏻","#1E6FD9","#5C9BFF"],["👦🏽","#D92B2B","#FF8A8A"],["👦🏼","#7c3aed","#b794f6"],["👨🏻‍🎓","#1f9d55","#6fd39a"],["👨🏽‍🎓","#F07A0A","#ffc069"],["👨🏻‍🔬","#0d9488","#5eead4"],["👨🏽‍🔬","#c026d3","#f0abfc"],["👨🏻‍🏫","#a8743a","#e0b97a"],["⚛️","#1E6FD9","#7dd3fc"],["🧬","#7c3aed","#c4b5fd"],["🧪","#1f9d55","#86efac"],["🔭","#334155","#94a3b8"],["📚","#a8743a","#fcd34d"],["🚀","#D92B2B","#fdba74"],["🌙","#1e3a8a","#93c5fd"],["⭐","#F07A0A","#fde047"]];
