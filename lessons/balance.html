@@ -311,8 +311,9 @@ function buildPQ(){const box=$('pq');box.innerHTML='';
 function score(){let sc=0,an=0;PQ.forEach((q,i)=>{const r=ANS['b:pq:'+i];if(r){an++;if(r.k===q.a)sc++}});$('pscore').textContent=an===PQ.length?'نتيجتك: '+sc+' من '+PQ.length+' 🔒':''}
 function refresh(){buildPQ();renderEq()}
 
-document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',String(x===b)));['bal','calc'].forEach(id=>{const s=$(id);s.classList.toggle('hidden',id!==b.dataset.t);if(id===b.dataset.t){s.classList.remove('pane');void s.offsetWidth;s.classList.add('pane')}});VW.forEach(v=>v.dirty=true);window.scrollTo({top:0,behavior:'smooth'})});
-buildEqs();buildBalance();buildCalc();buildPQ();
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',String(x===b)));['bal','calc'].forEach(id=>{const s=$(id);s.classList.toggle('hidden',id!==b.dataset.t);if(id===b.dataset.t){s.classList.remove('pane');void s.offsetWidth;s.classList.add('pane')}});if(b.dataset.t==='calc')ensureCalc();VW.forEach(v=>v.dirty=true);window.scrollTo({top:0,behavior:'smooth'})});
+let calcBuilt=false;function ensureCalc(){if(!calcBuilt){calcBuilt=true;buildCalc()}}
+buildEqs();buildBalance();buildPQ();
 loadEq(Math.max(0,EQS.findIndex((e,i)=>!ANS[eqKey(i)])));
 </script>
 </body>

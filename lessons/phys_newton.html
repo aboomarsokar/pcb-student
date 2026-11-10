@@ -42,7 +42,7 @@ const g_=10;
 /* ---- مختبر القوى ---- */
 let M=5,F=20,MU=.1,cx=0,cv=0,lt=0;
 const lc=P.canvas($('lst'));
-lc.anim=t=>{const dt=Math.min(.04,(t-lt)/1000);lt=t;if(dt<=0)return false;const N=M*g_,fmax=MU*N;let net;if(Math.abs(cv)<.02){if(Math.abs(F)<=fmax){net=0;cv=0}else net=F-Math.sign(F)*fmax}else net=F-Math.sign(cv)*fmax;const a=net/M;const nv=cv+a*dt;if(cv!==0&&Math.sign(nv)!==Math.sign(cv)&&Math.abs(F)<=fmax){cv=0}else cv=nv;cx+=cv*dt;if(Math.abs(cx)>1e3)cx=0;return true};
+let lq=0;lc.anim=t=>{const dt=Math.min(.04,(t-lt)/1000);lt=t;if(dt<=0)return false;if(t-lq>300){lq=t;lu()}const N=M*g_,fmax=MU*N;let net;if(Math.abs(cv)<.02){if(Math.abs(F)<=fmax){net=0;cv=0}else net=F-Math.sign(F)*fmax}else net=F-Math.sign(cv)*fmax;const a=net/M;const nv=cv+a*dt;if(cv!==0&&Math.sign(nv)!==Math.sign(cv)&&Math.abs(F)<=fmax){cv=0}else cv=nv;cx+=cv*dt;if(Math.abs(cx)>1e3)cx=0;return true};
 function netF(){const N=M*g_,fmax=MU*N;if(Math.abs(cv)<.02)return Math.abs(F)<=fmax?0:F-Math.sign(F)*fmax;return F-Math.sign(cv)*fmax}
 lc.draw=(g,w,h)=>{const gy=h-70,bx=w/2-36;g.fillStyle=P.col('--soft');g.fillRect(0,gy+40,w,30);g.strokeStyle=P.col('--muted');g.lineWidth=2;for(let x=-((cx*20)%40);x<w;x+=40){g.beginPath();g.moveTo(x,gy+40);g.lineTo(x,gy+52);g.stroke()}
  g.fillStyle='#1565C0';P.rrect(g,bx,gy-10,72,50,8);g.fill();P.text(g,M+' كغم',bx+36,gy+15,{size:13,color:'#fff'});g.fillStyle='#263238';g.beginPath();g.arc(bx+14,gy+42,7,0,7);g.arc(bx+58,gy+42,7,0,7);g.fill();
@@ -56,7 +56,7 @@ function lu(){M=+$('m').value;F=+$('f').value;MU=+$('mu').value/100;$('mv').text
  st.appendChild(mk('div','','الوزن و = ك × جـ = '+M+' × 10 = <b>'+N+' ن</b>، والقوة العمودية = الوزن (عمودية دائماً على السطح).'));
  st.appendChild(mk('div','','الاحتكاك الأقصى = '+MU.toFixed(2)+' × '+N+' = <b>'+(MU*N).toFixed(1)+' ن</b> يعاكس اتجاه الحركة.'));
  st.appendChild(mk('div','','محصلة القوى الأفقية ≈ <b>'+n.toFixed(1)+' ن</b> ⇒ ت = ق ÷ ك = <b>'+a.toFixed(2)+' م/ث²</b> باتجاه المحصلة.'));}
-['m','f','mu'].forEach(i=>$(i).oninput=lu);$('rs').onclick=()=>{cx=0;cv=0};lu();setInterval(lu,400);
+['m','f','mu'].forEach(i=>$(i).oninput=lu);$('rs').onclick=()=>{cx=0;cv=0};lu();
 /* ---- القانون الأول ---- */
 let n1k=0,px=30,pvv=0,n1l=0;const n1c=$('n1c');[['no','سطح أملس (بلا احتكاك)'],['yes','سطح خشن']].forEach((m,i)=>{const b=mk('button',i===0?'on':'',m[1]);b.onclick=()=>{n1k=i;[...n1c.children].forEach((x,j)=>x.classList.toggle('on',j===i));px=30;pvv=0;n1u()};n1c.appendChild(b)});
 const n1=P.canvas($('n1s'));
