@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>الهيدروكربونات</title><base href="../"></head>
+<body><main>
+<h1>🛢️ الهيدروكربونات</h1>
+<div class="tabs" id="tabs"></div>
+<section id="wk" class="pane">
+  <div class="card">
+    <h2>🧪 ورشة الجزيئات</h2>
+    <p class="hint" style="margin:0">ابنِ ألكاناً أو ألكيناً: اختر النوع وعدد ذرات الكربون، واسحب الجزيء لتديره.</p>
+    <div class="chips" id="kind"></div>
+    <div class="row"><label>ذرات الكربون:</label><input type="range" id="nr" min="1" max="8" value="3"><span class="val" id="nv"></span></div>
+    <div class="stage3" id="mst" style="height:300px"></div>
+    <div class="leg"><span><b style="color:#37474f">●</b> كربون</span><span><b style="color:#9aa3aa">●</b> هيدروجين</span></div>
+    <div class="steps" id="mstep" style="margin-top:10px"></div>
+  </div>
+</section>
+<section id="br" class="pane hidden">
+  <div class="card">
+    <h2>🧴 كاشف البروم</h2>
+    <p class="hint" style="margin:0">للتمييز بين الألكان والألكين: أضف محلول البروم الأحمر إلى كل أنبوب.</p>
+    <div class="row" style="justify-content:center"><button class="main" id="addbr">💧 أضف محلول البروم</button></div>
+    <div class="stage3" id="bst" style="height:280px"></div>
+    <div class="fb" id="brtxt">اضغط «أضف محلول البروم».</div>
+  </div>
+</section>
+<section id="src" class="pane hidden">
+  <div class="card"><h2>🏭 المصادر والبلمرة</h2><div class="steps">
+   <div>الكربون من أكثر العناصر انتشاراً، وله متآصلات أشهرها الجرافيت (طبقات تنفصل بسهولة) والماس (الأكثر قساوة).</div>
+   <div>الهيدروكربونات مركبات من الكربون والهيدروجين فقط، ومصدرها الرئيس: النفط (الأهم)، والغاز الطبيعي، والصخر الزيتي.</div>
+   <div>التقطير التجزيئي: فصل مكونات المخلوط حسب درجات غليانها.</div>
+   <div>الألكانات (CₙH₂ₙ₊₂): مشبعة بروابط أحادية، لا تذوب في الماء، وتزداد درجة غليانها بزيادة عدد ذرات الكربون. تفاعلاتها: الاحتراق والاستبدال مع الهالوجينات.</div>
+   <div>الألكينات (CₙH₂ₙ): غير مشبعة فيها رابطة ثنائية. تفاعلاتها: الاحتراق والإضافة (الهدرجة بوجود Ni أو Pt، وإضافة الهالوجين).</div>
+   <div>البلمرة: اتحاد عدد كبير من المونومرات لتكوين البوليمر. صناعية: البولي إيثيلين (من الإيثيلين) وPVC (من فينيل كلوريد). وطبيعية: السليلوز (القطن) والنشا (البطاطا والأرز والقمح).</div></div></div>
+</section>
+<section id="qz" class="pane hidden">
+  <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
+</section>
+</main>
+<script src="lib/three.min.js"></script><script src="lib/c3d.js"></script>
+<script>
+C3D.init({ns:'hc',accent:'#D32F2F',accentDark:'#EF5350'});
+const T=C3D.T,$=C3D.$,mk=C3D.mk;
+const PRE=['ميث','إيث','بروب','بيوت','بنت','هكس','هبت','أوكت'];
+let kind='ane',n=3,grp=null;
+const mv=C3D.viewer($('mst'),{yaw:-12,pitch:14,r:20,ty:0,floor:false,maxYaw:180,rmin:8,rmax:44,auto:.15});
+function Hs(i,o,dbl){const first=i===0,last=i===n-1;
+  if(n===1)return [[.9,.9,.9],[.9,-.9,-.9],[-.9,.9,-.9],[-.9,-.9,.9]];
+  if(dbl&&first)return [[-.78,-.05,.82],[-.78,-.05,-.82]];
+  if(dbl&&i===1&&last)return [[.78,.05,.82],[.78,.05,-.82]];
+  if(dbl&&i===1)return [[0,o*.95,0]];
+  const a=[[0,o*.85,.78],[0,o*.85,-.78]];
+  if(first)a.push([-.92,-o*.2,0]);
+  if(last)a.push([.92,-o*.2,0]);
+  return a}
+function rebuild(){if(!mv)return;if(grp)mv.scene.remove(grp);grp=new T.Group();
+  const dx=1.28,P=[];for(let i=0;i<n;i++)P.push(new T.Vector3((i-(n-1)/2)*dx,(i%2?.46:-.46),0));
+  const dbl=kind==='ene';
+  P.forEach(p=>grp.add(C3D.atom('C',p.x,p.y,p.z,.62)));
+  for(let i=0;i<n-1;i++){const A=P[i],B=P[i+1];if(dbl&&i===0){[-.2,.2].forEach(o=>grp.add(C3D.bond(A.clone().add(new T.Vector3(0,0,o)),B.clone().add(new T.Vector3(0,0,o)),.1)))}else grp.add(C3D.bond(A,B,.14))}
+  let hc=0;
+  for(let i=0;i<n;i++){const o=i%2?1:-1;Hs(i,o,dbl).forEach(d=>{const hp=P[i].clone().add(new T.Vector3(d[0],d[1],d[2]));grp.add(C3D.atom('H',hp.x,hp.y,hp.z,.42));grp.add(C3D.bond(P[i],hp,.09));hc++})}
+  mv.scene.add(grp);mv.r=Math.max(12,n*2.7+8);mv.dirty=true;
+  const name=n===1?'ميثان':kind==='ane'?PRE[n-1]+'ان':PRE[n-1]+'ين';
+  const f=kind==='ane'?'C'+n+'H'+(2*n+2):'C'+n+'H'+(2*n);
+  $('nv').textContent=n;
+  const st=$('mstep');st.innerHTML='';
+  st.appendChild(mk('div','','الاسم: <b>'+name+'</b> = مقطع عدد ذرات الكربون «'+PRE[n-1]+'» + «'+(kind==='ane'?'ان':'ين')+'».'));
+  st.appendChild(mk('div','','الصيغة الجزيئية: <b class="ltr">'+f.replace(/(\d+)/g,'<sub>$1</sub>')+'</b> من الصيغة العامة '+(kind==='ane'?'C<sub>n</sub>H<sub>2n+2</sub>':'C<sub>n</sub>H<sub>2n</sub>')+'.'));
+  st.appendChild(mk('div','',kind==='ane'?'هيدروكربون <b>مشبع</b>: روابطه أحادية فقط.':'هيدروكربون <b>غير مشبع</b>: فيه رابطة ثنائية (بين الكربونين الأول والثاني).'));
+  st.appendChild(mk('div','','عدد ذرات الهيدروجين في النموذج = <b>'+hc+'</b>'+(hc===(kind==='ane'?2*n+2:2*n)?' ✓ يطابق الصيغة.':'')))}
+['ane','ene'].forEach(k=>{const b=mk('button',k===kind?'on':'',k==='ane'?'ألكان (مشبع)':'ألكين (غير مشبع)');b.onclick=()=>{kind=k;if(k==='ene'&&n<2){n=2;$('nr').value=2}$('nr').min=k==='ene'?2:1;[...$('kind').children].forEach(x=>x.classList.toggle('on',x===b));rebuild()};$('kind').appendChild(b)});
+$('nr').oninput=()=>{n=+$('nr').value;rebuild()};rebuild();
+/* كاشف البروم */
+const bv=C3D.viewer($('bst'),{yaw:-10,pitch:10,r:22,ty:4.6,maxYaw:40,rmin:12,rmax:44});
+let tub=[],brm={t:0,g:0};
+if(bv){const sc=bv.scene;sc.add(C3D.mesh(new T.BoxGeometry(18,.7,7),C3D.std(0x37474f,.55,.3),0,-.35,0));
+  [-4.2,4.2].forEach((x,i)=>{const g=new T.Group();g.position.x=x;sc.add(g);g.add(C3D.mesh(C3D.lathe([[0,0],[1.7,0],[2,.3],[2,9],[2.25,9.2],[2,9.4],[0,9.4]].map(a=>[a[0],a[1]]),48),C3D.glass(0xdff1ff,.2),0,0,0,false));
+    const liq=C3D.mesh(new T.CylinderGeometry(1.85,1.55,4.8,40),new T.MeshPhysicalMaterial({color:0xeaf3f8,roughness:.05,transparent:true,opacity:.6,clearcoat:1}),0,2.6,0,false);g.add(liq);
+    const lb=C3D.plane(i===0?'ألكان':'ألكين',4,1.3,{pw:256,ph:90,size:46,color:'#fff',bg:i===0?'#546e7a':'#6a1b9a'});lb.position.set(0,-.1,3.1);lb.rotation.x=-.4;g.add(lb);tub.push({g,liq,c:0xeaf3f8,cur:new T.Color(0xeaf3f8)})});
+  const dr=C3D.mesh(new T.CylinderGeometry(.5,.9,2,24),C3D.glass(0xffd0d0,.5),0,13.5,0,false);dr.userData.noPick=1;sc.add(dr);const red=C3D.mesh(new T.CylinderGeometry(.42,.7,1.5,24),C3D.std(0xd32f2f,.3),0,13.4,0,false);sc.add(red);brm.dr=[dr,red];
+  bv.onframe=()=>{let ch=false;const d=brm.g-brm.t;if(Math.abs(d)>.002){brm.t+=d*.04;ch=true}else brm.t=brm.g;
+    const red=new T.Color(0xe0442a),clear=new T.Color(0xeaf3f8),bl=new T.Color(0xe0442a);
+    tub[0].liq.material.color.copy(clear).lerp(red,Math.min(1,brm.t*1.6));
+    const k=Math.max(0,Math.min(1,(brm.t-.4)/.6));tub[1].liq.material.color.copy(red).lerp(clear,k);if(brm.t<.4)tub[1].liq.material.color.copy(clear).lerp(red,Math.min(1,brm.t/.4));
+    brm.dr.forEach(m=>m.visible=brm.t<.05||brm.t>=.05&&brm.t<.98?true:false);return ch}}
+$('addbr').onclick=()=>{brm.g=1;$('addbr').disabled=true;setTimeout(()=>{$('brtxt').innerHTML='<b>الألكان</b>: بقي لون البروم الأحمر دون تغيّر. <b>الألكين</b>: زال لون البروم لأنه تفاعل مع الرابطة الثنائية (تفاعل إضافة). فنميّز بذلك بين الألكان والألكين.'},2600)};
+C3D.quiz('qbox','qscore','q',[
+ {q:'الصيغة العامة للألكانات:',o:['CₙH₂ₙ','CₙH₂ₙ₊₂','CₙH₂ₙ₋₂','CₙHₙ'],a:1,e:'الألكانات مشبعة وصيغتها العامة CₙH₂ₙ₊₂، والألكينات CₙH₂ₙ.'},
+ {q:'ما الصيغة الجزيئية للبروبان (3 ذرات كربون)؟',o:['C₃H₆','C₃H₈','C₃H₄','C₄H₁₀'],a:1,e:'C₃H₂×₃₊₂ = C₃H₈.'},
+ {q:'ما الذي يميّز الألكينات؟',o:['روابط أحادية فقط','وجود رابطة ثنائية واحدة على الأقل','لا تحتوي هيدروجين','تذوب في الماء'],a:1,e:'الألكينات غير مشبعة فيها رابطة ثنائية واحدة على الأقل.'},
+ {q:'كيف نميّز بين الألكان والألكين؟',o:['بالرائحة فقط','بمحلول البروم الأحمر: يزول لونه مع الألكين ولا يتغير مع الألكان','بالتبخير','بالوزن'],a:1,e:'محلول البروم الأحمر يزول لونه مع الألكين ولا يتغير مع الألكان.'},
+ {q:'ما التفاعلات المميزة للألكينات؟',o:['الإضافة (كالهدرجة وإضافة الهالوجين)','الاستبدال فقط','التعادل','الترسيب'],a:0,e:'تفاعلات الألكينات: الاحتراق والإضافة (الهدرجة بوجود Ni أو Pt، وإضافة الهالوجين).'},
+ {q:'البلمرة هي:',o:['فصل مكونات النفط','اتحاد عدد كبير من المونومرات لتكوين بوليمر','احتراق الهيدروكربون','إضافة الهيدروجين للألكين'],a:1,e:'البلمرة تفاعل يتحد فيه عدد كبير من المونومرات لتكوين البوليمر، كالبولي إيثيلين من الإيثيلين.'}
+]);
+C3D.tabs([{id:'wk',l:'🧪 ورشة الجزيئات'},{id:'br',l:'🧴 كاشف البروم'},{id:'src',l:'🏭 المصادر والبلمرة'},{id:'qz',l:'✍️ أسئلة'}]);
+</script></body></html>

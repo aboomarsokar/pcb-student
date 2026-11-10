@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>قوانين الاتحاد الكيميائي</title><base href="../"></head>
+<body><main>
+<h1>⚗️ قوانين الاتحاد الكيميائي</h1>
+<div class="tabs" id="tabs"></div>
+<section id="mass" class="pane">
+  <p class="hint">مختبر الموازين: الدورق مغلق (نظام مغلق). اضغط «ابدأ التفاعل» وراقب قراءة الميزان قبل التفاعل وبعده.</p>
+  <div class="chips" id="rx"></div>
+  <div class="stage3" id="lst" style="height:300px"></div>
+  <div class="row" style="justify-content:center"><button class="main" id="go">⚗️ ابدأ التفاعل</button><button id="back">↺ إعادة المشهد</button></div>
+  <div class="card info" id="linfo"></div>
+</section>
+<section id="prop" class="pane hidden">
+  <div class="card">
+    <h2>📊 قانون النسب الثابتة</h2>
+    <p class="hint" style="margin:0">اختر المركب ثم مصدر تحضيره: ستبقى نسب كتل العناصر ثابتة مهما اختلف المصدر.</p>
+    <div class="chips" id="cp"></div>
+    <div class="chips" id="src"></div>
+    <div class="stage3" id="pst" style="height:280px"></div>
+    <div class="steps" id="pstep" style="margin-top:10px"></div>
+  </div>
+</section>
+<section id="sig" class="pane hidden">
+  <div class="card"><h2>🔎 دلالات حدوث التفاعل</h2>
+    <p class="hint" style="margin:0">العلامات التي تدل على أن المواد المتفاعلة تحولت إلى مواد جديدة ذات خواص مختلفة. ليس شرطاً أن تظهر كلها معاً.</p>
+    <div class="steps"><div>تغير اللون.</div><div>تكون غاز.</div><div>تكون راسب.</div><div>تغير درجة الحرارة.</div><div>انبعاث ضوء.</div><div>ظهور رائحة جديدة.</div></div></div>
+</section>
+<section id="qz" class="pane hidden">
+  <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
+</section>
+</main>
+<script src="lib/three.min.js"></script><script src="lib/c3d.js"></script>
+<script>
+C3D.init({ns:'lw',accent:'#D32F2F',accentDark:'#EF5350'});
+const T=C3D.T,$=C3D.$,mk=C3D.mk,fm=C3D.fm;
+const RX=[
+ {n:'C + O₂ → CO₂',a:'carbon',before:[['الكربون C',12],['الأكسجين O₂',32]],after:[['ثاني أكسيد الكربون CO₂',44]],note:'12 + 32 = 44 غم. الكتلة قبل التفاعل = بعده.',col0:0x263238,col1:0xdde6ee,sig:'تكون غاز'},
+ {n:'الميثان + O₂ → CO₂ + H₂O',a:'meth',before:[['الميثان',32],['الأكسجين (المستهلك)',30]],after:[['CO₂',44],['H₂O',18]],note:'32 + ص = 44 + 18 = 62، فكتلة الأكسجين ص = 62 − 32 = 30 غم.',col0:0xdde6ee,col1:0xdde6ee,sig:'تغير درجة الحرارة وتكون غاز وماء'},
+ {n:'2KI + Pb(NO₃)₂ → PbI₂ + 2KNO₃',a:'ppt',before:[['KI + Pb(NO₃)₂ (محلولان)',100]],after:[['PbI₂ (راسب أصفر) + KNO₃',100]],note:'تغير اللون وتكون راسب، وكتل المواد قبل التفاعل وبعده تبقى ثابتة.',col0:0xcfe8f5,col1:0xcfe8f5,sig:'تغير اللون وتكون راسب'}
+];
+let cur=0,prog=0,tg=0,flask,liq,ptc=[],sc3,gasp=[];
+const lv=C3D.viewer($('lst'),{yaw:-14,pitch:14,r:30,ty:5,maxYaw:50,rmin:16,rmax:60});
+let digit=null,dtex=null;
+function disp(txt){const cv=document.createElement('canvas');cv.width=320;cv.height=128;const g=cv.getContext('2d');g.fillStyle='#10201a';g.fillRect(0,0,320,128);g.fillStyle='#7CFF9A';g.font='800 70px monospace';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,160,66);return cv}
+if(lv){sc3=lv.scene;
+  sc3.add(C3D.mesh(new T.BoxGeometry(12,1.6,10),C3D.phys(0xdfe4e8,.3,.2),0,.8,0));
+  const pl=C3D.mesh(new T.CylinderGeometry(4.2,4.2,.4,48),C3D.std(0xb0b8bf,.25,1),0,1.8,0);sc3.add(pl);
+  digit=new T.Mesh(new T.PlaneGeometry(5.2,2),new T.MeshBasicMaterial({color:0xffffff}));digit.position.set(0,.8,5.06);sc3.add(digit);
+  dtex=new T.CanvasTexture(disp('0.0'));dtex.colorSpace=T.SRGBColorSpace;digit.material.map=dtex;digit.material.needsUpdate=true;
+  flask=new T.Group();flask.position.y=2;sc3.add(flask);
+  const glassG=C3D.lathe([[0,0],[3.6,0],[4.2,.3],[4.6,2.8],[1.5,6.2],[1.4,9],[1.7,9.3],[0,9.3]].map(a=>[a[0],a[1]]),64);
+  flask.add(C3D.mesh(glassG,C3D.glass(0xbfe3ff,.22),0,0,0,false));
+  const stop=C3D.mesh(new T.CylinderGeometry(1.5,1.2,1.2,30),C3D.std(0x8d6e63,.7),0,9.5,0);flask.add(stop);
+  liq=C3D.mesh(new T.CylinderGeometry(3.4,3.4,2.2,48),new T.MeshPhysicalMaterial({color:0x90caf9,roughness:.05,transparent:true,opacity:.7,clearcoat:1}),0,1.2,0,false);flask.add(liq);
+  for(let i=0;i<60;i++){const m=C3D.mesh(new T.SphereGeometry(.14+Math.random()*.08,10,8),C3D.std(0xf2c500,.8),(Math.random()-.5)*5,5,(Math.random()-.5)*5);m.visible=false;m.userData={x:m.position.x,z:m.position.z,d:Math.random()};flask.add(m);ptc.push(m)}
+  for(let i=0;i<22;i++){const g=new T.Mesh(new T.SphereGeometry(.2+Math.random()*.15,10,8),new T.MeshPhysicalMaterial({color:0xeef3f7,transparent:true,opacity:.6,roughness:.1,clearcoat:1}));g.visible=false;g.userData={x:(Math.random()-.5)*4,z:(Math.random()-.5)*4,y:Math.random()*6,s:.03+Math.random()*.03};flask.add(g);gasp.push(g)}
+  lv.onframe=()=>{let ch=false;const d=tg-prog;if(Math.abs(d)>.002){prog+=d*.06;ch=true}else prog=tg;
+    const r=RX[cur];
+    if(r.a==='carbon'){liq.visible=false;liq.material.color.setHex(0x263238);gasp.forEach(g=>{g.visible=prog>.1;if(g.visible){g.userData.y+=g.userData.s;if(g.userData.y>7)g.userData.y=.5;g.position.set(g.userData.x,1+g.userData.y*.9,g.userData.z)}});ch=ch||prog>.1}
+    else if(r.a==='meth'){liq.visible=prog>.6;liq.material.color.setHex(0xaed9f5);liq.scale.y=Math.max(.01,(prog-.6)/.4);gasp.forEach(g=>{g.visible=true;g.userData.y+=g.userData.s;if(g.userData.y>7)g.userData.y=.5;g.position.set(g.userData.x,1+g.userData.y*.9,g.userData.z)});ch=true}
+    else{liq.visible=true;liq.scale.y=1;liq.material.color.setHex(prog<.3?0xcfe8f5:0xf6e27a);liq.material.opacity=.7;gasp.forEach(g=>g.visible=false);ptc.forEach(m=>{const v=prog>.35;m.visible=v;if(v){const k=Math.min(1,(prog-.35)/.65)*m.userData.d+Math.min(1,(prog-.35)/.65)*.2;m.position.set(m.userData.x,3.2-k*2.4,m.userData.z)}})}
+    return ch};
+}
+function setMass(){const r=RX[cur],tot=(prog<.5?r.before:r.after).reduce((s,x)=>s+x[1],0);if(dtex){dtex.image=disp(tot.toFixed(1)+' g');dtex.needsUpdate=true}}
+let last=-1;
+function tickInfo(){}
+function info(){const r=RX[cur],b=r.before.reduce((s,x)=>s+x[1],0),a=r.after.reduce((s,x)=>s+x[1],0);
+  $('linfo').innerHTML='<h2 class="ltr" style="text-align:center">'+fm(r.n).replace(/₂/g,'<sub>2</sub>').replace(/₃/g,'<sub>3</sub>')+'</h2>'+
+  '<p><span class="tag">قبل التفاعل</span>'+r.before.map(x=>x[0]+' = '+x[1]+' غم').join(' + ')+' ← <b>'+b+' غم</b></p>'+
+  '<p><span class="tag">بعد التفاعل</span>'+r.after.map(x=>x[0]+' = '+x[1]+' غم').join(' + ')+' ← <b>'+a+' غم</b></p>'+
+  '<div class="warn">'+r.note+'</div><p><span class="tag">دلالة التفاعل</span>'+r.sig+'</p>'+
+  '<div class="warn">قانون حفظ الكتلة: كتلة المواد المتفاعلة = كتلة المواد الناتجة في نظام مغلق. المواد لا تفنى ولا تظهر من العدم، وإنما تعيد ترتيب نفسها: تتفكك ثم ترتبط بطريقة جديدة فتكوّن مواد جديدة.</div>'}
+function reset(){tg=0;prog=0;last=-1;$('go').disabled=false;setMass();if(lv)lv.dirty=true}
+const rxb=$('rx');RX.forEach((r,i)=>{const b=mk('button','',r.n);b.onclick=()=>{cur=i;[...rxb.children].forEach((x,j)=>x.classList.toggle('on',j===i));reset();info()};rxb.appendChild(b)});rxb.children[0].classList.add('on');
+$('go').onclick=()=>{tg=1;$('go').disabled=true;setTimeout(()=>{setMass()},900)};$('back').onclick=()=>{reset()};
+setMass();info();
+/* ---------- النسب الثابتة ---------- */
+const CPD={
+ 'H₂O (الماء)':{el:[['H',2],['O',16]],tot:18,src:['من التحليل الكهربائي للماء','من احتراق الهيدروجين'],txt:'كتلة جزيء الماء = 16 + 2 = 18'},
+ 'NH₃ (الأمونيا)':{el:[['H',3],['N',14]],tot:17,src:['من 2NH₄Cl + Ca(OH)₂ → CaCl₂ + 2NH₃ + H₂O','من N₂ + 3H₂ → 2NH₃'],txt:'كتلة NH₃ = 14 + 3 = 17'},
+ 'سكر السكروز':{el:[['C',42],['H',6.5],['O',51.5]],tot:100,src:['سكر قصب السكر','سكر الشمندر السكري','سكر البطاطا الحلوة'],txt:'نسبة الأكسجين في سكر البطاطا الحلوة = 100% − (6.5% + 42%) = 51.5%',pct:true}
+};
+const ecol={H:0xf5f5f5,O:0xe53935,N:0x3f6fe0,C:0x37474f};
+let pk='H₂O (الماء)',ps=0,seg=[];
+const pv=C3D.viewer($('pst'),{yaw:-18,pitch:12,r:26,ty:4.4,maxYaw:55,rmin:14,rmax:50});
+function buildStack(){if(!pv)return;seg.forEach(s=>pv.scene.remove(s.m));seg=[];const d=CPD[pk];let y=0;
+  d.el.forEach(e=>{const pct=d.pct?e[1]:e[1]/d.tot*100,h=pct/100*8;const m=C3D.mesh(new T.CylinderGeometry(2.1,2.1,1,48),C3D.phys(ecol[e[0]],.3,.05),0,y+.01,0);m.scale.y=.01;pv.scene.add(m);seg.push({m,h,y,cur:.01});y+=h});
+  [3.2].forEach(x=>{});pv.dirty=true}
+if(pv){pv.scene.add(C3D.mesh(new T.CylinderGeometry(4.2,4.4,.5,48),C3D.std(0x37474f,.5,.3),0,-.25,0));pv.onframe=()=>{let ch=false;seg.forEach(s=>{const d=s.h-s.cur;if(Math.abs(d)>.01){s.cur+=d*.15;ch=true}else s.cur=s.h;s.m.scale.y=Math.max(.01,s.cur);s.m.position.y=s.y+s.cur/2});return ch}}
+function buildProp(){const d=CPD[pk],S=$('pstep');S.innerHTML='';
+  d.el.forEach(e=>{const pct=d.pct?e[1]:e[1]/d.tot*100;S.appendChild(mk('div','','<b style="color:#'+ecol[e[0]].toString(16).padStart(6,'0')+'">■</b> نسبة '+e[0]+' = '+(d.pct?e[1]:(e[1]*(e[0]==='O'||e[0]==='N'?1:1))+' ÷ '+d.tot+' × 100')+' = <b>'+pct.toFixed(1)+'%</b>'))});
+  S.appendChild(mk('div','',d.txt+'. مجموع النسب = <b>100%</b>.'));
+  S.appendChild(mk('div','','<b>'+d.src[ps]+':</b> النسب هي نفسها. فخصائص المركب لا تختلف باختلاف طريقة تحضيره لأنهما ينتجان المركب نفسه.'));buildStack()}
+function drawChips(){const cp=$('cp');cp.innerHTML='';Object.keys(CPD).forEach(k=>{const b=mk('button',k===pk?'on':'',k);b.onclick=()=>{pk=k;ps=0;drawChips();drawSrc();buildProp()};cp.appendChild(b)})}
+function drawSrc(){const s=$('src');s.innerHTML='';CPD[pk].src.forEach((x,i)=>{const b=mk('button',i===ps?'on':'',x);b.onclick=()=>{ps=i;drawSrc();buildProp()};s.appendChild(b)})}
+drawChips();drawSrc();buildProp();
+C3D.quiz('qbox','qscore','q',[
+ {q:'ينص قانون حفظ الكتلة على أن كتلة المواد المتفاعلة:',o:['أكبر من كتلة النواتج','تساوي كتلة المواد الناتجة في نظام مغلق','أصغر من كتلة النواتج','تتغير بحسب سرعة التفاعل'],a:1,e:'كتلة المتفاعلات = كتلة النواتج في نظام مغلق.'},
+ {q:'تفاعل 12 غم كربون مع 32 غم أكسجين. كم كتلة CO₂ الناتج؟',o:['20 غم','44 غم','32 غم','12 غم'],a:1,e:'12 + 32 = 44 غم.'},
+ {q:'تفاعل 32 غم ميثان مع كمية من الأكسجين فنتج 44 غم CO₂ و18 غم ماء. ما كتلة الأكسجين المستهلكة؟',o:['62 غم','30 غم','18 غم','44 غم'],a:1,e:'32 + ص = 44 + 18 = 62، فص = 62 − 32 = 30 غم.'},
+ {q:'ما النسبة المئوية لكتلة الهيدروجين في الماء؟ (H = 1، O = 16)',o:['88.9%','50%','11.1%','16%'],a:2,e:'(2 × 1) ÷ 18 × 100% = 11.1%.'},
+ {q:'ينص قانون النسب الثابتة على أن نسب كتل العناصر في المركب:',o:['تتغير حسب مصدره','تبقى ثابتة مهما اختلفت طريقة تحضيره أو مصدره','تتغير بالحرارة','تساوي 50% لكل عنصر'],a:1,e:'مهما اختلف تحضير المركب أو مصدره، فإن نسب كتل عناصره ثابتة.'},
+ {q:'في 2KI + Pb(NO₃)₂ → PbI₂ + 2KNO₃ ما دلائل حدوث التفاعل؟',o:['تغير اللون وتكون راسب','لا دلائل','انبعاث ضوء فقط','تكون غاز فقط'],a:0,e:'تغير اللون وتكون راسب، وكتل المواد قبل التفاعل وبعده ثابتة.'}
+]);
+C3D.tabs([{id:'mass',l:'⚖️ حفظ الكتلة'},{id:'prop',l:'📊 النسب الثابتة'},{id:'sig',l:'🔎 دلالات التفاعل'},{id:'qz',l:'✍️ أسئلة'}],id=>{if(id==='prop'&&pv)pv.dirty=true});
+</script></body></html>

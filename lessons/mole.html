@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>المول والكتلة المولية والحجم المولي</title><base href="../"></head>
+<body><main>
+<h1>🧮 المول والكتلة المولية</h1>
+<div class="tabs" id="tabs"></div>
+<section id="mol" class="pane">
+  <div class="card">
+    <h2>🔢 عدّاد المول</h2>
+    <p class="hint" style="margin:0">اختر مادة وحرّك الكتلة: ترى الموالت وعدد الجسيمات والحجم (للغازات) يتغيّر.</p>
+    <div class="chips" id="sub"></div>
+    <div class="row"><label>الكتلة:</label><input type="range" id="mr" min="1" max="200" value="56"><span class="val" id="mv"></span></div>
+    <div class="stage3" id="mst" style="height:300px"></div>
+    <div class="steps" id="mstep" style="margin-top:10px"></div>
+  </div>
+</section>
+<section id="cube" class="pane hidden">
+  <div class="card">
+    <h2>🧊 الحجم المولي للغازات</h2>
+    <p class="hint" style="margin:0">في الظروف المعيارية STP (ضغط 1 جوي، 0 °س) مول واحد من أي غاز يشغل 22.4 لتراً. حرّك عدد الموالت.</p>
+    <div class="row"><label>الموالت:</label><input type="range" id="nr" min="1" max="40" value="10"><span class="val" id="nv"></span></div>
+    <div class="stage3" id="cst" style="height:300px"></div>
+    <div class="warn">الحجم = عدد الموالت × 22.4 لتر. حجم الغاز يتغير بالحرارة والضغط، لذلك نستخدم الظروف المعيارية للحسابات.</div>
+  </div>
+</section>
+<section id="fac" class="pane hidden">
+  <div class="card"><h2>📘 العلاقات</h2><div class="steps">
+   <div>المول: كمية المادة التي تحتوي 6.023×10²³ جسيم (ذرة أو جزيء أو أيون)، وهو عدد أفوجادرو.</div>
+   <div>الكتلة المولية: كتلة مول واحد بوحدة غم/مول، وتساوي العدد الكتلي للعنصر تقريباً. وتعتمد على حالة العنصر: مول ذرات O كتلته 16 غم، ومول جزيئات O₂ كتلته 32 غم.</div>
+   <div>عدد الموالت = الكتلة (غم) ÷ الكتلة المولية (غم/مول).</div>
+   <div>الحجم = عدد الموالت × 22.4 لتر.</div></div></div>
+</section>
+<section id="qz" class="pane hidden">
+  <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
+</section>
+</main>
+<script src="lib/three.min.js"></script><script src="lib/c3d.js"></script>
+<script>
+C3D.init({ns:'mo',accent:'#D32F2F',accentDark:'#EF5350'});
+const T=C3D.T,$=C3D.$,mk=C3D.mk,fm=C3D.fm;
+const SUBS=[['Fe','الحديد Fe',56,0,'ذرة',0xa8582a],['O','ذرات الأكسجين O',16,0,'ذرة',0xe53935],['O₂','جزيئات الأكسجين O₂',32,1,'جزيء',0xe53935],['CaCO₃','كربونات الكالسيوم CaCO₃',100,0,'وحدة صيغة',0xe6e2d6],['CO₂','ثاني أكسيد الكربون CO₂',44,1,'جزيء',0x37474f]];
+let si=0;
+const mv=C3D.viewer($('mst'),{yaw:-16,pitch:16,r:34,ty:4.4,maxYaw:55,rmin:16,rmax:65});
+let mp=[],pil,cubeG,hs={mass:0,mol:0,t1:0,t2:0};
+if(mv){const sc=mv.scene;sc.add(C3D.mesh(new T.BoxGeometry(20,.7,9),C3D.std(0x37474f,.55,.3),0,-.35,0));
+  pil=C3D.mesh(new T.CylinderGeometry(2,2,1,48),C3D.phys(0xa8582a,.3,.6),-6,.5,0);sc.add(pil);
+  cubeG=new T.Group();cubeG.position.set(5.2,0,0);sc.add(cubeG);const wall=C3D.mesh(new T.BoxGeometry(8,8,8),C3D.glass(0xbfe3ff,.14),0,4,0,false);cubeG.add(wall);
+  const eg=new T.EdgesGeometry(new T.BoxGeometry(8,8,8));const ln=new T.LineSegments(eg,new T.LineBasicMaterial({color:0x78909c}));ln.position.y=4;cubeG.add(ln);
+  const gm=new T.SphereGeometry(.26,12,10);for(let i=0;i<220;i++){const m=new T.Mesh(gm,C3D.phys(0xa8582a,.25,.1));m.userData={x:(Math.random()-.5)*7.2,y:.3+Math.random()*7.2,z:(Math.random()-.5)*7.2,v:[Math.random()-.5,Math.random()-.5,Math.random()-.5]};m.visible=false;cubeG.add(m);mp.push(m)}
+  mv.onframe=()=>{const k=.12;hs.t1+=(hs.mass-hs.t1)*k;hs.t2+=(hs.mol-hs.t2)*k;pil.scale.y=Math.max(.05,hs.t1);pil.position.y=hs.t1/2;
+    const n=Math.min(mp.length,Math.round(hs.t2));mp.forEach((m,i)=>{m.visible=i<n;if(i<n){const u=m.userData;u.x+=u.v[0]*.03;u.y+=u.v[1]*.03;u.z+=u.v[2]*.03;['x','y','z'].forEach((a,j)=>{const lim=a==='y'?[.3,7.7]:[-3.6,3.6];if(u[a]<lim[0]||u[a]>lim[1])u.v[j]*=-1});m.position.set(u.x,u.y,u.z)}});return true}
+}
+function fmt(x){if(x>=1e5||x<.01)return x.toExponential(2).replace('e+','×10^').replace('e-','×10^-');return (Math.round(x*100)/100).toString()}
+function sup(s){return s.replace(/\^(-?\d+)/g,(m,e)=>'<sup>'+e+'</sup>')}
+function upd(){const s=SUBS[si],m=+$('mr').value,n=m/s[2];$('mv').textContent=m+' غم';
+  if(mv){hs.mass=Math.min(9,m/200*9+.2);hs.mol=Math.min(220,n*18+.5);pil.material.color.setHex(s[5]);mp.forEach(x=>x.material.color.setHex(s[5]));mv.dirty=true}
+  const st=$('mstep');st.innerHTML='';
+  st.appendChild(mk('div','','الكتلة المولية لـ'+s[1]+' = <b>'+s[2]+' غم/مول</b>.'));
+  st.appendChild(mk('div','','عدد الموالت = '+m+' ÷ '+s[2]+' = <b>'+fmt(n)+' مول</b>.'));
+  st.appendChild(mk('div','','عدد '+s[4]+'ات = '+fmt(n)+' × 6.023×10<sup>23</sup> = <b>'+sup(fmt(n*6.023e23).replace('×10^','×10^'))+'</b> '+s[4]+'.'));
+  if(s[3])st.appendChild(mk('div','','الحجم في STP = '+fmt(n)+' × 22.4 = <b>'+fmt(n*22.4)+' لتر</b>.'))}
+SUBS.forEach((s,i)=>{const b=mk('button',i===0?'on':'',s[1]);b.onclick=()=>{si=i;[...$('sub').children].forEach((x,j)=>x.classList.toggle('on',j===i));$('mr').value=s[2];upd()};$('sub').appendChild(b)});
+$('mr').oninput=upd;$('mr').value=56;upd();
+/* مكعب الحجم المولي */
+const cv=C3D.viewer($('cst'),{yaw:-20,pitch:16,r:30,ty:4.2,maxYaw:55,rmin:14,rmax:70});
+let cb=null,bs=[],ct={n:10,tn:10};
+if(cv){cv.scene.add(C3D.mesh(new T.BoxGeometry(22,.7,9),C3D.std(0x37474f,.55,.3),0,-.35,0));
+  cb=C3D.mesh(new T.BoxGeometry(1,1,1),C3D.glass(0x90caf9,.3),0,.5,0,false);cv.scene.add(cb);
+  cv.onframe=()=>{ct.n+=(ct.tn-ct.n)*.15;const s=Math.cbrt(ct.n*22.4/22.4)*2.6;cb.scale.set(s,s,s);cb.position.y=s/2;return Math.abs(ct.tn-ct.n)>.01}}
+function nupd(){const n=+$('nr').value;ct.tn=n;$('nv').textContent=n+' مول = '+(Math.round(n*22.4*10)/10)+' لتر';if(cv)cv.dirty=true}
+$('nr').oninput=nupd;nupd();
+C3D.quiz('qbox','qscore','q',[
+ {q:'المول يحتوي على عدد من الجسيمات يساوي:',o:['6.023×10²³','6.023×10⁻²³','22.4','100'],a:0,e:'المول يحتوي 6.023×10²³ جسيم، وهو عدد أفوجادرو.'},
+ {q:'كم عدد الذرات في 0.25 مول من الحديد Fe؟',o:['6×10²³','3×10²³','1.5×10²³','2.4×10²⁴'],a:2,e:'0.25 × 6.023×10²³ ≈ 1.5×10²³ ذرة.'},
+ {q:'ما الكتلة المولية لكربونات الكالسيوم CaCO₃؟',o:['40 غم/مول','56 غم/مول','100 غم/مول','44 غم/مول'],a:2,e:'الكتلة المولية لـ CaCO₃ = 100 غم/مول.'},
+ {q:'ما عدد موالت 50 غم من CaCO₃؟',o:['0.5 مول','2 مول','5 مول','50 مول'],a:0,e:'عدد الموالت = 50 ÷ 100 = 0.5 مول.'},
+ {q:'الحجم الذي يشغله مول واحد من أي غاز في STP يساوي:',o:['11.2 لتر','22.4 لتر','1 لتر','44 لتر'],a:1,e:'الحجم المولي في الظروف المعيارية 22.4 لتراً.'},
+ {q:'ما حجم 2 مول من غاز في STP؟',o:['22.4 لتر','11.2 لتر','44.8 لتر','2 لتر'],a:2,e:'الحجم = 2 × 22.4 = 44.8 لتر.'}
+]);
+C3D.tabs([{id:'mol',l:'🔢 عدّاد المول'},{id:'cube',l:'🧊 الحجم المولي'},{id:'fac',l:'📘 العلاقات'},{id:'qz',l:'✍️ أسئلة'}]);
+</script></body></html>

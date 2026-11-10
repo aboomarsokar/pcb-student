@@ -8,6 +8,7 @@
 - كلُّ قيمةٍ مثل  "videos/اسم.mp4"  داخل var VID تصير نصَّ base64 (تفكّه الدالة vurl).
 """
 import base64
+import json
 import re
 import sys
 from pathlib import Path
@@ -64,14 +65,21 @@ def main() -> None:
             jp = ROOT / mm.group(1)
             if not jp.is_file():
                 sys.exit(f"ملفٌّ مفقود: {jp.relative_to(ROOT)}")
-            return "<script>" + jp.read_text(encoding="utf-8").replace("</script", "<\\/script") + "</script>"
+            raw = jp.read_bytes()
+            if jp.suffix == ".js" and b"fonts/" in raw:
+                raw = FONT_REF.sub(inline_font, raw.decode("utf-8")).encode("utf-8")
+            libs[mm.group(1).split("/")[-1]] = base64.b64encode(raw).decode("ascii")
+            return "<!--LIB:" + mm.group(1).split("/")[-1] + "-->"
 
         t = SCRIPT_REF.sub(inline_js, t)
         t = IMG_REF.sub(inline_img, t)
         t = FONT_REF.sub(inline_font, t)
         return '"b64html:' + base64.b64encode(t.encode("utf-8")).decode("ascii") + '"'
 
+    libs: dict = {}
     html = LESSON_REF.sub(inline_lesson, html)
+    if libs:
+        html = html.replace("var LIBJS={};", "var LIBJS=" + json.dumps(libs) + ";", 1)
     html = IMG_REF.sub(inline_img, html)
     html = FONT_REF.sub(inline_font, html)
     html = VID_REF.sub(inline_vid, html)

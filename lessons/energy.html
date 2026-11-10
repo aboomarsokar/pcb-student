@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>الطاقة في التفاعلات الكيميائية</title><base href="../"></head>
+<body><main>
+<h1>🔥 الطاقة في التفاعلات</h1>
+<div class="tabs" id="tabs"></div>
+<section id="dg" class="pane">
+  <div class="card">
+    <h2>📈 مخطط الطاقة</h2>
+    <p class="hint" style="margin:0">اختر تفاعلاً وحرّك شريط التقدّم: يتحرك التفاعل بين المتفاعلات والنواتج وتتغير الحرارة.</p>
+    <div class="chips" id="rx"></div>
+    <div class="row"><label>التقدّم:</label><input type="range" id="pr" min="0" max="100" value="0"><span class="val" id="pv"></span></div>
+    <div class="stage3" id="dst" style="height:320px"></div>
+    <div class="steps" id="dstep" style="margin-top:10px"></div>
+  </div>
+</section>
+<section id="cal" class="pane hidden">
+  <div class="card">
+    <h2>🧮 حساب الطاقة</h2>
+    <p class="hint" style="margin:0">نحسب الموالت ثم نستخدم الحرارة المكتوبة للمول. من مثال الدرس: احتراق 5 أطنان فحم ≈ 1.64×10⁸ كيلو جول، أي ≈ 394 كيلو جول لكل مول كربون.</p>
+    <div class="row"><label>كتلة الفحم:</label><input type="range" id="cr" min="1" max="10" value="5"><span class="val" id="cv"></span></div>
+    <div class="stage3" id="kst" style="height:260px"></div>
+    <div class="steps" id="kstep" style="margin-top:10px"></div>
+  </div>
+</section>
+<section id="fac" class="pane hidden">
+  <div class="card"><h2>📘 المفاهيم</h2><div class="steps">
+   <div>تصاحب التفاعلات الكيميائية طاقة بأشكال مختلفة. قانون حفظ الطاقة: الطاقة لا تفنى ولا تُستحدث، والطاقة الكلية قبل التفاعل = بعده.</div>
+   <div>التفاعل <b>الطارد</b> للطاقة: يطلق طاقة، مثل تعادل HCl مع NaOH، وΔH سالبة.</div>
+   <div>التفاعل <b>الماص</b> للطاقة: يحتاج طاقة، مثل تحلل CaCO₃ بالحرارة، وΔH موجبة.</div>
+   <div>المحتوى الحراري H: تعبير عن الطاقة المخزنة في المادة. وحرارة التفاعل ΔH = H(النواتج) − H(المتفاعلات).</div>
+   <div>المعادلة الكيميائية الحرارية: معادلة موزونة يُذكر فيها مقدار الحرارة. في الطارد تُكتب الحرارة في جهة النواتج أو ΔH بإشارة سالبة، وفي الماص تُكتب في جهة المتفاعلات أو ΔH بإشارة موجبة.</div></div></div>
+</section>
+<section id="qz" class="pane hidden">
+  <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
+</section>
+</main>
+<script src="lib/three.min.js"></script><script src="lib/c3d.js"></script>
+<script>
+C3D.init({ns:'en',accent:'#D32F2F',accentDark:'#EF5350'});
+const T=C3D.T,$=C3D.$,mk=C3D.mk;
+const RX=[{n:'تعادل HCl مع NaOH (طارد)',exo:true,eq:'HCl + NaOH → NaCl + H<sub>2</sub>O + حرارة',h0:7,h1:3},{n:'تحلل CaCO₃ بالحرارة (ماص)',exo:false,eq:'CaCO<sub>3</sub> + حرارة → CaO + CO<sub>2</sub>',h0:3,h1:7}];
+let cur=0,pr=0,tg=0;
+const dv=C3D.viewer($('dst'),{yaw:-12,pitch:12,r:38,ty:4.6,maxYaw:50,rmin:18,rmax:70});
+const HW=8;let ball,pl0,pl1,path,l0,l1,liq,tw={t:0};
+function cy(t,r){const sm=t*t*(3-2*t);return r.h0+(r.h1-r.h0)*sm+Math.sin(Math.PI*t)*2.4}
+function buildPath(){if(!dv)return;if(path)dv.scene.remove(path);const r=RX[cur],pts=[];for(let i=0;i<=60;i++){const t=i/60;pts.push(new T.Vector3(-HW+2*HW*t,cy(t,r)+.5,0))}
+  path=C3D.mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts),120,.14,10,false),C3D.std(0xD32F2F,.4,.2),0,0,0);dv.scene.add(path);
+  pl0.scale.y=r.h0;pl0.position.y=r.h0/2;pl1.scale.y=r.h1;pl1.position.y=r.h1/2;l0.position.y=r.h0+1.1;l1.position.y=r.h1+1.1;dv.dirty=true}
+if(dv){const sc=dv.scene;sc.add(C3D.mesh(new T.BoxGeometry(26,.6,7),C3D.std(0x37474f,.55,.3),0,-.3,0));
+  pl0=C3D.mesh(new T.BoxGeometry(5,1,4),C3D.phys(0x1e88e5,.35,.05),-HW-.5,.5,0);sc.add(pl0);pl1=C3D.mesh(new T.BoxGeometry(5,1,4),C3D.phys(0x43a047,.35,.05),HW+.5,.5,0);sc.add(pl1);
+  l0=C3D.plane('المتفاعلات',4.6,1.4,{pw:300,ph:90,size:40,color:'#fff',bg:'#1565C0'});l0.position.set(-HW-.5,0,2.2);sc.add(l0);
+  l1=C3D.plane('النواتج',4.6,1.4,{pw:300,ph:90,size:40,color:'#fff',bg:'#2E7D32'});l1.position.set(HW+.5,0,2.2);sc.add(l1);
+  ball=C3D.mesh(new T.SphereGeometry(.7,28,20),C3D.phys(0xffb300,.2,.1),-HW,3,0);sc.add(ball);
+  // مقياس حرارة
+  const th=new T.Group();th.position.set(0,0,-3.2);sc.add(th);th.add(C3D.mesh(C3D.lathe([[0,0],[.5,0],[.5,6],[.35,6.4],[0,6.4]],24),C3D.glass(0xdff1ff,.25),0,0,0,false));
+  th.add(C3D.mesh(new T.SphereGeometry(.75,24,18),C3D.std(0xd32f2f,.3),0,.2,0));liq=C3D.mesh(new T.CylinderGeometry(.22,.22,1,16),C3D.std(0xd32f2f,.3),0,.7,0);th.add(liq);
+  const cL=C3D.plane('الحرارة',2.6,.9,{pw:200,ph:70,size:36,color:'#fff',bg:'#546e7a'});cL.position.set(0,6.9,0);th.add(cL);
+  dv.onframe=()=>{let ch=false;const d=tg-pr;if(Math.abs(d)>.002){pr+=d*.1;ch=true}else pr=tg;const r=RX[cur];ball.position.set(-HW+2*HW*pr,cy(pr,r)+.5+.7,0);
+    const temp=r.exo?pr:1-pr;const h=1.6+3.2*(r.exo?pr:1-pr);liq.scale.y=h;liq.position.y=h/2+.5;return ch}
+}
+function upd(){const r=RX[cur];tg=+$('pr').value/100;$('pv').textContent=Math.round(tg*100)+'%';
+  const e=r.exo,H0=r.h0*100,H1=r.h1*100;const st=$('dstep');st.innerHTML='';
+  st.appendChild(mk('div','','المعادلة: <b class="ltr">'+r.eq+'</b>'));
+  st.appendChild(mk('div','','المحتوى الحراري: H<sub>المتفاعلات</sub> أعلى من H<sub>النواتج</sub>'.replace('أعلى من',e?'أعلى من':'أقل من')));
+  st.appendChild(mk('div','','ΔH = H(النواتج) − H(المتفاعلات) '+(e?'<b>سالبة</b>: التفاعل <b>طارد</b> للطاقة، تنتقل الحرارة إلى الوسط فترتفع حرارته.':'<b>موجبة</b>: التفاعل <b>ماص</b> للطاقة، يمتص الحرارة من الوسط فتنخفض حرارته.')));
+  st.appendChild(mk('div','',e?'في المعادلة الحرارية تُكتب الحرارة في جهة <b>النواتج</b> (أو ΔH بإشارة سالبة).':'في المعادلة الحرارية تُكتب الحرارة في جهة <b>المتفاعلات</b> (أو ΔH بإشارة موجبة).'));if(dv)dv.dirty=true}
+RX.forEach((r,i)=>{const b=mk('button',i===0?'on':'',r.n);b.onclick=()=>{cur=i;[...$('rx').children].forEach((x,j)=>x.classList.toggle('on',j===i));buildPath();upd()};$('rx').appendChild(b)});
+$('pr').oninput=upd;buildPath();upd();
+/* حساب الطاقة */
+const kv=C3D.viewer($('kst'),{yaw:-14,pitch:16,r:26,ty:3,maxYaw:50,rmin:12,rmax:55});let coal=[],glow,kh={n:5,t:5};
+if(kv){const sc=kv.scene;sc.add(C3D.mesh(new T.BoxGeometry(18,.6,8),C3D.std(0x37474f,.55,.3),0,-.3,0));
+  for(let i=0;i<10;i++){const m=C3D.mesh(new T.DodecahedronGeometry(1.05,0),C3D.std(0x1a1a1a,.55,.1),-6+(i%5)*1.6,1+Math.floor(i/5)*1.9,(Math.floor(i/5)-.5)*0);m.rotation.set(i,i*2,i*3);sc.add(m);coal.push(m)}
+  glow=C3D.mesh(new T.SphereGeometry(1,32,24),new T.MeshBasicMaterial({color:0xff7a18,transparent:true,opacity:.85,blending:T.AdditiveBlending,depthWrite:false}),5.5,2.6,0,false);sc.add(glow);
+  kv.onframe=()=>{kh.n+=(kh.t-kh.n)*.12;coal.forEach((m,i)=>m.visible=i<Math.round(kh.n));const s=Math.max(.3,Math.sqrt(kh.n)*.95);glow.scale.setScalar(s);glow.position.y=s*.9+.4;return Math.abs(kh.t-kh.n)>.01}}
+function kupd(){const m=+$('cr').value;kh.t=m;$('cv').textContent=m+' طن';const g=m*1e6,mol=g/12,E=mol*393.6;
+  const st=$('kstep');st.innerHTML='';
+  st.appendChild(mk('div','','كتلة الكربون = '+m+' × 10<sup>6</sup> = <b>'+g.toLocaleString('en')+' غم</b>.'));
+  st.appendChild(mk('div','','عدد الموالت = '+g.toLocaleString('en')+' ÷ 12 = <b>'+Math.round(mol).toLocaleString('en')+' مول</b>.'));
+  st.appendChild(mk('div','','الطاقة الناتجة ≈ '+Math.round(mol).toLocaleString('en')+' × 393.6 ≈ <b>'+(E/1e8).toFixed(2)+'×10<sup>8</sup> كيلو جول</b>.'));if(kv)kv.dirty=true}
+$('cr').oninput=kupd;kupd();
+C3D.quiz('qbox','qscore','q',[
+ {q:'إشارة ΔH في التفاعل الطارد للطاقة:',o:['موجبة','سالبة','صفر دائماً','لا إشارة لها'],a:1,e:'في التفاعل الطارد تكون ΔH سالبة.'},
+ {q:'أي التفاعلات التالية ماص للطاقة؟',o:['تعادل HCl مع NaOH','احتراق الميثان','تحلل CaCO₃ بالحرارة','تفاعل Na مع الماء'],a:2,e:'تحلل CaCO₃ بالحرارة يحتاج طاقة فهو ماص وΔH موجبة.'},
+ {q:'ما المقصود بالمحتوى الحراري H؟',o:['درجة الحرارة','الطاقة المخزنة في المادة','كتلة المادة','سرعة التفاعل'],a:1,e:'المحتوى الحراري H تعبير عن الطاقة المخزنة في المادة.'},
+ {q:'حرارة التفاعل ΔH تساوي:',o:['H(المتفاعلات) + H(النواتج)','H(النواتج) − H(المتفاعلات)','H(المتفاعلات) − H(النواتج)','H(المتفاعلات) × H(النواتج)'],a:1,e:'ΔH = H(النواتج) − H(المتفاعلات).'},
+ {q:'في التفاعل الماص تُكتب الحرارة في المعادلة الحرارية:',o:['في جهة النواتج','في جهة المتفاعلات (أو ΔH موجبة)','لا تُكتب','على السهم فقط بإشارة سالبة'],a:1,e:'في الماص تُكتب الحرارة في جهة المتفاعلات أو ΔH بإشارة موجبة.'},
+ {q:'ينص قانون حفظ الطاقة على أن:',o:['الطاقة تفنى في التفاعل','الطاقة تُستحدث أثناء التفاعل','الطاقة لا تفنى ولا تُستحدث والطاقة الكلية قبل التفاعل = بعده','الطاقة الناتجة أكبر دائماً'],a:2,e:'الطاقة لا تفنى ولا تُستحدث، والطاقة الكلية قبل التفاعل تساوي بعده.'}
+]);
+C3D.tabs([{id:'dg',l:'📈 مخطط الطاقة'},{id:'cal',l:'🧮 حساب الطاقة'},{id:'fac',l:'📘 المفاهيم'},{id:'qz',l:'✍️ أسئلة'}]);
+</script></body></html>

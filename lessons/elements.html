@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>العناصر الكيميائية في حياتنا</title><base href="../"></head>
+<body><main>
+<h1>⚛️ العناصر الكيميائية في حياتنا</h1>
+<div class="tabs" id="tabs"></div>
+<section id="tbl" class="pane">
+  <p class="hint">جدول دوري مجسّم: اسحب لتديره، واضغط على أي عنصر لتعرف توزيعه الإلكتروني وموقعه.</p>
+  <div class="stage3" id="tst" style="height:300px"></div>
+  <div class="leg" id="tleg"></div>
+  <div class="card info" id="tinfo"></div>
+</section>
+<section id="atm" class="pane hidden">
+  <div class="card">
+    <h2>⚛️ ابنِ الذرة</h2>
+    <div class="row"><label>العدد الذري Z:</label><input type="range" id="zr" min="1" max="20" value="11"><span class="val" id="zv"></span></div>
+    <div class="stage3" id="ast" style="height:320px"></div>
+    <div class="steps" id="astep" style="margin-top:10px"></div>
+  </div>
+</section>
+<section id="qz" class="pane hidden">
+  <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
+</section>
+</main>
+<script src="lib/three.min.js"></script>
+<script src="lib/c3d.js"></script>
+<script>
+C3D.init({ns:'el',accent:'#D32F2F',accentDark:'#EF5350'});
+const T=C3D.T,$=C3D.$,mk=C3D.mk,fm=C3D.fm;
+const E=[ // [sym, اسم, A, group, period]
+ ['H','الهيدروجين',1,1,1],['He','الهيليوم',4,18,1],
+ ['Li','الليثيوم',7,1,2],['Be','البيريليوم',9,2,2],['B','البورون',11,13,2],['C','الكربون',12,14,2],['N','النيتروجين',14,15,2],['O','الأكسجين',16,16,2],['F','الفلور',19,17,2],['Ne','النيون',20,18,2],
+ ['Na','الصوديوم',23,1,3],['Mg','المغنيسيوم',24,2,3],['Al','الألمنيوم',27,13,3],['Si','السيليكون',28,14,3],['P','الفوسفور',31,15,3],['S','الكبريت',32,16,3],['Cl','الكلور',35,17,3],['Ar','الأرجون',40,18,3],
+ ['K','البوتاسيوم',39,1,4],['Ca','الكالسيوم',40,2,4]];
+const CAT={1:['الفلزات القلوية',0x8e24aa],2:['الفلزات القلوية الترابية',0xef6c00],13:['مجموعة البورون',0x00838f],14:['مجموعة الكربون',0x546e7a],15:['مجموعة النيتروجين',0x1565c0],16:['مجموعة الأكسجين',0xc62828],17:['الهالوجينات',0x2e7d32],18:['الغازات النبيلة',0x6a1b9a]};
+function dist(z){const sh=[2,8,8,2],o=[];let r=z;for(const c of sh){const t=Math.min(c,r);if(t>0)o.push(t);r-=t;if(r<=0)break}return o}
+const GN={1:'IA',2:'IIA',13:'IIIA',14:'IVA',15:'VA',16:'VIA',17:'VIIA',18:'VIIIA'};
+function ox(g,v){if(g===18)return 'لا يوجد (لا يشكل مركبات)';if(g===1)return '+1';if(g===2)return '+2';if(g===13)return '+3';if(g===15)return '-3';if(g===16)return '-2';if(g===17)return '-1';return '±4 (يشارك بالإلكترونات)'}
+function infoHTML(i){const e=E[i],z=i+1,d=dist(z),g=e[3],v=g===18?(z===2?2:8):(g>=13?g-10:g);
+  return '<h2>'+e[1]+' ('+e[0]+')</h2><p><span class="tag">Z</span>'+z+' <span class="tag">A</span>'+e[2]+' <span class="tag">نيوترونات</span>'+(e[2]-z)+'</p>'+
+  '<p><span class="tag">التوزيع الإلكتروني</span><b class="ltr">'+d.join(',')+'</b></p><p><span class="tag">الدورة</span>'+e[4]+' <span class="tag">المجموعة</span>'+GN[g]+' ('+CAT[g][0]+')</p><p><span class="tag">إلكترونات التكافؤ</span>'+v+' <span class="tag">رقم التأكسد</span><span class="ltr">'+ox(g,v)+'</span></p>'}
+/* ---------- الجدول المجسّم ---------- */
+const tv=C3D.viewer($('tst'),{yaw:0,pitch:55,r:27,ty:0,floor:false,maxYaw:60,rmin:12,rmax:70});
+const tiles=[];let selT=-1;
+if(tv){
+  const base=C3D.mesh(new T.BoxGeometry(12.6,.5,7.4),C3D.std(0x2d3236,.5,.4),0,-.25,0);base.userData.noPick=1;tv.scene.add(base);
+  E.forEach((e,i)=>{const col=CAT[e[3]][1],g=new T.Group();g.userData.part=i;
+    const b=C3D.mesh(new T.BoxGeometry(1.2,.7,1.2),C3D.phys(col,.35,.1),0,.35,0);g.add(b);
+    const t=C3D.plane(e[0],1,1,{pw:128,ph:128,size:60,color:'#fff'});t.rotation.x=-Math.PI/2;t.position.y=.72;g.add(t);
+    const n=C3D.plane(String(i+1),.5,.3,{pw:64,ph:48,size:26,color:'#fff'});n.rotation.x=-Math.PI/2;n.position.set(-.3,.725,-.38);g.add(n);
+    const cc=e[3]<=2?e[3]-1:e[3]-11, X=(cc-3.5)*1.45,Z=(e[4]-2.5)*1.45;g.position.set(X,0,Z);tv.scene.add(g);tv.pick.push(g);tiles.push({g,b,y:0,t:0})});
+  tv.onframe=()=>{let ch=false;tiles.forEach(o=>{const d=o.t-o.y;if(Math.abs(d)>.005){o.y+=d*.2;o.g.position.y=o.y;ch=true}});return ch};
+  tv.onpick=(p)=>{if(p==null)return;selT=p;tiles.forEach((o,i)=>o.t=i===p?.8:0);$('tinfo').innerHTML=infoHTML(p);tv.dirty=true};
+}
+const leg=$('tleg');Object.keys(CAT).forEach(g=>leg.appendChild(mk('span','','<b style="color:#'+CAT[g][1].toString(16).padStart(6,'0')+'">■</b> '+CAT[g][0])));
+$('tinfo').innerHTML='<h2>اضغط على عنصر</h2><p class="hint">ستظهر هنا بطاقة العنصر: عدده الذري والكتلي وتوزيعه ودورته ومجموعته ورقم تأكسده.</p>';
+/* ---------- بناء الذرة ---------- */
+const av=C3D.viewer($('ast'),{yaw:0,pitch:20,r:26,ty:0,floor:false,rmin:10,rmax:50});
+let nuc=null,shells=[],elec=[];
+function buildAtom(z){
+  if(!av)return;const sc=av.scene;if(nuc)sc.remove(nuc);shells.forEach(s=>sc.remove(s));shells=[];elec=[];
+  const e=E[z-1],n=e[2]-z;nuc=new T.Group();const pts=[];for(let i=0;i<z+n;i++){const k=i+.5,ph=Math.acos(1-2*k/(z+n)),th=Math.PI*(1+Math.sqrt(5))*k,r=.55*Math.cbrt(z+n)*.95;pts.push([r*Math.sin(ph)*Math.cos(th),r*Math.cos(ph),r*Math.sin(ph)*Math.sin(th)])}
+  pts.forEach((p,i)=>{const m=C3D.mesh(new T.SphereGeometry(.55,20,14),C3D.phys(i<z?0xe53935:0x9aa3aa,.35),p[0],p[1],p[2]);nuc.add(m)});sc.add(nuc);
+  dist(z).forEach((c,si)=>{const R=3.4+si*2.5,ring=new T.Mesh(new T.TorusGeometry(R,.04,8,96),C3D.std(0x90a4ae,.3,.8));ring.rotation.x=Math.PI/2;sc.add(ring);shells.push(ring);
+    for(let k=0;k<c;k++){const m=new T.Mesh(new T.SphereGeometry(.38,18,14),C3D.phys(0x1e88e5,.2,.2));m.castShadow=true;m.userData={R,a:k/c*Math.PI*2,sp:.012-si*.002};sc.add(m);shells.push(m);elec.push(m)}});
+  const d=dist(z),g=e[3],v=g===18?(z===2?2:8):(g>=13?g-10:g);
+  $('zv').textContent=z+' ('+e[0]+')';
+  const st=$('astep');st.innerHTML='';
+  st.appendChild(mk('div','','<b>'+e[1]+'</b>: بروتونات = '+z+' (الحمراء)، ونيوترونات = '+(e[2]-z)+' (الرمادية)، وإلكترونات = '+z+' (الزرقاء).'));
+  st.appendChild(mk('div','','التوزيع الإلكتروني: <b class="ltr">'+d.join(',')+'</b>.'));
+  st.appendChild(mk('div','','رقم الدورة = عدد المستويات = <b>'+d.length+'</b>، ورقم المجموعة = إلكترونات التكافؤ (المستوى الأخير) = <b>'+v+'</b> ← المجموعة <b>'+GN[g]+'</b> ('+CAT[g][0]+').'));
+  st.appendChild(mk('div','','الذرة تميل لإكمال مستواها الأخير بثمانية إلكترونات: رقم تأكسدها المتوقع <b class="ltr">'+ox(g,v)+'</b>.'));
+  av.dirty=true;
+}
+if(av){av.auto=.25;av.onframe=()=>{elec.forEach(m=>{m.userData.a+=m.userData.sp;m.position.set(Math.cos(m.userData.a)*m.userData.R,0,Math.sin(m.userData.a)*m.userData.R)});return elec.length>0}}
+$('zr').oninput=()=>buildAtom(+$('zr').value);buildAtom(11);
+/* ---------- الأسئلة ---------- */
+C3D.quiz('qbox','qscore','q',[
+ {q:'ما العدد الذري (Z) للذرة؟',o:['مجموع البروتونات والنيوترونات','عدد البروتونات في الذرة','عدد النيوترونات','عدد مستويات الطاقة'],a:1,e:'العدد الذري هو عدد البروتونات، ويساوي عدد الإلكترونات في الذرة المتعادلة.'},
+ {q:'العدد الكتلي (A) يساوي:',o:['عدد البروتونات فقط','عدد الإلكترونات','مجموع عدد البروتونات والنيوترونات','عدد إلكترونات التكافؤ'],a:2,e:'العدد الكتلي = البروتونات + النيوترونات.'},
+ {q:'عنصر توزيعه الإلكتروني 2,8,1. ما موقعه ورقم تأكسده؟',o:['الدورة الثالثة، المجموعة IA، +1','الدورة الأولى، المجموعة IIIA، +3','الدورة الثالثة، المجموعة VIIA، -1','الدورة الثانية، المجموعة IA، +1'],a:0,e:'ثلاثة مستويات فالدورة الثالثة، وإلكترون تكافؤ واحد فالمجموعة IA، ويفقد إلكتروناً فرقم تأكسده +1.'},
+ {q:'ما رقم المجموعة في الجدول الدوري؟',o:['عدد مستويات الطاقة','عدد النيوترونات','عدد البروتونات','عدد إلكترونات التكافؤ'],a:3,e:'رقم المجموعة = عدد إلكترونات التكافؤ، ورقم الدورة = عدد مستويات الطاقة.'},
+ {q:'أي العناصر التالية لا يشكل مركبات (غاز نبيل)؟',o:['Cl (2,8,7)','Na (2,8,1)','Ne (2,8)','Mg (2,8,2)'],a:2,e:'النيون مستواه الأخير مكتمل بثمانية إلكترونات فهو مستقر ولا يشكل مركبات.'},
+ {q:'التوزيع 2,8,2 يدل على عنصر في:',o:['الدورة الثالثة، المجموعة IIA، رقم تأكسده +2','الدورة الثانية، المجموعة VIIIA','الدورة الثالثة، المجموعة VIIA','الدورة الرابعة، المجموعة IIA'],a:0,e:'ثلاثة مستويات، وإلكترونان في الأخير: الدورة الثالثة، المجموعة IIA (قلوية ترابية)، ويفقد إلكترونين فرقم تأكسده +2، ومركباته أيونية.'}
+]);
+C3D.tabs([{id:'tbl',l:'🧱 الجدول المجسّم'},{id:'atm',l:'⚛️ ابنِ الذرة'},{id:'qz',l:'✍️ أسئلة'}]);
+</script></body></html>
