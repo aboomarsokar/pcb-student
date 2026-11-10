@@ -803,7 +803,7 @@ function heroDay(){var d=new Date(),n=Math.floor((Date.UTC(d.getFullYear(),d.get
 var _vNext="sp";
 function verseNext(){H=[];V=_vNext;draw()}
 var _dVS=draw;draw=function(){if(V!="verse")return _dVS();var k=heroDay(),g=heroImg();document.documentElement.lang="ar";document.documentElement.dir="rtl";document.body.className="sp";
-$("app").innerHTML='<div class="vs0">'+(g?'<img class="vi" alt="" src="'+g+'">':'')+'<div class="va">﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾</div><div class="vm">سورة طه – الآية ١١٤</div><div class="vc"><div class="vk">✦ حكمة اليوم • '+new Date().toLocaleDateString("ar",{weekday:"long",day:"numeric",month:"long"})+' ✦</div><hr><div class="vh">'+k.t+'</div><div class="vm">'+k.s+'</div></div><button class="vnx" onclick="verseNext()">التالي ›</button></div>';window.scrollTo(0,0);mdraw();fitVerse();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitVerse)};
+$("app").innerHTML='<div class="vs0">'+(g?'<img class="vi" alt="" src="'+g+'">':'')+'<div class="va">﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾</div><div class="vm">سورة طه – الآية ١١٤</div><div class="vc"><div class="vk">✦ حكمة اليوم • '+new Date().toLocaleDateString("ar",{weekday:"long",day:"numeric",month:"long"})+' ✦</div><hr><div class="vh">'+k.t+'</div><div class="vm">'+k.s+'</div></div><button class="vnx" onclick="verseNext()">ابدأ ›</button></div>';window.scrollTo(0,0);mdraw();fitVerse();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitVerse)};
 _vNext=V;V="verse";draw();
 /*PCB-PATCH6*/
 (function(){
