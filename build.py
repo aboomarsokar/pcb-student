@@ -28,6 +28,7 @@ MIME = {
 IMG_REF = re.compile(r"images/[\w.-]+\.(jpg|jpeg|png|gif|webp|svg)\b")
 VID_REF = re.compile(r'"videos/([\w.-]+\.mp4)"')
 FONT_REF = re.compile(r"fonts/[\w.-]+\.woff2")
+SCRIPT_REF = re.compile(r'<script src="(lib/[\w.-]+\.js)"></script>')
 LESSON_REF = re.compile(r'"lessons/([\w.-]+\.html)"')
 
 
@@ -59,6 +60,13 @@ def main() -> None:
         if not path.is_file():
             sys.exit(f"ملفٌّ مفقود: {path.relative_to(ROOT)}")
         t = path.read_text(encoding="utf-8").replace('<base href="../">', "")
+        def inline_js(mm: re.Match) -> str:
+            jp = ROOT / mm.group(1)
+            if not jp.is_file():
+                sys.exit(f"ملفٌّ مفقود: {jp.relative_to(ROOT)}")
+            return "<script>" + jp.read_text(encoding="utf-8").replace("</script", "<\\/script") + "</script>"
+
+        t = SCRIPT_REF.sub(inline_js, t)
         t = IMG_REF.sub(inline_img, t)
         t = FONT_REF.sub(inline_font, t)
         return '"b64html:' + base64.b64encode(t.encode("utf-8")).decode("ascii") + '"'

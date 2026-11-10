@@ -35,8 +35,8 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 @keyframes rise{from{opacity:0;transform:perspective(900px) rotateX(-10deg) translateY(18px)}to{opacity:1;transform:none}}
 
 /* ======= المجهر المجسّم ======= */
-.stage3{position:relative;height:350px;perspective:1000px;perspective-origin:50% 35%;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;direction:ltr;border-radius:16px;background:radial-gradient(ellipse at 50% 85%,color-mix(in srgb,var(--accent) 22%,var(--card)) 0,var(--card) 70%);border:1px solid var(--line);overflow:hidden}
-.stage3:active{cursor:grabbing}
+.stage3{position:relative;height:390px;perspective:1000px;perspective-origin:50% 35%;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;direction:ltr;border-radius:16px;background:radial-gradient(ellipse at 50% 85%,color-mix(in srgb,var(--accent) 22%,var(--card)) 0,var(--card) 70%);border:1px solid var(--line);overflow:hidden}
+.stage3:active{cursor:grabbing}.stage3.glmode{perspective:none}.stage3.glmode .world{display:none}.gl{position:absolute;inset:0;width:100%;height:100%;display:block}
 .world{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;transform:rotateX(-10deg) rotateY(-28deg)}
 .model{position:absolute;left:0;top:0;transform-style:preserve-3d;transform:scale(.86) translateY(135px)}
 .pt{position:absolute;left:0;top:0;transform-style:preserve-3d;cursor:pointer}
@@ -110,7 +110,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
   </div>
 
   <section id="parts" class="pane">
-    <p class="hint">اسحب المجهر بإصبعك لتديره، واضغط على أي جزء لتعرف وظيفته.</p>
+    <p class="hint">اسحب المجهر لتديره، واستعمل إصبعين للتكبير، وانقر مرتين للعودة. واضغط على أي جزء لتعرف وظيفته.</p>
     <div class="stage3" id="stage"><div class="world" id="world"><div class="model" id="model"></div></div><span class="lbl" id="lbl">اسحب لتدوير المجهر 🔄</span></div>
     <div class="chips" id="chips"></div>
     <div class="card info" id="info"></div>
@@ -155,6 +155,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
   </section>
 </main>
 
+<script src="lib/three.min.js"></script>
 <script>
 /* ---------- حفظ الإجابات (مرة واحدة فقط) + جسر التطبيق ---------- */
 const ANS={};
@@ -185,6 +186,121 @@ const INFO={
 const ORDER=['eyepiece','objective','nosepiece','stage','slide','coarse','fine','condenser','light','armbase'];
 const ALIAS={base:'armbase',arm:'armbase',head:'armbase',tube:'eyepiece'};
 const TARGETS=['eyepiece','objective','nosepiece','stage','coarse','fine','condenser','light','armbase'];
+
+let ang=-28,tilt=-10,auto=true,drag=null,moved=0,lastT=0,quiz=null;
+/* ---------- مجهر واقعي (WebGL / three.js) ---------- */
+let GL=null;
+function initGL(){
+  if(!window.THREE)return null;
+  const T=THREE;let R;
+  try{
+    const cv=document.createElement('canvas');cv.className='gl';
+    R=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:true,powerPreference:'high-performance'});
+    if(!R.getContext())return null;
+    R.outputColorSpace=T.SRGBColorSpace;R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=1.05;
+    R.shadowMap.enabled=true;R.shadowMap.type=T.PCFSoftShadowMap;R.setClearColor(0x000000,0);
+    $('stage').insertBefore(cv,$('stage').firstChild);
+    const scene=new T.Scene();
+    // بيئة استوديو للانعكاسات الواقعية
+    const envS=new T.Scene();
+    envS.add(new T.Mesh(new T.BoxGeometry(40,40,40),new T.MeshBasicMaterial({color:new T.Color(.5,.53,.55),side:T.BackSide})));
+    const pnl=(x,y,z,w,h,rx,ry,I)=>{const m=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({color:new T.Color(I,I,I),side:T.DoubleSide}));m.position.set(x,y,z);m.rotation.set(rx,ry,0);envS.add(m)};
+    pnl(0,19,0,18,18,Math.PI/2,0,10);pnl(-19,4,6,10,18,0,Math.PI/2,6);pnl(19,2,-4,8,14,0,-Math.PI/2,3.5);pnl(0,2,-19,22,12,0,0,2.2);pnl(0,-3,19,24,8,0,0,1.4);
+    const pm=new T.PMREMGenerator(R);scene.environment=pm.fromScene(envS,.03).texture;
+    const cam=new T.PerspectiveCamera(30,1,10,3000);
+    const key=new T.DirectionalLight(0xffffff,2.4);key.position.set(170,360,260);key.castShadow=true;key.shadow.mapSize.set(1024,1024);
+    const sc=key.shadow.camera;sc.left=-260;sc.right=260;sc.top=260;sc.bottom=-260;sc.near=50;sc.far=900;key.shadow.bias=-.0006;key.shadow.radius=4;scene.add(key);
+    scene.add(new T.HemisphereLight(0xeaf3ff,0x778080,.55));
+    const floor=new T.Mesh(new T.PlaneGeometry(1400,1400),new T.ShadowMaterial({opacity:.26}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+    const root=new T.Group();scene.add(root);
+    const meshes=[],byPart={};
+    const M={
+      enamel:()=>new T.MeshPhysicalMaterial({color:0xdadde0,roughness:.36,metalness:.12,clearcoat:.7,clearcoatRoughness:.2}),
+      rubber:()=>new T.MeshStandardMaterial({color:0x141516,roughness:.82,metalness:.05}),
+      black:()=>new T.MeshStandardMaterial({color:0x1b1d20,roughness:.46,metalness:.6}),
+      chrome:()=>new T.MeshStandardMaterial({color:0xe3e7ec,roughness:.16,metalness:1}),
+      steel:()=>new T.MeshStandardMaterial({color:0x8e969d,roughness:.3,metalness:1}),
+      glass:()=>new T.MeshPhysicalMaterial({color:0x9bd1ff,roughness:.04,metalness:0,transparent:true,opacity:.42,clearcoat:1}),
+      lens:()=>new T.MeshPhysicalMaterial({color:0x1d3a63,roughness:.03,metalness:.2,clearcoat:1,clearcoatRoughness:.02})
+    };
+    const add=(part,geo,mat,x,y,z,rx,ry,rz,par)=>{const m=new T.Mesh(geo,mat);m.position.set(x||0,y||0,z||0);m.rotation.set(rx||0,ry||0,rz||0);m.castShadow=true;m.receiveShadow=true;m.userData.part=part;m.userData.e0=mat.emissive?mat.emissive.getHex():null;(par||root).add(m);meshes.push(m);(byPart[part]=byPart[part]||[]).push(m);return m};
+    const lathe=(pts,seg)=>new T.LatheGeometry(pts.map(p=>new T.Vector2(p[0],p[1])),seg||56);
+    const rr=(w,h,r)=>{const s=new T.Shape(),x=-w/2,y=-h/2;s.moveTo(x+r,y);s.lineTo(x+w-r,y);s.quadraticCurveTo(x+w,y,x+w,y+r);s.lineTo(x+w,y+h-r);s.quadraticCurveTo(x+w,y+h,x+w-r,y+h);s.lineTo(x+r,y+h);s.quadraticCurveTo(x,y+h,x,y+h-r);s.lineTo(x,y+r);s.quadraticCurveTo(x,y,x+r,y);return s};
+    const gear=(r,w,teeth)=>{const s=new T.Shape(),n=teeth*4;for(let i=0;i<=n;i++){const a=i/n*Math.PI*2,k=(i%4===1||i%4===2)?r:r-1.7;const x=Math.cos(a)*k,y=Math.sin(a)*k;i?s.lineTo(x,y):s.moveTo(x,y)}const g=new T.ExtrudeGeometry(s,{depth:w,bevelEnabled:true,bevelSize:.8,bevelThickness:.8,bevelSegments:2,curveSegments:4});g.translate(0,0,-w/2);g.rotateY(Math.PI/2);return g};
+    const OZ=36; // محور الضوء (z)
+    // ---- القاعدة ----
+    const bg=new T.ExtrudeGeometry(rr(190,168,28),{depth:18,bevelEnabled:true,bevelSize:5,bevelThickness:5,bevelSegments:5,curveSegments:18});bg.rotateX(-Math.PI/2);
+    add('base',bg,M.enamel(),0,6,0);
+    [[-72,-60],[72,-60],[-72,60],[72,60]].forEach(p=>add('base',new T.CylinderGeometry(8,9,5,24),M.rubber(),p[0],2.2,p[1]));
+    // ---- الذراع ----
+    const armC=new T.CatmullRomCurve3([new T.Vector3(0,28,-62),new T.Vector3(0,100,-64),new T.Vector3(0,180,-58),new T.Vector3(0,236,-40),new T.Vector3(0,258,-12),new T.Vector3(0,260,18)]);
+    const am=add('arm',new T.TubeGeometry(armC,90,17,36,false),M.enamel(),0,0,0);am.scale.x=1.3;
+    [[0,28,-62],[0,260,18]].forEach(p=>{const s=add('arm',new T.SphereGeometry(17,32,24),M.enamel(),p[0],p[1],p[2]);s.scale.x=1.3});
+    // ---- الأنبوب المائل والعدسة العينية ----
+    const inc=new T.Group();inc.position.set(0,262,OZ-18);inc.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),new T.Vector3(0,.8,.6).normalize());root.add(inc);
+    add('tube',lathe([[0,-12],[21,-12],[21,0],[19.5,6],[17.5,10],[17.5,62],[19,66],[19,72],[0,72]]),M.enamel(),0,0,0,0,0,0,inc);
+    add('tube',new T.CylinderGeometry(12.6,12.6,34,40),M.chrome(),0,86,0,0,0,0,inc);
+    add('eyepiece',lathe([[0,0],[11.2,0],[11.2,19],[13.4,21],[14.6,34],[11,35],[0,35]]),M.rubber(),0,92,0,0,0,0,inc);
+    add('eyepiece',new T.TorusGeometry(11.5,1,12,40),M.chrome(),0,93.5,0,Math.PI/2,0,0,inc);
+    add('eyepiece',new T.CircleGeometry(9.6,36),M.lens(),0,126.6,0,-Math.PI/2,0,0,inc);
+    // ---- القرص الدوار والعدسات الشيئية ----
+    add('tube',lathe([[0,0],[15,0],[15,40],[0,40]]),M.enamel(),0,222,OZ-18);
+    add('nosepiece',lathe([[0,0],[28,0],[30,4],[30,12],[22,21],[0,21]]),M.black(),0,201,OZ-18);
+    add('nosepiece',new T.TorusGeometry(30,1.1,10,56),M.steel(),0,208,OZ-18,Math.PI/2,0,0);
+    [{a:0,L:40,c:0xfdd835,t:0},{a:90,L:34,c:0xe53935,t:14},{a:180,L:50,c:0xf5f5f5,t:14},{a:270,L:46,c:0x1e88e5,t:14}].forEach(o=>{
+      const g=new T.Group(),ar=o.a*Math.PI/180,rad=18;g.position.set(Math.sin(ar)*rad,201,OZ-18+Math.cos(ar)*rad);
+      if(o.t)g.quaternion.setFromAxisAngle(new T.Vector3(-Math.cos(ar),0,Math.sin(ar)).normalize(),o.t*Math.PI/180);root.add(g);
+      add('objective',lathe([[0,0],[7.6,0],[7.6,-5],[6.4,-6.5],[6.4,-o.L*.5],[5.3,-o.L*.78],[4.2,-o.L+1.2],[3.6,-o.L],[0,-o.L]]),M.chrome(),0,0,0,0,0,0,g);
+      const band=add('objective',new T.CylinderGeometry(6.6,6.6,3.2,32),new T.MeshStandardMaterial({color:o.c,roughness:.45,metalness:.2}),0,-11,0,0,0,0,g);
+      add('objective',new T.CircleGeometry(2.7,24),M.lens(),0,-o.L-.05,0,Math.PI/2,0,0,g);
+    });
+    // ---- المنضدة والشريحة ----
+    const sh=rr(140,120,12);const hole=new T.Path();hole.absarc(0,0,13,0,Math.PI*2,true);sh.holes.push(hole);
+    const sg=new T.ExtrudeGeometry(sh,{depth:5,bevelEnabled:true,bevelSize:1.2,bevelThickness:1.2,bevelSegments:3,curveSegments:24});sg.rotateX(-Math.PI/2);
+    add('stage',sg,M.black(),0,96,OZ);
+    add('stage',new T.TorusGeometry(13.6,1.2,10,40),M.chrome(),0,102.2,OZ,Math.PI/2,0,0);
+    add('stage',new T.BoxGeometry(34,18,70),M.enamel(),0,88,-12);
+    [-1,1].forEach(s=>add('stage',new T.BoxGeometry(16,1.2,3.5),M.chrome(),s*30,103,OZ+13));
+    add('slide',new T.BoxGeometry(76,1.6,26),M.glass(),0,103.3,OZ);
+    add('slide',new T.BoxGeometry(20,.5,20),M.glass(),0,104.3,OZ);
+    const sp=add('slide',new T.SphereGeometry(4.6,24,16),new T.MeshStandardMaterial({color:0xd6457f,roughness:.5,emissive:0x2a0610}),0,104,OZ);sp.scale.y=.22;
+    // ---- الضابطان ----
+    [-1,1].forEach(s=>{
+      add('fine',gear(15,10,34),M.rubber(),s*26.5,128,-62);
+      add('coarse',gear(22,14,40),M.rubber(),s*38,128,-62);
+      add('coarse',new T.CylinderGeometry(7,7,5,28),M.chrome(),s*47.5,128,-62,0,0,Math.PI/2);
+    });
+    // ---- المكثف ----
+    const cg=lathe([[0,0],[10,0],[12,5],[15,5],[15,12],[11,15],[0,15]]);
+    add('condenser',cg,M.chrome(),0,78,OZ);add('condenser',new T.TorusGeometry(15.2,1.4,10,40),M.black(),0,86,OZ,Math.PI/2,0,0);
+    add('condenser',new T.BoxGeometry(7,6,60),M.steel(),0,84,OZ-38);
+    add('condenser',new T.CylinderGeometry(1.6,1.6,20,12),M.steel(),10,83,OZ+16,Math.PI/2,0,0.3);
+    // ---- مصدر الضوء ----
+    add('light',new T.TorusGeometry(21,2.4,12,48),M.chrome(),0,29.6,OZ,Math.PI/2,0,0);
+    const lamp=add('light',new T.CylinderGeometry(18.5,18.5,1.4,40),new T.MeshStandardMaterial({color:0xfff3c4,emissive:0xffd36b,emissiveIntensity:1.8,roughness:.4}),0,29.2,OZ);
+    const pl=new T.PointLight(0xffe0a0,6000,170,2);pl.position.set(0,48,OZ);root.add(pl);
+    const cone=new T.Mesh(new T.CylinderGeometry(11,19,47,36,1,true),new T.MeshBasicMaterial({color:0xffe9a6,transparent:true,opacity:.13,blending:T.AdditiveBlending,side:T.DoubleSide,depthWrite:false}));cone.position.set(0,53,OZ);cone.raycast=()=>{};root.add(cone);
+    // ---- كاميرا وتحكم ----
+    const FOC={eyepiece:[0,330,66,440],objective:[0,178,40,400],nosepiece:[0,206,20,420],stage:[0,102,36,420],slide:[0,103,36,300],coarse:[38,128,-60,420],fine:[26,128,-60,420],condenser:[0,84,36,380],light:[0,40,36,420],armbase:[0,176,22,900],tube:[0,300,60,460]};
+    const st={tx:0,ty:176,tz:22,r:900,gx:0,gy:176,gz:22,gr:900,dirty:true,w:0,h:0};
+    const rc=new T.Raycaster(),mv=new T.Vector2();
+    const resize=()=>{const b=$('stage'),w=b.clientWidth||320,h=b.clientHeight||350;if(w===st.w&&h===st.h)return;st.w=w;st.h=h;R.setPixelRatio(Math.min(2,window.devicePixelRatio||1));R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();st.dirty=true};
+    new ResizeObserver(resize).observe($('stage'));
+    const frame=()=>{const e=-tilt*Math.PI/180,a=ang*Math.PI/180;cam.position.set(st.tx+st.r*Math.cos(e)*Math.sin(a),st.ty+st.r*Math.sin(e),st.tz+st.r*Math.cos(e)*Math.cos(a));cam.lookAt(st.tx,st.ty,st.tz);R.render(scene,cam)};
+    const api={
+      dirty(){st.dirty=true},
+      focus(id){const f=FOC[id]||FOC.armbase;st.gx=f[0];st.gy=f[1];st.gz=f[2];st.gr=f[3];st.dirty=true},
+      zoom(k){st.gr=Math.max(220,Math.min(1100,st.gr*k));st.r=st.gr;st.dirty=true},
+      highlight(names){meshes.forEach(m=>{if(m.material.emissive){m.material.emissive.setHex(m.userData.e0);m.material.emissiveIntensity=m.userData.part==='light'?1.8:1}});names.forEach(n=>(byPart[n]||[]).forEach(m=>{if(m.material.emissive){m.material.emissive.setHex(0xff9100);m.material.emissiveIntensity=.26}}));st.dirty=true},
+      pick(cx,cy){const b=$('stage').getBoundingClientRect();mv.set((cx-b.left)/b.width*2-1,-((cy-b.top)/b.height)*2+1);rc.setFromCamera(mv,cam);const h=rc.intersectObjects(meshes,false)[0];return h?h.object.userData.part:null},
+      tick(){let ch=st.dirty;const k=.14;['x','y','z','r'].forEach(c=>{const cur='t'+c==='tr'?'r':'t'+c,tgt='g'+c;const d=st[tgt]-st[cur];if(Math.abs(d)>.05){st[cur]+=d*k;ch=true}else st[cur]=st[tgt]});if(ch||st.auto){frame();st.dirty=false}},
+      st
+    };
+    resize();return api;
+  }catch(e){try{R&&R.dispose()}catch(_){}document.querySelectorAll('canvas.gl').forEach(c=>c.remove());return null}
+}
+GL=initGL();
+if(GL)$('stage').classList.add('glmode');
 
 /* ---------- بناء المجسّم ثلاثي الأبعاد ---------- */
 const shade=(c,k)=>'color-mix(in srgb,'+c+' '+k+'%,#000)';
@@ -233,29 +349,37 @@ function buildScope(){
 }
 let sel=null;
 function select(id){id=ALIAS[id]||id;sel=id;
-  document.querySelectorAll('.pt.sel').forEach(e=>e.classList.remove('sel'));
-  const names=id==='armbase'?['base','arm','head']:id==='eyepiece'?['eyepiece','tube']:[id];
-  names.forEach(n=>(PT[n]||[]).forEach(e=>e.classList.add('sel')));
+  const names=id==='armbase'?['base','arm','head']:id==='eyepiece'?['eyepiece','tube']:id?[id]:[];
+  if(GL){GL.highlight(names);GL.focus(id||'armbase')}
+  else{document.querySelectorAll('.pt.sel').forEach(e=>e.classList.remove('sel'));names.forEach(n=>(PT[n]||[]).forEach(e=>e.classList.add('sel')))}
   document.querySelectorAll('#chips button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
   const d=INFO[id];
-  $('info').innerHTML=d?'<h2>'+d.ar+'</h2><div class="en">'+d.en+'</div><p><span class="tag">الوظيفة</span>'+d.fn+'</p><p>'+d.more+'</p>':'';
+  $('info').innerHTML=d?'<h2>'+d.ar+'</h2><div class="en">'+d.en+'</div><p><span class="tag">الوظيفة</span>'+d.fn+'</p><p>'+d.more+'</p>':'<h2>🔬 المجهر الضوئي المركب</h2><p>اضغط على أي جزء من المجهر، أو اختر اسمه من الأزرار، لتعرف وظيفته.</p>';
   $('lbl').textContent=d?d.ar:'اسحب لتدوير المجهر 🔄';
 }
 function buildChips(){const c=$('chips');c.innerHTML='';ORDER.forEach(id=>{const b=mk('button','',INFO[id].ar);b.dataset.id=id;b.onclick=()=>{auto=false;if(quiz)return;select(id)};c.appendChild(b)})}
 
-/* ---------- تدوير وسحب ---------- */
-let ang=-28,tilt=-10,auto=true,drag=null,moved=0,lastT=0;
+/* ---------- تدوير وسحب وتكبير ---------- */
 const world=$('world'),stage=$('stage');
-const apply=()=>{world.style.transform='rotateX('+tilt+'deg) rotateY('+ang+'deg)'};
-stage.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,a:ang,t:tilt};moved=0;auto=false;try{stage.setPointerCapture(e.pointerId)}catch(_){}});
-stage.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;moved=Math.max(moved,Math.abs(dx)+Math.abs(dy));ang=drag.a+dx*.6;tilt=Math.max(-55,Math.min(25,drag.t-dy*.25));apply()});
-stage.addEventListener('pointerup',e=>{const was=moved<6&&drag;drag=null;if(was){const t=document.elementFromPoint(e.clientX,e.clientY),pt=t&&t.closest&&t.closest('.pt');if(pt){const id=pt.dataset.part;if(quiz)answerQuiz(id);else select(id)}}});
-stage.addEventListener('pointercancel',()=>{drag=null});
+const apply=()=>{if(GL)GL.dirty();else world.style.transform='rotateX('+tilt+'deg) rotateY('+ang+'deg)'};
+const ptrs=new Map();let pinch=0;
+stage.addEventListener('pointerdown',e=>{ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});drag={x:e.clientX,y:e.clientY,a:ang,t:tilt};moved=0;auto=false;if(ptrs.size===2){const v=[...ptrs.values()];pinch=Math.hypot(v[0].x-v[1].x,v[0].y-v[1].y);moved=99}try{stage.setPointerCapture(e.pointerId)}catch(_){}});
+stage.addEventListener('pointermove',e=>{if(ptrs.has(e.pointerId))ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(ptrs.size>=2&&GL){const v=[...ptrs.values()],d=Math.hypot(v[0].x-v[1].x,v[0].y-v[1].y);if(pinch>0&&d>0)GL.zoom(pinch/d);pinch=d;return}
+  if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;moved=Math.max(moved,Math.abs(dx)+Math.abs(dy));ang=drag.a+dx*.6;tilt=Math.max(-55,Math.min(GL?5:25,drag.t-dy*.25));apply()});
+const upEnd=e=>{ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=0};
+stage.addEventListener('pointerup',e=>{const was=moved<6&&drag;drag=null;upEnd(e);if(was){let id=null;if(GL)id=GL.pick(e.clientX,e.clientY);else{const t=document.elementFromPoint(e.clientX,e.clientY),pt=t&&t.closest&&t.closest('.pt');id=pt?pt.dataset.part:null}
+  if(id){if(quiz)answerQuiz(id);else select(id)}}});
+stage.addEventListener('pointercancel',e=>{drag=null;upEnd(e)});
+stage.addEventListener('wheel',e=>{if(!GL)return;e.preventDefault();GL.zoom(e.deltaY>0?1.08:.92)},{passive:false});
+stage.addEventListener('dblclick',()=>{if(GL){tilt=-10;ang=-28;GL.focus('armbase');select(null)}});
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-function loop(t){if(auto&&!drag&&!reduce&&!document.hidden&&!$('parts').classList.contains('hidden')){ang+=(lastT?(t-lastT):0)*0.018;apply()}lastT=t;requestAnimationFrame(loop)}
+function loop(t){const vis=!document.hidden&&!$('parts').classList.contains('hidden');
+  if(auto&&!drag&&!reduce&&vis){ang+=(lastT?(t-lastT):0)*0.014;apply()}
+  if(GL&&vis)GL.tick();
+  lastT=t;requestAnimationFrame(loop)}
 
 /* ---------- اختبر نفسك: اضغط على الجزء ---------- */
-let quiz=null;
 function qStat(){let sc=0,tt=0;TARGETS.forEach(t=>{const a=ANS['m:q:'+t];if(a){tt++;if(a.ok)sc++}});return{sc,tt}}
 function nextTarget(prev){const left=TARGETS.filter(t=>!ANS['m:q:'+t]&&t!==prev);return left.length?left[Math.floor(Math.random()*left.length)]:null}
 function renderQ(msg){const s=qStat();
@@ -274,7 +398,7 @@ const TYPES=[
  {id:'compound',ic:'🔬',nm:'المجهر الضوئي المركب',c:'#1565C0',img:'images/mic-compound.webp',kind:'ضوئي (ضوء مرئي وعدسات زجاجية)',use:'لفحص العينات الرقيقة جداً التي تسمح بمرور الضوء.',look:'يسمح برؤية الخلايا وهي حية، ويعطي صورة ثنائية الأبعاد.'},
  {id:'dissect',ic:'🔍',nm:'المجهر الضوئي التشريحي',c:'#2E7D32',img:'images/mic-dissect.webp',kind:'ضوئي (ضوء مرئي وعدسات زجاجية)',use:'يُستعمل في تشريح الكائنات الصغيرة أو بعض أجزائها الخارجية.',look:'لرؤية الأجسام بأبعادها الثلاثة.'},
  {id:'sem',ic:'⚡',nm:'المجهر الإلكتروني الماسح (SEM)',c:'#D32F2F',img:'images/mic-sem.webp',kind:'إلكتروني (حزمة إلكترونات بدل الضوء)',use:'لدراسة التفاصيل السطحية للعينة وتكبيرها.',look:'يُظهر الصورة بأبعادها الثلاثية، ولا يمكن من خلاله مشاهدة عينات حية.'},
- {id:'tem',ic:'🧬',nm:'المجهر الإلكتروني النافذ (TEM)',c:'#6A1B9A',img:'images/mic-tem.webp',kind:'إلكتروني (حزمة إلكترونات بدل الضوء)',use:'لدراسة التفاصيل الداخلية للخلية وبنيتها.',look:'تصل قوة التكبير في المجاهر الإلكترونية إلى أكثر من مليون مرة.'}
+ {id:'tem',ic:'⚛️',nm:'المجهر الإلكتروني النافذ (TEM)',c:'#6A1B9A',img:'images/mic-tem.webp',kind:'إلكتروني (حزمة إلكترونات بدل الضوء)',use:'لدراسة التفاصيل الداخلية للخلية وبنيتها.',look:'تصل قوة التكبير في المجاهر الإلكترونية إلى أكثر من مليون مرة.'}
 ];
 function buildTypes(){const g=$('cmp');g.innerHTML='';
   TYPES.forEach(t=>{const c=mk('div','fc');c.style.setProperty('--c',t.c);c.tabIndex=0;
@@ -335,7 +459,7 @@ function score(){let sc=0,an=0;PQ.forEach((q,i)=>{const r=ANS['m:mag:'+i];if(r){
 document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',String(x===b)));['parts','types','mag'].forEach(id=>{const s=$(id);s.classList.toggle('hidden',id!==b.dataset.t);if(id===b.dataset.t){s.classList.remove('pane');void s.offsetWidth;s.classList.add('pane')}});window.scrollTo({top:0,behavior:'smooth'})});
 function refreshLocked(){buildCls();buildPQ();renderQ();const s=qStat();if(s.tt===TARGETS.length){$('bQuiz').textContent='انتهى الاختبار 🔒';$('bQuiz').disabled=true}else if(s.tt>0&&!quiz){$('bQuiz').textContent='تابع الاختبار ('+s.tt+'/'+TARGETS.length+')'}}
 $('bQuiz').onclick=startQuiz;
-buildScope();buildChips();select('eyepiece');buildTypes();buildMag();refreshLocked();apply();requestAnimationFrame(loop);
+if(!GL)buildScope();buildChips();select(null);buildTypes();buildMag();refreshLocked();apply();requestAnimationFrame(loop);
 </script>
 </body>
 </html>
