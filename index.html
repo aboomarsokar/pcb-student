@@ -1501,6 +1501,25 @@ sel.split(',').map(function(x){return x+' *'}).join(',')+'{color:var(--gt)!impor
 '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rd h4,:root:not([data-theme="light"]) .tab:not(.on),:root:not([data-theme="light"]) .lvc .tx2 b{color:color-mix(in srgb,var(--k,var(--c,#fff)) 45%,#fff)!important}}'+
 ':root[data-theme="dark"] .rd h4,:root[data-theme="dark"] .tab:not(.on),:root[data-theme="dark"] .lvc .tx2 b{color:color-mix(in srgb,var(--k,var(--c,#fff)) 45%,#fff)!important}';
 document.head.appendChild(st)})();
+/*PCB-CELLX: الدرس التفاعلي لوحدة الخلية*/
+var CELLX="lessons/cell.html";
+(function(){
+var sy=document.createElement("style");sy.textContent=".cxr{display:flex;gap:8px;margin:0 0 8px}.cxr button{flex:1;border:1.5px solid var(--pri);background:var(--card);color:var(--text);border-radius:12px;padding:8px 6px;font:inherit;font-weight:800;font-size:13px;line-height:1.5;cursor:pointer}.cxf{display:block;width:calc(100% + 32px);margin:0 -16px;height:calc(100vh - 176px);height:calc(100dvh - 176px);border:0;background:var(--bg)}";document.head.appendChild(sy);
+function curTheme(){var d=document.documentElement.getAttribute("data-theme");return(d=="dark"||(d!="light"&&matchMedia("(prefers-color-scheme:dark)").matches))?"dark":"light"}
+window.cxTheme=function(){var f=document.getElementById("cxf");try{if(f&&f.contentWindow)f.contentWindow.postMessage({pcb:"theme",t:curTheme()},"*")}catch(e){}};
+function cxAns(){try{return JSON.parse(localStorage.getItem("pcbC"))||{}}catch(e){return{}}}
+window.addEventListener("message",function(e){var d=e.data;if(!d||!d.pcb)return;if(d.pcb=="ready"){cxTheme();try{e.source.postMessage({pcb:"answers",m:cxAns()},"*")}catch(x){}}
+else if(d.pcb=="ans"&&typeof d.k=="string"){var o=cxAns();if(!o[d.k]){o[d.k]=d.v;try{localStorage.setItem("pcbC",JSON.stringify(o))}catch(x){}}}});
+var _td=td;td=function(){var r=_td.apply(this,arguments);cxTheme();return r};
+var _ou=ou;ou=function(i){if(si==2&&i==1&&CELLX){ui=1;nav("cellx");return}_ou(i)};
+window.cxRev=function(j){si=2;ui=1;li=j;tb=0;nav("lesson");setTimeout(function(){var t=[].slice.call(document.querySelectorAll("#app .tab")).filter(function(e){return/المراجعة|Review/.test(e.textContent)})[0];if(t)t.click()},60)};
+function cxMount(){var h=document.getElementById("cxh");if(!h)return;var f=document.createElement("iframe");f.id="cxf";f.className="cxf";f.title="الخلية";f.setAttribute("loading","eager");f.onload=cxTheme;
+if(CELLX.indexOf("b64html:")==0){var bin=atob(CELLX.slice(8)),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);f.srcdoc=new TextDecoder("utf-8").decode(u)}else f.src=CELLX;h.replaceWith(f)}
+var _dcx=draw;draw=function(){if(V!="cellx"){var a=document.getElementById("app");if(a&&a.style.paddingBottom)a.style.paddingBottom="";return _dcx.apply(this,arguments)}
+document.documentElement.lang="ar";document.documentElement.dir="rtl";document.body.className="";var L=DATA[2][1]||[];
+$("app").style.paddingBottom="0";$("app").innerHTML=bar(U[2][1],1)+'<div class="cxr">'+L.map(function(x,j){return'<button onclick="cxRev('+j+')">📝 أسئلة المراجعة<br><small>'+x.t+'</small></button>'}).join("")+'</div><div id="cxh"></div>';
+cxMount();window.scrollTo(0,0);try{mdraw()}catch(e){}};
+})();
 </script>
 </body>
 </html>

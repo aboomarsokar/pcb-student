@@ -28,6 +28,7 @@ MIME = {
 IMG_REF = re.compile(r"images/[\w.-]+\.(jpg|jpeg|png|gif|webp|svg)\b")
 VID_REF = re.compile(r'"videos/([\w.-]+\.mp4)"')
 FONT_REF = re.compile(r"fonts/[\w.-]+\.woff2")
+LESSON_REF = re.compile(r'"lessons/([\w.-]+\.html)"')
 
 
 def b64(path: Path) -> str:
@@ -52,6 +53,17 @@ def main() -> None:
         counts["font"] = counts.get("font", 0) + 1
         return f"data:font/woff2;base64,{b64(ROOT / m.group(0))}"
 
+    def inline_lesson(m: re.Match) -> str:
+        counts["lesson"] = counts.get("lesson", 0) + 1
+        path = ROOT / "lessons" / m.group(1)
+        if not path.is_file():
+            sys.exit(f"ملفٌّ مفقود: {path.relative_to(ROOT)}")
+        t = path.read_text(encoding="utf-8").replace('<base href="../">', "")
+        t = IMG_REF.sub(inline_img, t)
+        t = FONT_REF.sub(inline_font, t)
+        return '"b64html:' + base64.b64encode(t.encode("utf-8")).decode("ascii") + '"'
+
+    html = LESSON_REF.sub(inline_lesson, html)
     html = IMG_REF.sub(inline_img, html)
     html = FONT_REF.sub(inline_font, html)
     html = VID_REF.sub(inline_vid, html)
