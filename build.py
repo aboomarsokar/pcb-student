@@ -1,0 +1,59 @@
+"""يبني «نسخة الطالب» ملفاً واحداً: يدمج الصور والفيديوهات داخل الصفحة.
+
+الاستعمال:  python3 build.py
+الناتج:     dist/pcb-student.html  (يُرسل كما هو على واتساب ويعمل بلا إنترنت)
+
+- كلُّ مرجعٍ مثل  images/اسم.jpg  داخل index.html يصير  data:image/...;base64,...
+- كلُّ قيمةٍ مثل  "videos/اسم.mp4"  داخل var VID تصير نصَّ base64 (تفكّه الدالة vurl).
+"""
+import base64
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
+SRC = ROOT / "index.html"
+OUT = ROOT / "dist" / "pcb-student.html"
+
+MIME = {
+    "jpg": "image/jpeg",
+    "jpeg": "image/jpeg",
+    "png": "image/png",
+    "gif": "image/gif",
+    "webp": "image/webp",
+    "svg": "image/svg+xml",
+}
+
+IMG_REF = re.compile(r"images/[\w.-]+\.(jpg|jpeg|png|gif|webp|svg)\b")
+VID_REF = re.compile(r'"videos/([\w.-]+\.mp4)"')
+
+
+def b64(path: Path) -> str:
+    if not path.is_file():
+        sys.exit(f"ملفٌّ مفقود: {path.relative_to(ROOT)}")
+    return base64.b64encode(path.read_bytes()).decode("ascii")
+
+
+def main() -> None:
+    html = SRC.read_bytes().decode("utf-8")
+    counts = {"img": 0, "vid": 0}
+
+    def inline_img(m: re.Match) -> str:
+        counts["img"] += 1
+        return f"data:{MIME[m.group(1)]};base64,{b64(ROOT / m.group(0))}"
+
+    def inline_vid(m: re.Match) -> str:
+        counts["vid"] += 1
+        return f'"{b64(ROOT / "videos" / m.group(1))}"'
+
+    html = IMG_REF.sub(inline_img, html)
+    html = VID_REF.sub(inline_vid, html)
+
+    OUT.parent.mkdir(exist_ok=True)
+    OUT.write_bytes(html.encode("utf-8"))
+    size = OUT.stat().st_size / 1024 / 1024
+    print(f"صور: {counts['img']} · فيديو: {counts['vid']} → {OUT.relative_to(ROOT)} ({size:.1f} م.ب)")
+
+
+if __name__ == "__main__":
+    main()
