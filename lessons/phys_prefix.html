@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>البادئات والتحويل بين الوحدات</title><base href="../"><script src="lib/icons.js"></script></head>
+<body><main>
+<h1>🪜 البادئات والتحويل</h1>
+<div class="tabs" id="tabs"></div>
+<section id="lad" class="pane"><div class="card"><h2>🪜 سلّم البادئات</h2><p class="hint" style="margin:0">اضغط على بادئة وحرّك القيمة: ترى التحويل إلى الوحدة الأساسية. من الأكبر إلى الأصغر نضرب، ومن الأصغر إلى الأكبر نقسم.</p>
+<div class="stage3" id="lst" style="height:210px;cursor:default"></div>
+<div class="row"><label>القيمة:</label><input type="range" id="vr" min="1" max="1000" value="5"><span class="val" id="vv"></span></div>
+<div class="steps" id="lstep"></div></div></section>
+<section id="cmp" class="pane hidden"><div class="card"><h2>🔁 تحويل الوحدات المركبة</h2>
+<div class="chips" id="cch"></div>
+<div class="row"><label>القيمة:</label><input type="range" id="cr" min="1" max="200" value="108"><span class="val" id="cv"></span></div>
+<div class="stage3" id="cst" style="height:170px;cursor:default"></div>
+<div class="steps" id="cstep"></div></div></section>
+<section id="tim" class="pane hidden"><div class="card"><h2>⏱️ الزمن والكتلة والمساحة والحجم</h2><div class="steps">
+<div>1 دقيقة = 60 ث، و1 ساعة = 60 × 60 = 3600 ث، و1 يوم = 24 × 60 × 60 = 86400 ث.</div>
+<div>1 كغم = 1000 غم، و1 طن = 1000 كغم.</div>
+<div>المساحة (م²): مساحة المستطيل = الطول × العرض. 1 م² = (10² سم)² = 10<sup>4</sup> سم².</div>
+<div>الحجم (م³): 1 م³ = (10² سم)³ = 10<sup>6</sup> سم³.</div></div></div></section>
+<section id="qz" class="pane hidden"><div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div></section>
+</main>
+<script src="lib/c3d.js"></script><script src="lib/p2d.js"></script>
+<script>
+C3D.init({ns:'pp',accent:'#1565C0',accentDark:'#64B5F6'});
+const $=C3D.$,mk=C3D.mk,fm=C3D.fm,P=P2D;
+
+const PR=[['تيرا','T',12],['غيغا','G',9],['ميغا','M',6],['كيلو','k',3],['','',0],['ديسي','d',-1],['سنتي','c',-2],['ملي','m',-3],['مايكرو','μ',-6],['نانو','n',-9],['بيكو','p',-12],['فمتو','f',-15]];
+let pi=3,pv=5;
+const lc=P.canvas($('lst'));
+lc.down=p=>{const w=lc.w,n=PR.length,x=8,cw=(w-16)/n;const i=Math.floor((p.x-8)/cw);if(i>=0&&i<n){pi=i;upd()}};
+lc.draw=(g,w,h)=>{const n=PR.length,cw=(w-16)/n,y=110;g.strokeStyle=P.col('--line');g.lineWidth=4;g.beginPath();g.moveTo(8,y);g.lineTo(w-8,y);g.stroke();
+ PR.forEach((r,i)=>{const x=8+(n-1-i)*cw+cw/2,sel=i===pi,base=r[2]===0,c=sel?P.col('--accent'):base?P.col('--ok'):P.col('--card');
+  g.fillStyle=c;g.beginPath();g.arc(x,y,sel?15:11,0,7);g.fill();g.strokeStyle=P.col('--ink');g.lineWidth=1.2;g.stroke();
+  P.text(g,r[1]||'أساس',x,y-30,{size:sel?15:12,color:sel?P.col('--accent'):P.col('--ink')});P.text(g,r[2]===0?'10⁰':'10'+String(r[2]).replace('-','⁻').replace(/\d/g,d=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[d]),x,y+30,{size:11,color:P.col('--muted')});
+  if(sel)P.text(g,r[0]||'الوحدة',x,y+54,{size:13,color:P.col('--accent')})});
+ P.text(g,'← أكبر',w-30,18,{size:12,color:P.col('--muted')});P.text(g,'أصغر →',30,18,{size:12,color:P.col('--muted')});
+ const sx=8+(PR.length-1-pi)*cw+cw/2;P.arrow(g,sx,y+72,sx,y+62,P.col('--accent'),3,8)};
+function sci(v){const e=Math.floor(Math.log10(Math.abs(v)));return {m:v/Math.pow(10,e),e}}
+function upd(){pv=+$('vr').value;$('vv').textContent=pv+(PR[pi][1]?' '+PR[pi][1]+'م':' م');const r=PR[pi],e=r[2];const res=pv*Math.pow(10,e);
+  const st=$('lstep');st.innerHTML='';
+  st.appendChild(mk('div','','البادئة <b>'+(r[0]||'(لا بادئة)')+'</b> ورمزها <b>'+(r[1]||'—')+'</b> وقيمتها <b class="ltr">10<sup>'+e+'</sup></b>.'));
+  st.appendChild(mk('div','',e===0?'الوحدة هي الوحدة الأساسية نفسها (المتر).':'عند التحويل إلى النظام الدولي نضرب في قيمة البادئة: '+pv+' × 10<sup>'+e+'</sup>.'));
+  const s=sci(res);st.appendChild(mk('div','','<b>'+pv+' '+(r[1]||'')+'م = '+(Math.abs(res)<1e-3||Math.abs(res)>=1e5?'<span class="ltr">'+(Math.round(s.m*100)/100)+' × 10<sup>'+s.e+'</sup></span>':(Math.round(res*1e6)/1e6))+' م</b>'));
+  lc.dirty=true}
+$('vr').oninput=upd;upd();
+/* مركبة */
+const CM=[{n:'كم/س ← م/ث',u1:'كم/س',u2:'م/ث',f:1000/3600,steps:v=>['1 كم = 1000 م','1 س = 3600 ث','السرعة = '+v+' × 1000 ÷ 3600 = <b>'+Math.round(v*1000/3600*100)/100+' م/ث</b>'],ex:'108 كم/س = 108 × 1000 ÷ 3600 = 30 م/ث',max:200,def:108},
+ {n:'غم/سم³ ← كغم/م³',u1:'غم/سم³',u2:'كغم/م³',f:1000,steps:v=>['1 غم = 10<sup>-3</sup> كغم','1 سم³ = 10<sup>-6</sup> م³','الكثافة = '+v+' × 10<sup>-3</sup> ÷ 10<sup>-6</sup> = <b>'+(v*1000)+' كغم/م³</b>'],ex:'3 غم/سم³ = 3 × 10⁻³ ÷ 10⁻⁶ = 3000 كغم/م³',max:20,def:3}];
+let ci=0;
+const cc=P.canvas($('cst')),ch=$('cch');CM.forEach((c,i)=>{const b=mk('button',i===0?'on':'',c.n);b.onclick=()=>{ci=i;$('cr').max=c.max;$('cr').value=c.def;[...ch.children].forEach((x,j)=>x.classList.toggle('on',j===i));cupd()};ch.appendChild(b)});
+cc.draw=(g,w,h)=>{const c=CM[ci],v=+$('cr').value,r=v*c.f,mx=Math.max(v,r),bw=w-40;
+ P.text(g,v+' '+c.u1,w-20,22,{align:'right',size:14,color:'#1565C0'});g.fillStyle='#1565C0';P.rrect(g,w-20-Math.max(10,bw*v/mx),32,Math.max(10,bw*v/mx),22,8);g.fill();
+ P.text(g,(Math.round(r*100)/100)+' '+c.u2,w-20,92,{align:'right',size:14,color:'#D32F2F'});g.fillStyle='#D32F2F';P.rrect(g,w-20-Math.max(10,bw*r/mx),102,Math.max(10,bw*r/mx),22,8);g.fill()};
+function cupd(){const c=CM[ci],v=+$('cr').value;$('cv').textContent=v+' '+c.u1;const st=$('cstep');st.innerHTML='';c.steps(v).forEach(s=>st.appendChild(mk('div','',s)));st.appendChild(mk('div','','<span class="ltr">'+c.ex+'</span> (مثال الدرس)'));cc.dirty=true}
+$('cr').oninput=cupd;cupd();
+C3D.quiz('qbox','qscore','q',[
+ {q:'حوّل 5 كم إلى المتر:',o:['50 م','500 م','5000 م','0.005 م'],a:2,e:'5 × 10³ = 5000 م.'},
+ {q:'حوّل 600 ملم إلى المتر:',o:['0.6 م','60 م','6 م','0.06 م'],a:0,e:'600 × 10⁻³ = 0.6 م.'},
+ {q:'حوّل 200 سم إلى المتر:',o:['20 م','0.2 م','200 م','2 م'],a:3,e:'200 × 10⁻² = 2 م.'},
+ {q:'قيمة البادئة مايكرو (μ):',o:['10⁻³','10⁻⁶','10⁻⁹','10⁶'],a:1,e:'مايكرو = 10⁻⁶.'},
+ {q:'50 نانومتر بالمتر تساوي:',o:['5 × 10⁻⁸ م','5 × 10⁻⁶ م','50 × 10⁹ م','5 × 10⁻¹⁰ م'],a:0,e:'50 × 10⁻⁹ = 5 × 10⁻⁸ م.'},
+ {q:'108 كم/س بوحدة م/ث تساوي:',o:['30 م/ث','108 م/ث','300 م/ث','3 م/ث'],a:0,e:'108 × 1000 ÷ 3600 = 30 م/ث.'},
+ {q:'1 م² تساوي كم سم²؟',o:['10²','10⁴','10⁶','10³'],a:1,e:'1 م² = (10² سم)² = 10⁴ سم².'}
+]);
+C3D.tabs([{id:'lad',l:'🪜 سلّم البادئات'},{id:'cmp',l:'🔁 الوحدات المركبة'},{id:'tim',l:'⏱️ معلومات'},{id:'qz',l:'✍️ أسئلة'}],()=>P.redraw());
+
+</script></body></html>

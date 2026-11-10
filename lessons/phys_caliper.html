@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>أدوات القياس: الورنية والميكرومتر</title><base href="../"><script src="lib/icons.js"></script></head>
+<body><main>
+<h1>📏 الورنية والميكرومتر</h1>
+<div class="tabs" id="tabs"></div>
+<section id="ver" class="pane"><div class="card"><h2>📏 الورنية</h2><p class="hint" style="margin:0">اسحب الفك المتحرك. القراءة = التدريج الرئيسي + (رقم الخط المنطبق × دقة الورنية 0.01 سم).</p>
+<div class="stage3" id="vst" style="height:200px;cursor:default"></div>
+<div class="steps" id="vstep"></div></div></section>
+<section id="mic" class="pane hidden"><div class="card"><h2>🔩 الميكرومتر</h2><p class="hint" style="margin:0">أدر الدوّار بالسحب أفقياً. القراءة = التدريج الثابت + (التدريج الدائري × 0.01 ملم).</p>
+<div class="stage3" id="mst" style="height:230px;cursor:default"></div>
+<div class="steps" id="mstep"></div></div></section>
+<section id="chl" class="pane hidden"><div class="card"><h2>🎯 اقرأ القياس</h2><p class="hint" style="margin:0">اقرأ كل جهاز واكتب القراءة. لكل تحدٍّ محاولة واحدة فقط ولا يمكن إعادته.</p><div id="chal"></div><div class="score" id="cscore"></div></div></section>
+<section id="qz" class="pane hidden"><div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div></section>
+</main>
+<script src="lib/c3d.js"></script><script src="lib/p2d.js"></script>
+<script>
+C3D.init({ns:'pc',accent:'#1565C0',accentDark:'#64B5F6'});
+const $=C3D.$,mk=C3D.mk,fm=C3D.fm,P=P2D;
+
+/* ---- الورنية: x بالمليمتر ---- */
+let vx=24.2;
+const vc=P.canvas($('vst')),VS=7;
+function vdraw(g,w,h,x,hid){const ox=24,s=(w-ox*2)/52;g.fillStyle=P.col('--card');P.rrect(g,ox-10,20,w-ox*2+20,52,6);g.fill();g.strokeStyle=P.col('--ink');g.lineWidth=1;
+  for(let m=0;m<=52;m++){const t=m%10===0?20:m%5===0?15:9;g.beginPath();g.moveTo(ox+m*s,72);g.lineTo(ox+m*s,72-t);g.stroke();if(m%10===0)P.text(g,String(m/10),ox+m*s,34,{size:12,dir:'ltr'})}
+  const vy=76,vx0=ox+x*s;g.fillStyle=P.col('--soft');P.rrect(g,vx0-4,vy,9*s*1+20,46,5);g.fill();g.strokeStyle=P.col('--accent');g.lineWidth=2;P.rrect(g,vx0-4,vy,9*s+20,46,5);g.stroke();
+  const k=Math.round((x-Math.floor(x+1e-9))*10)%10,idx=Math.round(((x*10)%10+10)%10)%10;
+  for(let i=0;i<=10;i++){const px=vx0+i*.9*s,t=i%5===0?16:10,hit=hid?false:i===idx;g.strokeStyle=hit?P.col('--bad'):P.col('--ink');g.lineWidth=hit?3:1.2;g.beginPath();g.moveTo(px,vy);g.lineTo(px,vy+t);g.stroke();if(i%5===0||hit)P.text(g,String(i),px,vy+28,{size:11,color:hit?P.col('--bad'):P.col('--muted'),dir:'ltr'})}
+  g.fillStyle=P.col('--ink');g.fillRect(ox-3,72,4,80);g.fillRect(vx0-4,72,4,80);return {idx,main:Math.floor(x+1e-9)}}
+vc.draw=(g,w,h)=>{vdraw(g,w,h,vx)};
+vc.down=vc.move=p=>{if(!vc.holdP)return;const ox=24,s=(vc.w-ox*2)/52;vx=Math.max(0,Math.min(42,Math.round((p.x-ox)/s*10)/10));vu()};
+function vu(){const idx=Math.round(((vx*10)%10+10)%10)%10,main=Math.floor(vx+1e-9),r=vx/10;const st=$('vstep');st.innerHTML='';
+ st.appendChild(mk('div','','التدريج الرئيسي = <b>'+(main/10).toFixed(1)+' سم</b>'));st.appendChild(mk('div','','الخط المنطبق من الورنية رقم <b>'+idx+'</b>، وقراءة الورنية = '+idx+' × 0.01 = <b>'+(idx*.01).toFixed(2)+' سم</b>'));
+ st.appendChild(mk('div','','القراءة النهائية = '+(main/10).toFixed(1)+' + '+(idx*.01).toFixed(2)+' = <b>'+r.toFixed(2)+' سم</b>'));vc.dirty=true}
+vu();
+/* ---- الميكرومتر ---- */
+let mm=9.44;
+const mc=P.canvas($('mst'));
+function mdraw(g,w,h,val,hid){const ox=18,cy=84,s=(w-ox-140)/20;const whole=Math.floor(val*2+1e-9)/2,th=Math.round((val-whole)*100);const sleeveEnd=ox+10*s;
+  g.fillStyle=P.col('--soft');P.rrect(g,ox,cy-30,w-ox-20,60,6);g.fill();g.strokeStyle=P.col('--ink');g.lineWidth=1;
+  g.beginPath();g.moveTo(ox,cy);g.lineTo(ox+w,cy);g.stroke();
+  for(let m=0;m<=20;m++){const x=ox+m*s,up=m%2===0;g.beginPath();g.moveTo(x,cy);g.lineTo(x,cy+(up?-14:-8));g.stroke();if(up&&m%4===0)P.text(g,String(m/2),x,cy-24,{size:11,dir:'ltr'})}
+  const tx=ox+val*2*s;const thx=tx+10;g.fillStyle=P.col('--card');g.strokeStyle=P.col('--accent');g.lineWidth=2;P.rrect(g,thx,cy-44,w-thx-10,88,10);g.fill();g.stroke();
+  for(let i=0;i<50;i++){const a=(i-th)/50*Math.PI*2,yy=cy-Math.sin(a)*38,vis=Math.cos(a)>0;if(!vis)continue;g.strokeStyle=i%5===0?P.col('--ink'):P.col('--muted');g.lineWidth=i%5===0?2:1;g.beginPath();g.moveTo(thx+6,yy);g.lineTo(thx+(i%5===0?22:14),yy);g.stroke();if(i%5===0&&!hid)P.text(g,String(i),thx+38,yy,{size:10,dir:'ltr',color:P.col('--muted')})}
+  g.strokeStyle=P.col('--bad');g.lineWidth=2.5;g.beginPath();g.moveTo(thx-6,cy);g.lineTo(thx+30,cy);g.stroke();
+  g.fillStyle=P.col('--ink');g.fillRect(ox-6,cy-34,8,68);g.fillRect(tx-4,cy-3,8,6)}
+mc.draw=(g,w,h)=>mdraw(g,w,h,mm);
+let mxd=0;mc.down=p=>{mxd=p.x};mc.move=p=>{if(!mc.holdP)return;const d=(p.x-mxd)/(mc.w-108)*20/1;mm=Math.max(0,Math.min(10,Math.round((mm+d*.5)*100)/100));mxd=p.x;mu()};
+function mu(){const whole=Math.floor(mm*2+1e-9)/2,th=Math.round((mm-whole)*100);const st=$('mstep');st.innerHTML='';
+ st.appendChild(mk('div','','التدريج الثابت = <b>'+whole.toFixed(1)+' ملم</b>'));st.appendChild(mk('div','','التدريج الدائري = <b>'+th+'</b>، وقيمته = '+th+' × 0.01 = <b>'+(th*.01).toFixed(2)+' ملم</b>'));
+ st.appendChild(mk('div','','القراءة = '+whole.toFixed(1)+' + '+(th*.01).toFixed(2)+' = <b>'+mm.toFixed(2)+' ملم</b>'));mc.dirty=true}
+mu();
+/* ---- التحديات ---- */
+const CH=[['v',2.42],['v',3.17],['m',9.44],['m',5.73],['v',4.05],['m',2.18]];
+function chal(){const box=$('chal');box.innerHTML='';let ok=0,n=0;
+ CH.forEach((c,i)=>{const r=C3D.get('c'+i),card=mk('div','card');card.style.marginTop='10px';card.innerHTML='<h3>'+(i+1)+'. اقرأ '+(c[0]==='v'?'الورنية (بالسم)':'الميكرومتر (بالملم)')+'</h3>';
+  const st=mk('div','stage3');st.style.cssText='height:'+(c[0]==='v'?150:170)+'px;cursor:default';card.appendChild(st);
+  const cv=P.canvas(st);cv.draw=(g,w,h)=>{if(c[0]==='v')vdraw(g,w,h,c[1]*10,true);else mdraw(g,w,h,c[1],true)};
+  const row=mk('div','row');const inp=mk('input');inp.type='text';inp.inputMode='decimal';inp.placeholder='القراءة';inp.style.cssText='flex:1;padding:9px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:700';const b=mk('button','main','تحقّق');const fb=mk('div','fb hidden');
+  const lock=(v,okk)=>{inp.value=v;inp.disabled=true;b.disabled=true;fb.classList.remove('hidden');fb.innerHTML=(okk?'<b style="color:var(--ok)">✔ قراءة صحيحة!</b> ':'<b style="color:var(--bad)">✘ القراءة غير صحيحة.</b> ')+'القراءة الصحيحة = <b>'+c[1].toFixed(2)+(c[0]==='v'?' سم':' ملم')+'</b><br>🔒 لا يمكن إعادة هذا التحدي.'};
+  b.onclick=()=>{if(C3D.get('c'+i))return;const v=parseFloat(inp.value.replace(',','.'));if(isNaN(v))return;const okk=Math.abs(v-c[1])<.0051;C3D.save('c'+i,{v:inp.value,ok:okk});lock(inp.value,okk);chal2()};
+  row.appendChild(inp);row.appendChild(b);card.appendChild(row);card.appendChild(fb);box.appendChild(card);if(r){lock(r.v,r.ok);n++;if(r.ok)ok++}});
+ $('cscore').textContent=n===CH.length?'نتيجتك: '+ok+' من '+CH.length+' 🔒':''}
+function chal2(){let ok=0,n=0;CH.forEach((c,i)=>{const r=C3D.get('c'+i);if(r){n++;if(r.ok)ok++}});$('cscore').textContent=n===CH.length?'نتيجتك: '+ok+' من '+CH.length+' 🔒':''}
+let built=false;function ensure(){if(!built){built=true;chal()}}
+C3D.quiz('qbox','qscore','q',[
+ {q:'الورنية تقيس:',o:['السرعة','السُّمك والقطر الخارجي والداخلي وعمق الثقوب','الكتلة','الزمن'],a:1,e:'الورنية أداة لقياس الأطوال الصغيرة بدقة أكبر من المسطرة: السُّمك والقطر الخارجي والداخلي وعمق الثقوب.'},
+ {q:'قراءة الورنية النهائية =',o:['التدريج الرئيسي فقط','التدريج الرئيسي + (رقم الخط المنطبق × دقة الورنية)','رقم الخط المنطبق فقط','التدريج الرئيسي × دقة الورنية'],a:1,e:'القراءة النهائية = قراءة التدريج الرئيسي + (رقم الخط المنطبق × دقة الورنية).'},
+ {q:'تدريج رئيسي 2.4 سم، والخط المنطبق رقم 2، ودقة الورنية 0.01 سم. القراءة:',o:['2.42 سم','2.6 سم','4.8 سم','2.402 سم'],a:0,e:'2 × 0.01 = 0.02، فالقراءة = 2.4 + 0.02 = 2.42 سم.'},
+ {q:'دقة الميكرومتر:',o:['0.1 ملم','1 ملم','0.01 ملم','0.001 ملم'],a:2,e:'الميكرومتر دقته 0.01 ملم.'},
+ {q:'تدريج ثابت 9 ملم، وتدريج دائري 44. القراءة:',o:['9.44 ملم','13.4 ملم','9.044 ملم','53 ملم'],a:0,e:'9 + (44 × 0.01) = 9.44 ملم.'},
+ {q:'المقياس الدائري في الميكرومتر مقسّم إلى:',o:['10 أقسام','100 قسم','25 قسماً','50 قسماً'],a:3,e:'المقياس الدائري مقسم إلى 50 قسماً ويعطي الجزء الكسري من الميليمتر.'}
+]);
+C3D.tabs([{id:'ver',l:'📏 الورنية'},{id:'mic',l:'🔩 الميكرومتر'},{id:'chl',l:'🎯 اقرأ'},{id:'qz',l:'✍️ أسئلة'}],id=>{if(id==='chl')ensure();P.redraw()});
+
+</script></body></html>

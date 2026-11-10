@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>قوانين نيوتن</title><base href="../"><script src="lib/icons.js"></script></head>
+<body><main>
+<h1>🛒 قوانين نيوتن</h1>
+<div class="tabs" id="tabs"></div>
+<section id="lab" class="pane"><div class="card"><h2>🛒 مختبر القوى (القانون الثاني)</h2><p class="hint" style="margin:0">اضبط الكتلة والقوة والاحتكاك وراقب مخطط القوى: محصلة القوى ق = ك × ت.</p>
+<div class="row"><label>الكتلة ك:</label><input type="range" id="m" min="1" max="20" value="5"><span class="val" id="mv"></span></div>
+<div class="row"><label>القوة المؤثرة:</label><input type="range" id="f" min="-50" max="50" value="20" step="5"><span class="val" id="fv"></span></div>
+<div class="row"><label>معامل الاحتكاك:</label><input type="range" id="mu" min="0" max="50" value="10"><span class="val" id="muv"></span></div>
+<div class="stage3" id="lst" style="height:260px;cursor:default"></div>
+<div class="row" style="justify-content:center"><button id="rs">↺ أعد العربة</button></div>
+<div class="steps" id="lstep"></div></div></section>
+<section id="n1" class="pane hidden"><div class="card"><h2>🥌 القانون الأول: القصور الذاتي</h2><p class="hint" style="margin:0">الجسم الساكن يبقى ساكناً، والمتحرك بسرعة ثابتة يبقى كذلك، ما لم تؤثر عليه محصلة قوى خارجية.</p>
+<div class="chips" id="n1c"></div>
+<div class="stage3" id="n1s" style="height:200px;cursor:default"></div>
+<div class="row" style="justify-content:center"><button class="main" id="push">ادفع القرص</button><button id="n1r">↺ أعد</button></div>
+<div class="steps" id="n1t"></div></div></section>
+<section id="n3" class="pane hidden"><div class="card"><h2>⛸️ القانون الثالث: الفعل ورد الفعل</h2><p class="hint" style="margin:0">لكل فعل رد فعل يساويه في المقدار ويعاكسه في الاتجاه، ويؤثران في جسمين مختلفين.</p>
+<div class="row"><label>كتلة الأول:</label><input type="range" id="ma" min="20" max="100" value="40"><span class="val" id="mav"></span></div>
+<div class="row"><label>كتلة الثاني:</label><input type="range" id="mb" min="20" max="100" value="80"><span class="val" id="mbv"></span></div>
+<div class="stage3" id="n3s" style="height:210px;cursor:default"></div>
+<div class="row" style="justify-content:center"><button class="main" id="pu">ادفع بعضكما</button><button id="n3r">↺ أعد</button></div>
+<div class="steps" id="n3t"></div></div></section>
+<section id="wt" class="pane hidden"><div class="card"><h2>🌍 الوزن والكتلة</h2><p class="hint" style="margin:0">الكتلة لا تتغير بتغير المكان، أما الوزن (و = ك × جـ) فيتغير.</p>
+<div class="chips" id="wch"></div>
+<div class="row"><label>الكتلة:</label><input type="range" id="wm" min="1" max="100" value="60"><span class="val" id="wmv"></span></div>
+<div class="stage3" id="wst" style="height:220px;cursor:default"></div><div class="steps" id="wstep"></div></div></section>
+<section id="cir" class="pane hidden"><div class="card"><h2>🌀 القوة المركزية</h2><p class="hint" style="margin:0">ق مركزية = ك·ع² ÷ نق وتتجه نحو المركز. الزمن الدوري ن = 2πنق ÷ ع، والتردد تر = 1 ÷ ن.</p>
+<div class="row"><label>نصف القطر:</label><input type="range" id="r" min="1" max="10" value="5"><span class="val" id="rv"></span></div>
+<div class="row"><label>السرعة ع:</label><input type="range" id="v" min="1" max="20" value="10"><span class="val" id="vv"></span></div>
+<div class="row"><label>الكتلة:</label><input type="range" id="cm" min="1" max="5" value="2"><span class="val" id="cmv"></span></div>
+<div class="stage3" id="cst" style="height:260px;cursor:default"></div><div class="steps" id="cstep"></div></div></section>
+<section id="qz" class="pane hidden"><div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div></section>
+</main>
+<script src="lib/c3d.js"></script><script src="lib/p2d.js"></script>
+<script>
+C3D.init({ns:'pn',accent:'#1565C0',accentDark:'#64B5F6'});
+const $=C3D.$,mk=C3D.mk,fm=C3D.fm,P=P2D;
+
+const g_=10;
+/* ---- مختبر القوى ---- */
+let M=5,F=20,MU=.1,cx=0,cv=0,lt=0;
+const lc=P.canvas($('lst'));
+lc.anim=t=>{const dt=Math.min(.04,(t-lt)/1000);lt=t;if(dt<=0)return false;const N=M*g_,fmax=MU*N;let net;if(Math.abs(cv)<.02){if(Math.abs(F)<=fmax){net=0;cv=0}else net=F-Math.sign(F)*fmax}else net=F-Math.sign(cv)*fmax;const a=net/M;const nv=cv+a*dt;if(cv!==0&&Math.sign(nv)!==Math.sign(cv)&&Math.abs(F)<=fmax){cv=0}else cv=nv;cx+=cv*dt;if(Math.abs(cx)>1e3)cx=0;return true};
+function netF(){const N=M*g_,fmax=MU*N;if(Math.abs(cv)<.02)return Math.abs(F)<=fmax?0:F-Math.sign(F)*fmax;return F-Math.sign(cv)*fmax}
+lc.draw=(g,w,h)=>{const gy=h-70,bx=w/2-36;g.fillStyle=P.col('--soft');g.fillRect(0,gy+40,w,30);g.strokeStyle=P.col('--muted');g.lineWidth=2;for(let x=-((cx*20)%40);x<w;x+=40){g.beginPath();g.moveTo(x,gy+40);g.lineTo(x,gy+52);g.stroke()}
+ g.fillStyle='#1565C0';P.rrect(g,bx,gy-10,72,50,8);g.fill();P.text(g,M+' كغم',bx+36,gy+15,{size:13,color:'#fff'});g.fillStyle='#263238';g.beginPath();g.arc(bx+14,gy+42,7,0,7);g.arc(bx+58,gy+42,7,0,7);g.fill();
+ const s=1.3,cxm=bx+36,cym=gy+15,N=M*g_,fr=Math.abs(cv)<.02?Math.min(Math.abs(F),MU*N)*Math.sign(F):MU*N*Math.sign(cv);
+ P.arrow(g,cxm,cym,cxm,cym+Math.min(80,N*.4),'#D32F2F',3,9);P.text(g,'الوزن',cxm+22,cym+Math.min(80,N*.4)+2,{size:11,color:'#D32F2F'});
+ P.arrow(g,cxm+10,cym,cxm+10,cym-Math.min(80,N*.4),'#2E7D32',3,9);P.text(g,'العمودية',cxm+44,cym-Math.min(80,N*.4)-4,{size:11,color:'#2E7D32'});
+ if(F)P.arrow(g,bx+(F>0?72:0),gy+4,bx+(F>0?72:0)+F*s,gy+4,'#EF6C00',4,11);if(F)P.text(g,'ق='+F+' ن',bx+(F>0?72:0)+F*s/2,gy-22,{size:12,color:'#EF6C00'});
+ if(fr)P.arrow(g,bx+36,gy+34,bx+36-fr*s,gy+34,'#8E24AA',4,10);if(fr)P.text(g,'احتكاك',bx+36-fr*s/2,gy+56,{size:11,color:'#8E24AA'});
+ P.text(g,'ع = '+cv.toFixed(1)+' م/ث',w-12,16,{align:'right',size:13})};
+function lu(){M=+$('m').value;F=+$('f').value;MU=+$('mu').value/100;$('mv').textContent=M+' كغم';$('fv').textContent=F+' ن';$('muv').textContent=MU.toFixed(2);const N=M*g_,n=netF(),a=n/M,st=$('lstep');st.innerHTML='';
+ st.appendChild(mk('div','','الوزن و = ك × جـ = '+M+' × 10 = <b>'+N+' ن</b>، والقوة العمودية = الوزن (عمودية دائماً على السطح).'));
+ st.appendChild(mk('div','','الاحتكاك الأقصى = '+MU.toFixed(2)+' × '+N+' = <b>'+(MU*N).toFixed(1)+' ن</b> يعاكس اتجاه الحركة.'));
+ st.appendChild(mk('div','','محصلة القوى الأفقية ≈ <b>'+n.toFixed(1)+' ن</b> ⇒ ت = ق ÷ ك = <b>'+a.toFixed(2)+' م/ث²</b> باتجاه المحصلة.'));}
+['m','f','mu'].forEach(i=>$(i).oninput=lu);$('rs').onclick=()=>{cx=0;cv=0};lu();setInterval(lu,400);
+/* ---- القانون الأول ---- */
+let n1k=0,px=30,pvv=0,n1l=0;const n1c=$('n1c');[['no','سطح أملس (بلا احتكاك)'],['yes','سطح خشن']].forEach((m,i)=>{const b=mk('button',i===0?'on':'',m[1]);b.onclick=()=>{n1k=i;[...n1c.children].forEach((x,j)=>x.classList.toggle('on',j===i));px=30;pvv=0;n1u()};n1c.appendChild(b)});
+const n1=P.canvas($('n1s'));
+n1.anim=t=>{const dt=Math.min(.04,(t-n1l)/1000);n1l=t;if(pvv===0)return false;if(n1k===1){pvv=Math.max(0,pvv-6*dt)}px+=pvv*dt*20;if(px>n1.w+30)px=-30;n1u();return true};
+n1.draw=(g,w,h)=>{g.fillStyle=n1k?'#8d6e63':'#bbdefb';g.fillRect(0,h-60,w,60);for(let x=0;x<w;x+=30){g.strokeStyle=n1k?'#6d4c41':'#90caf9';g.beginPath();g.moveTo(x,h-60);g.lineTo(x+10,h-40);g.stroke()}
+ g.fillStyle='#263238';P.rrect(g,px-24,h-82,48,22,8);g.fill();if(pvv>0)P.arrow(g,px+28,h-71,px+28+pvv*5,h-71,'#2E7D32',4,10);P.text(g,'ع = '+pvv.toFixed(1)+' م/ث',w-12,16,{align:'right',size:13})};
+$('push').onclick=()=>{pvv=8};$('n1r').onclick=()=>{px=30;pvv=0;n1u()};
+function n1u(){const st=$('n1t');st.innerHTML='';st.appendChild(mk('div','',n1k?'على السطح الخشن يؤثر الاحتكاك بقوة تعاكس الحركة، فتتناقص السرعة حتى يسكن القرص.':'على السطح الأملس لا توجد محصلة قوى على القرص بعد الدفعة، فيستمر بسرعة ثابتة.'));st.appendChild(mk('div','','القصور الذاتي: ممانعة الجسم لتغيير حالته الحركية، ويعتمد على الكتلة.'));n1.dirty=true}
+n1u();
+/* ---- القانون الثالث ---- */
+let sA=0,sB=0,vA=0,vB=0,n3t=-1,n3l=0;const FF=60,PT=.5;
+const n3=P.canvas($('n3s'));
+n3.anim=t=>{const dt=Math.min(.04,(t-n3l)/1000);n3l=t;if(n3t<0)return false;n3t+=dt;const mA=+$('ma').value,mB=+$('mb').value;if(n3t<PT){vA-=FF/mA*dt;vB+=FF/mB*dt}sA+=vA*dt*30;sB+=vB*dt*30;if(Math.abs(sA)>400)n3t=-1;n3u();return true};
+n3.draw=(g,w,h)=>{const y=h-56,cx=w/2;g.fillStyle='#bbdefb';g.fillRect(0,y+34,w,40);const mA=+$('ma').value,mB=+$('mb').value;[[cx-50+sA,mA,'#1565C0','الأول'],[cx+50+sB,mB,'#D32F2F','الثاني']].forEach(p=>{const r=14+p[1]*.18;g.fillStyle=p[2];g.beginPath();g.arc(p[0],y-r+34,r,0,7);g.fill();P.text(g,p[3],p[0],y-r+34,{size:11,color:'#fff'})});
+ if(n3t>=0&&n3t<PT){P.arrow(g,cx-50+sA,16,cx-110+sA,16,'#1565C0',4,10);P.arrow(g,cx+50+sB,16,cx+110+sB,16,'#D32F2F',4,10);P.text(g,'ق='+FF+' ن',cx,18,{size:12})}
+ P.text(g,'ع₁ = '+(vA).toFixed(2)+' م/ث',w-10,h-10,{align:'right',size:12,color:'#1565C0'});P.text(g,'ع₂ = '+vB.toFixed(2)+' م/ث',10,h-10,{align:'left',size:12,color:'#D32F2F'})};
+$('pu').onclick=()=>{if(n3t<0){sA=0;sB=0;vA=0;vB=0;n3t=0}};$('n3r').onclick=()=>{sA=sB=vA=vB=0;n3t=-1;n3u()};
+function n3u(){const mA=+$('ma').value,mB=+$('mb').value;$('mav').textContent=mA+' كغم';$('mbv').textContent=mB+' كغم';const st=$('n3t');st.innerHTML='';
+ st.appendChild(mk('div','','قوة الفعل = قوة رد الفعل = <b>'+FF+' ن</b> (متساويتان مقداراً ومتعاكستان اتجاهاً، وتؤثران في جسمين مختلفين).'));
+ st.appendChild(mk('div','','تسارع الأول = '+FF+' ÷ '+mA+' = <b>'+(FF/mA).toFixed(2)+' م/ث²</b>، وتسارع الثاني = '+FF+' ÷ '+mB+' = <b>'+(FF/mB).toFixed(2)+' م/ث²</b>. الأخف يتسارع أكثر.'));
+ st.appendChild(mk('div','','أمثلة: خرطوم الإطفاء، وارتداد المدفع.'));n3.dirty=true}
+$('ma').oninput=n3u;$('mb').oninput=n3u;n3u();
+/* ---- الوزن ---- */
+const PL=[['الأرض',10,'#1565C0'],['القمر',10/6,'#757575']];let pl=0;
+const wc=P.canvas($('wst')),wch=$('wch');PL.forEach((p,i)=>{const b=mk('button',i===0?'on':'',p[0]);b.onclick=()=>{pl=i;[...wch.children].forEach((x,j)=>x.classList.toggle('on',j===i));wu()};wch.appendChild(b)});
+wc.draw=(g,w,h)=>{const m=+$('wm').value,wt=m*PL[pl][1],cx=w/2;g.fillStyle=PL[pl][2];g.beginPath();g.arc(cx,h+120,200,0,7);g.fill();
+ g.fillStyle=P.col('--card');P.rrect(g,cx-60,14,120,76,10);g.fill();g.strokeStyle=P.col('--ink');g.lineWidth=2;P.rrect(g,cx-60,14,120,76,10);g.stroke();P.text(g,'نيوتن',cx,28,{size:12});P.text(g,wt.toFixed(1),cx,56,{size:26,color:P.col('--accent')});
+ const ang=Math.min(1,wt/1000)*Math.PI*.9;g.strokeStyle='#D32F2F';g.lineWidth=3;g.beginPath();g.moveTo(cx,84);g.lineTo(cx+Math.cos(Math.PI-ang)*40,84-Math.sin(ang)*40*0);g.stroke();
+ g.fillStyle='#263238';P.rrect(g,cx-26,96,52,34,8);g.fill();P.text(g,m+' كغم',cx,113,{size:13,color:'#fff'});P.arrow(g,cx+40,113,cx+40,113+Math.min(60,wt*.12),'#D32F2F',3,9)};
+function wu(){const m=+$('wm').value,p=PL[pl];$('wmv').textContent=m+' كغم';const st=$('wstep');st.innerHTML='';
+ st.appendChild(mk('div','','على '+p[0]+': جـ = '+(Math.round(p[1]*100)/100)+' م/ث²، فالوزن و = ك × جـ = '+m+' × '+(Math.round(p[1]*100)/100)+' = <b>'+(m*p[1]).toFixed(1)+' ن</b>.'));
+ st.appendChild(mk('div','','الكتلة <b>'+m+' كغم</b> لم تتغير. وعلى القمر يساوي وزنك سدس وزنك على الأرض.'));wc.dirty=true}
+$('wm').oninput=wu;wu();
+/* ---- الحركة الدائرية ---- */
+let ca=0,cl=0;const cc=P.canvas($('cst'));
+cc.anim=t=>{const dt=Math.min(.04,(t-cl)/1000);cl=t;const r=+$('r').value,v=+$('v').value;ca+=v/r*dt*.6;return true};
+cc.draw=(g,w,h)=>{const r=+$('r').value,v=+$('v').value,m=+$('cm').value,R=Math.min(w,h)/2-30,x0=w/2,y0=h/2,x=x0+Math.cos(ca)*R*r/10*.9+Math.cos(ca)*R*.1,y=y0+Math.sin(ca)*R*r/10*.9+Math.sin(ca)*R*.1;const rr=Math.hypot(x-x0,y-y0);
+ g.strokeStyle=P.col('--line');g.setLineDash([5,5]);g.lineWidth=2;g.beginPath();g.arc(x0,y0,rr,0,7);g.stroke();g.setLineDash([]);g.strokeStyle=P.col('--muted');g.lineWidth=2;g.beginPath();g.moveTo(x0,y0);g.lineTo(x,y);g.stroke();
+ g.fillStyle='#263238';g.beginPath();g.arc(x0,y0,6,0,7);g.fill();g.fillStyle='#D32F2F';g.beginPath();g.arc(x,y,9+m*1.5,0,7);g.fill();
+ const fc=m*v*v/r,L=Math.min(70,fc*.5);P.arrow(g,x,y,x-Math.cos(ca)*L,y-Math.sin(ca)*L,'#2E7D32',4,11);P.text(g,'ق مركزية',x-Math.cos(ca)*(L+22),y-Math.sin(ca)*(L+22),{size:11,color:'#2E7D32'});
+ P.arrow(g,x,y,x-Math.sin(ca)*Math.min(60,v*4),y+Math.cos(ca)*Math.min(60,v*4),'#1565C0',3,10)};
+function cu(){const r=+$('r').value,v=+$('v').value,m=+$('cm').value;$('rv').textContent=r+' م';$('vv').textContent=v+' م/ث';$('cmv').textContent=m+' كغم';const fc=m*v*v/r,T=2*Math.PI*r/v,st=$('cstep');st.innerHTML='';
+ st.appendChild(mk('div','','ق مركزية = ك·ع² ÷ نق = '+m+' × '+v+'² ÷ '+r+' = <b>'+fc.toFixed(1)+' ن</b> نحو المركز.'));st.appendChild(mk('div','','الزمن الدوري ن = 2πنق ÷ ع = <b>'+T.toFixed(2)+' ث</b>، والتردد تر = 1 ÷ ن = <b>'+(1/T).toFixed(2)+' هرتز</b>.'))}
+['r','v','cm'].forEach(i=>$(i).oninput=cu);cu();
+C3D.quiz('qbox','qscore','q',[
+ {q:'وحدة قياس القوة:',o:['الجول','الباسكال','النيوتن','الواط'],a:2,e:'القوة وحدتها النيوتن.'},
+ {q:'وزن جسم كتلته 5 كغم على الأرض (جـ = 10):',o:['5 ن','50 ن','0.5 ن','15 ن'],a:1,e:'و = ك × جـ = 5 × 10 = 50 ن.'},
+ {q:'ينص القانون الأول لنيوتن على أن الجسم الساكن يبقى ساكناً ما لم:',o:['تؤثر عليه محصلة قوى خارجية','يصبح ثقيلاً','يسخّن','يلمسه جسم'],a:0,e:'الجسم الساكن يبقى ساكناً ما لم تؤثر عليه محصلة قوى خارجية (القصور الذاتي).'},
+ {q:'القانون الثاني لنيوتن:',o:['ق = ك ÷ ت','ق = ك × ت','ق = ك + ت','ق = ت ÷ ك'],a:1,e:'محصلة القوى ق = ك × ت، والتسارع باتجاه المحصلة.'},
+ {q:'على القمر يساوي وزنك:',o:['ضعف وزنك على الأرض','وزنك نفسه','سدس وزنك على الأرض','صفر'],a:2,e:'الكتلة لا تتغير، أما الوزن على القمر فيساوي سدس وزنك على الأرض.'},
+ {q:'فعل ورد فعل يؤثران في:',o:['الجسم نفسه','جسمين مختلفين','لا يؤثران','الجسم نفسه دائماً'],a:1,e:'لكل فعل رد فعل يساويه في المقدار ويعاكسه في الاتجاه، ويؤثران في جسمين مختلفين.'},
+ {q:'القوة المركزية في الحركة الدائرية المنتظمة تساوي:',o:['ك·ع ÷ نق','ك·ع² ÷ نق','ك·نق ÷ ع','ك·ع²·نق'],a:1,e:'ق مركزية = ك·ع² ÷ نق، وتتجه نحو المركز.'}
+]);
+C3D.tabs([{id:'lab',l:'🛒 مختبر القوى'},{id:'n1',l:'🥌 القانون الأول'},{id:'n3',l:'⛸️ القانون الثالث'},{id:'wt',l:'🌍 الوزن'},{id:'cir',l:'🌀 المركزية'},{id:'qz',l:'✍️ أسئلة'}],()=>P.redraw());
+
+</script></body></html>

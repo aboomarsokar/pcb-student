@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>الموائع السكونية</title><base href="../"><script src="lib/icons.js"></script></head>
+<body><main>
+<h1>🌊 الموائع السكونية</h1>
+<div class="tabs" id="tabs"></div>
+<section id="prs" class="pane"><div class="card"><h2>🌊 ضغط السائل</h2><p class="hint" style="margin:0">ض = ث × ل × جـ: يعتمد الضغط على العمق والكثافة والجاذبية، ولا يعتمد على شكل الوعاء.</p>
+<div class="chips" id="lch"></div>
+<div class="row"><label>العمق ل:</label><input type="range" id="d" min="1" max="10" value="6" step=".5"><span class="val" id="dv"></span></div>
+<div class="stage3" id="pst" style="height:280px;cursor:default"></div>
+<div class="steps" id="pstep"></div></div></section>
+<section id="pas" class="pane hidden"><div class="card"><h2>🏗️ المكبس الهيدروليكي (مبدأ باسكال)</h2><p class="hint" style="margin:0">الضغط الخارجي على سائل محصور ينتقل بالتساوي إلى جميع أجزائه: ق₁/أ₁ = ق₂/أ₂.</p>
+<div class="row"><label>القوة الصغرى ق₁:</label><input type="range" id="f1" min="10" max="200" value="50" step="10"><span class="val" id="f1v"></span></div>
+<div class="row"><label>مساحة المكبس الصغير أ₁:</label><input type="range" id="a1" min="5" max="50" value="10" step="5"><span class="val" id="a1v"></span></div>
+<div class="row"><label>مساحة المكبس الكبير أ₂:</label><input type="range" id="a2" min="50" max="500" value="200" step="50"><span class="val" id="a2v"></span></div>
+<div class="stage3" id="hst" style="height:260px;cursor:default"></div>
+<div class="row" style="justify-content:center"><button class="main" id="hp">اضغط المكبس</button></div>
+<div class="steps" id="hstep"></div></div></section>
+<section id="arc" class="pane hidden"><div class="card"><h2>🛟 قاعدة أرخميدس: الطفو</h2><p class="hint" style="margin:0">الجسم المغمور في مائع يفقد من وزنه مقدار وزن المائع المزاح، وهذه هي قوة الطفو.</p>
+<div class="chips" id="ach"></div>
+<div class="row"><label>كثافة الجسم:</label><input type="range" id="od" min="200" max="3000" value="600" step="50"><span class="val" id="odv"></span></div>
+<div class="stage3" id="ast" style="height:300px;cursor:default"></div>
+<div class="steps" id="astep"></div></div></section>
+<section id="atm" class="pane hidden"><div class="card"><h2>🌬️ الضغط والضغط الجوي</h2><div class="steps">
+<div>المائع: كل مادة تتصف بالجريان (السوائل) أو الانتشار (الغازات).</div>
+<div>الضغط = القوة العمودية ÷ المساحة، وحدته الباسكال (نيوتن/م²).</div>
+<div>الضغط الجوي ≈ 1.013 × 10<sup>5</sup> باسكال = 760 ملم زئبق.</div>
+<div>لهذا يُوضع خزان الماء مرتفعاً: ليزداد الضغط عند الصنابير.</div>
+<div>يُستخدم الزيت في المكبس الهيدروليكي عادة لأن الهواء ينضغط. ومن تطبيقاته: رافعات السيارات، ومعاصر الزيتون، والفرامل.</div>
+<div>من تطبيقات قاعدة أرخميدس: الهيدروميتر، والسفينة، وعوامة الخزان، والغواصة، والبالون.</div></div></div>
+<div class="card"><h2>🧮 الضغط = ق ÷ أ</h2>
+<div class="row"><label>القوة:</label><input type="range" id="pf" min="10" max="1000" value="200" step="10"><span class="val" id="pfv"></span></div>
+<div class="row"><label>المساحة:</label><input type="range" id="pa" min="1" max="100" value="10"><span class="val" id="pav"></span></div>
+<div class="stage3" id="bst" style="height:160px;cursor:default"></div><div class="steps" id="bstep"></div></div></section>
+<section id="qz" class="pane hidden"><div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div></section>
+</main>
+<script src="lib/c3d.js"></script><script src="lib/p2d.js"></script>
+<script>
+C3D.init({ns:'pf',accent:'#1565C0',accentDark:'#64B5F6'});
+const $=C3D.$,mk=C3D.mk,fm=C3D.fm,P=P2D;
+
+const LQ=[['ماء',1000,'#4FC3F7'],['زيت',800,'#FFD54F'],['زئبق',13600,'#B0BEC5']];let li=0;const g_=10;
+const pc=P.canvas($('pst')),lch=$('lch');LQ.forEach((l,i)=>{const b=mk('button',i===0?'on':'',l[0]+' ('+l[1]+' كغم/م³)');b.onclick=()=>{li=i;[...lch.children].forEach((x,j)=>x.classList.toggle('on',j===i));pu()};lch.appendChild(b)});
+pc.draw=(g,w,h)=>{const d=+$('d').value,L=LQ[li],P0=L[1]*g_*d,mx=13600*g_*10,sh=[[.2,.8],[.45,.55],[.15,.85]];const top=40,bot=h-50,hh=bot-top,wv=w/3;
+ sh.forEach((s,i)=>{const x0=i*wv+wv*.1,ww=wv*.8;g.strokeStyle=P.col('--ink');g.lineWidth=3;g.beginPath();
+  if(i===0){g.rect(x0+ww*.3,top,ww*.4,hh)}else if(i===1){g.rect(x0,top,ww,hh)}else{g.moveTo(x0,top);g.lineTo(x0+ww*.35,bot);g.lineTo(x0+ww*.65,bot);g.lineTo(x0+ww,top)}g.stroke();
+  const fy=top+hh*(1-d/10);g.fillStyle=L[2]+'AA';if(i===0)g.fillRect(x0+ww*.3+2,fy,ww*.4-4,bot-fy);else if(i===1)g.fillRect(x0+2,fy,ww-4,bot-fy);else{const t=(fy-top)/hh,xl=x0+ww*.35*t,xr=x0+ww-ww*.35*t;g.beginPath();g.moveTo(xl,fy);g.lineTo(x0+ww*.35,bot);g.lineTo(x0+ww*.65,bot);g.lineTo(xr,fy);g.closePath();g.fill()}
+  const gx=x0+ww/2,len=Math.max(6,P0/mx*(wv*.7));g.fillStyle='#D32F2F';g.fillRect(gx-len/2,bot+8,len,10);P.text(g,Math.round(P0/1000)+' كيلوباسكال',gx,bot+32,{size:11,color:'#D32F2F'})});
+ P.text(g,'العمق = '+d+' م',w-12,14,{align:'right',size:13});P.text(g,'الضغط نفسه في الأوعية الثلاثة',w/2,top-14,{size:12,color:P.col('--muted')})};
+function pu(){const d=+$('d').value,L=LQ[li];$('dv').textContent=d+' م';const Pp=L[1]*g_*d,st=$('pstep');st.innerHTML='';
+ st.appendChild(mk('div','','ض = ث × ل × جـ = '+L[1]+' × '+d+' × 10 = <b>'+Pp.toLocaleString('en')+' باسكال</b> = '+(Pp/1000).toFixed(1)+' كيلوباسكال.'));
+ st.appendChild(mk('div','','الضغط في الأوعية الثلاثة <b>متساوٍ</b> عند العمق نفسه لأنه لا يعتمد على شكل الوعاء. وكلما زادت الكثافة (زئبق) أو العمق زاد الضغط.'));pc.dirty=true}
+$('d').oninput=pu;pu();
+/* ---- المكبس ---- */
+let hp=0,hl=0,hdir=0;
+const hc=P.canvas($('hst'));
+hc.anim=t=>{const dt=Math.min(.04,(t-hl)/1000);hl=t;if(hdir===0)return false;hp+=hdir*dt*.8;if(hp>=1){hp=1;hdir=-1}if(hp<=0&&hdir<0){hp=0;hdir=0}return true};
+hc.draw=(g,w,h)=>{const f1=+$('f1').value,a1=+$('a1').value,a2=+$('a2').value,w1=Math.max(24,Math.sqrt(a1)*9),w2=Math.max(40,Math.sqrt(a2)*9),base=h-40,x1=w*.22,x2=w*.68,d1=hp*70,d2=d1*a1/a2;
+ g.fillStyle='#FFD54F88';P.rrect(g,12,base-34,w-24,34,6);g.fill();g.strokeStyle=P.col('--ink');g.lineWidth=3;g.beginPath();g.moveTo(x1-w1/2-4,base-110);g.lineTo(x1-w1/2-4,base);g.lineTo(x2-w2/2-4,base);g.lineTo(x2-w2/2-4,base-110);g.moveTo(x1+w1/2+4,base-110);g.lineTo(x1+w1/2+4,base-34);g.lineTo(x2+w2/2+4,base-34);g.lineTo(x2+w2/2+4,base-110);g.stroke();
+ g.fillStyle='#FFD54F88';g.fillRect(x1-w1/2,base-34+d1*0,w1,34);g.fillStyle='#546E7A';P.rrect(g,x1-w1/2,base-110+d1,w1,14,3);g.fill();P.rrect(g,x2-w2/2,base-110+2-d2,w2,14,3);g.fill();
+ P.arrow(g,x1,base-170+d1,x1,base-112+d1,'#D32F2F',5,12);P.text(g,'ق₁='+f1+' ن',x1,base-182+d1,{size:12,color:'#D32F2F'});
+ const f2=f1*a2/a1,L=Math.min(110,f2/f1*18);P.arrow(g,x2,base-112-d2,x2,base-112-d2-L,'#2E7D32',5,12);P.text(g,'ق₂='+f2+' ن',x2,base-112-d2-L-12,{size:12,color:'#2E7D32'});
+ P.text(g,'أ₁='+a1+' سم²',x1,base+14,{size:11});P.text(g,'أ₂='+a2+' سم²',x2,base+14,{size:11})};
+$('hp').onclick=()=>{hp=0;hdir=1};
+function hu(){const f1=+$('f1').value,a1=+$('a1').value,a2=+$('a2').value;$('f1v').textContent=f1+' ن';$('a1v').textContent=a1+' سم²';$('a2v').textContent=a2+' سم²';const f2=f1*a2/a1,st=$('hstep');st.innerHTML='';
+ st.appendChild(mk('div','','الضغط على المكبس الصغير = '+f1+' ÷ '+a1+' = <b>'+(f1/a1)+' ن/سم²</b> ينتقل بالتساوي في السائل.'));
+ st.appendChild(mk('div','','ق₂ = ق₁ × أ₂ ÷ أ₁ = '+f1+' × '+a2+' ÷ '+a1+' = <b>'+f2+' ن</b>.'));
+ st.appendChild(mk('div','','المكبس الكبير يرتفع مسافة أقل بنسبة '+(a1/a2).toFixed(2)+' (حفظ الطاقة). تُستخدم هذه الفكرة في رافعات السيارات ومعاصر الزيتون والفرامل، ويُستخدم الزيت لأن الهواء ينضغط.'));hc.dirty=true}
+['f1','a1','a2'].forEach(i=>$(i).oninput=hu);hu();
+/* ---- أرخميدس ---- */
+const AL=[['ماء',1000],['زيت',800],['زئبق',13600]];let ai=0,oy=0,ol=0;
+const ac=P.canvas($('ast')),ach=$('ach');AL.forEach((l,i)=>{const b=mk('button',i===0?'on':'',l[0]);b.onclick=()=>{ai=i;[...ach.children].forEach((x,j)=>x.classList.toggle('on',j===i));au()};ach.appendChild(b)});
+function tgt(){const od=+$('od').value,ld=AL[ai][1];if(od>ld)return 1;if(od===ld)return .5;return od/ld}
+ac.anim=t=>{const k=tgt();if(Math.abs(oy-k)>.002){oy+=(k-oy)*.08;return true}return false};
+ac.draw=(g,w,h)=>{const od=+$('od').value,ld=AL[ai][1],top=h*.42,bot=h-20,cx=w/2-40,sz=70;g.fillStyle=ai===2?'#B0BEC5AA':ai===1?'#FFD54F88':'#4FC3F788';g.fillRect(20,top,w-40,bot-top);g.strokeStyle=P.col('--ink');g.lineWidth=3;g.beginPath();g.moveTo(20,20);g.lineTo(20,bot);g.lineTo(w-20,bot);g.lineTo(w-20,20);g.stroke();
+ const sub=oy*sz,yb=od>ld?bot-sz-4:top-(sz-sub)+ (od===ld?-sz*.5+sz*.5:0);const yy=od>ld?bot-sz:top-sz+sub;g.fillStyle='#8D6E63';P.rrect(g,cx-sz/2,yy,sz,sz,6);g.fill();P.text(g,od+' كغم/م³',cx,yy+sz/2,{size:11,color:'#fff'});
+ const W=od*.001*g_,B=ld*.001*g_*Math.min(1,tgt()),sc=7;P.arrow(g,cx+sz/2+26,yy+sz/2,cx+sz/2+26,yy+sz/2+W*sc,'#D32F2F',4,10);P.text(g,'الوزن',cx+sz/2+50,yy+sz/2+W*sc+10,{size:11,color:'#D32F2F'});
+ P.arrow(g,cx+sz/2+8,yy+sz/2,cx+sz/2+8,yy+sz/2-B*sc,'#2E7D32',4,10);P.text(g,'الطفو',cx+sz/2+6,yy+sz/2-B*sc-10,{size:11,color:'#2E7D32'});
+ P.text(g,od>ld?'ينغمر':od===ld?'يعلق':'يطفو',w-30,34,{align:'right',size:20,color:P.col('--accent')})};
+function au(){const od=+$('od').value,ld=AL[ai][1];$('odv').textContent=od+' كغم/م³';const V=.001,W=od*V*g_,B=ld*V*g_*Math.min(1,tgt()),st=$('astep');st.innerHTML='';
+ st.appendChild(mk('div','','حجم الجسم 1 لتر (0.001 م³): وزنه = '+od+' × 0.001 × 10 = <b>'+W.toFixed(1)+' ن</b>.'));
+ st.appendChild(mk('div','',od>ld?'كثافة الجسم أكبر من كثافة '+AL[ai][0]+' فــ<b>ينغمر</b>. قوة الطفو = وزن المائع المزاح = '+B.toFixed(1)+' ن، والوزن الظاهر = '+(W-B).toFixed(1)+' ن.':od===ld?'الكثافتان متساويتان فــ<b>يعلق</b> الجسم في المائع.':'كثافة الجسم أقل من كثافة '+AL[ai][0]+' فــ<b>يطفو</b>، ويغمر منه '+Math.round(tgt()*100)+'% فقط، والطفو = الوزن = '+W.toFixed(1)+' ن.'));
+ st.appendChild(mk('div','','تطبيقاتها: الهيدروميتر، والسفينة، وعوامة الخزان، والغواصة، والبالون.'));ac.dirty=true}
+$('od').oninput=au;au();
+/* ---- الضغط = ق/أ ---- */
+const bc=P.canvas($('bst'));
+bc.draw=(g,w,h)=>{const F=+$('pf').value,A=+$('pa').value,p=F/A,s=Math.sqrt(A)*7;g.fillStyle='#546E7A';P.rrect(g,w/2-s/2,20,s,40,4);g.fill();P.arrow(g,w/2,6,w/2,24,'#D32F2F',4,8);g.fillStyle='#8D6E63';g.fillRect(20,100,w-40,20);for(let i=0;i<14;i++){const px=w/2-s/2+((i+.5)/14)*s,ln=Math.min(34,p*1.4);g.strokeStyle='#D32F2F';g.lineWidth=1.6;g.beginPath();g.moveTo(px,64);g.lineTo(px,64+ln);g.stroke()}
+ P.text(g,'ق='+F+' ن',w-14,16,{align:'right',size:12,color:'#D32F2F'});P.text(g,'أ='+A+' سم²',14,16,{align:'left',size:12})};
+function bu(){const F=+$('pf').value,A=+$('pa').value;$('pfv').textContent=F+' ن';$('pav').textContent=A+' سم²';const st=$('bstep');st.innerHTML='';st.appendChild(mk('div','','الضغط = ق ÷ أ = '+F+' ÷ '+A+' = <b>'+(F/A).toFixed(2)+' ن/سم²</b> ('+(F/A*1e4).toLocaleString('en')+' باسكال). نفس القوة على مساحة أصغر تعطي ضغطاً أكبر.'));bc.dirty=true}
+$('pf').oninput=bu;$('pa').oninput=bu;bu();
+C3D.quiz('qbox','qscore','q',[
+ {q:'الضغط =',o:['القوة × المساحة','القوة العمودية ÷ المساحة','المساحة ÷ القوة','الكتلة ÷ الحجم'],a:1,e:'الضغط = القوة العمودية ÷ المساحة، وحدته الباسكال.'},
+ {q:'ضغط السائل ض =',o:['ث × ل × جـ','ث ÷ ل','ل ÷ جـ','ث + ل'],a:0,e:'ض = ث × ل × جـ، ويعتمد على العمق والكثافة وتسارع الجاذبية.'},
+ {q:'ضغط السائل لا يعتمد على:',o:['العمق','الكثافة','شكل الوعاء','تسارع الجاذبية'],a:2,e:'لا يعتمد ضغط السائل على شكل الوعاء، ولهذا يُوضع خزان الماء مرتفعاً.'},
+ {q:'ينص مبدأ باسكال على أن الضغط الخارجي على سائل محصور:',o:['ينتقل بالتساوي إلى جميع أجزائه','يبقى في مكانه','ينعدم','يزداد في القاع فقط'],a:0,e:'الضغط الخارجي على سائل محصور ينتقل بالتساوي إلى جميع أجزائه.'},
+ {q:'مكبس هيدروليكي: ق₁ = 50 ن، أ₁ = 10 سم²، أ₂ = 200 سم². ق₂ تساوي:',o:['500 ن','1000 ن','250 ن','100 ن'],a:1,e:'ق₂ = 50 × 200 ÷ 10 = 1000 ن.'},
+ {q:'ينغمر الجسم في المائع إذا كانت كثافته:',o:['أكبر من كثافة المائع','أقل من كثافة المائع','مساوية لكثافة المائع','صفراً'],a:0,e:'ينغمر إذا كانت كثافته أكبر من كثافة السائل، ويعلق إذا تساوت، ويطفو إذا كانت أقل.'},
+ {q:'قوة الطفو تساوي:',o:['وزن الجسم دائماً','وزن المائع المزاح','كتلة الجسم','ضغط الجو'],a:1,e:'الجسم المغمور يفقد من وزنه مقدار وزن المائع المزاح، وهذه هي قوة الطفو.'}
+]);
+C3D.tabs([{id:'prs',l:'🌊 ضغط السائل'},{id:'pas',l:'🏗️ المكبس'},{id:'arc',l:'🛟 أرخميدس'},{id:'atm',l:'🌬️ الضغط'},{id:'qz',l:'✍️ أسئلة'}],()=>P.redraw());
+
+</script></body></html>

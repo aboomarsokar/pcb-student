@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>الفيزياء والقياس</title><base href="../"><script src="lib/icons.js"></script></head>
+<body><main>
+<h1>📏 الفيزياء والقياس</h1>
+<div class="tabs" id="tabs"></div>
+<section id="cmp" class="pane"><p class="hint">اختر الكمية لترى وحدتها في كل نظام بحجمها النسبي.</p>
+<div class="chips" id="qch"></div>
+<div class="stage3" id="cst" style="height:230px;cursor:default"></div>
+<div class="card info" id="cinfo"></div></section>
+<section id="tbl" class="pane hidden"><div class="card"><h2>🧩 أكمل جدول الأنظمة</h2><p class="hint" style="margin:0">اختر خانة ثم اختر الوحدة الصحيحة. لكل خانة محاولة واحدة.</p>
+<table style="width:100%;border-collapse:collapse;margin-top:8px;text-align:center" id="mt"></table>
+<div id="opts" class="opts"></div><div class="score" id="tscore"></div></div></section>
+<section id="def" class="pane hidden"><div class="card"><h2>📘 المفاهيم</h2><div class="steps">
+<div>الفيزياء: أحد فروع العلوم الطبيعية، وهي العلم الذي يدرس المادة والطاقة والعلاقة بينهما.</div>
+<div>الكمية الفيزيائية: أي شيء يمكن قياسه والتعبير عنه بقيمة عددية ووحدة قياس.</div>
+<div>القياس: عملية مقارنة كمية مجهولة بكمية أخرى من نوعها تسمى وحدة القياس.</div>
+<div>وحدة القياس: كمية محددة وثابتة تستخدم كمرجع للمقارنة. ومن مواصفات الوحدة المناسبة أن تكون ثابتة ويمكن الرجوع إليها بسهولة.</div>
+<div>توجد وحدات للقياس لكي نتمكن من مقارنة النتائج ببعضها بسهولة، والنظام الدولي للوحدات هو الأكثر انتشاراً في العلوم الحديثة.</div>
+<div>الطول: المسافة بين نقطتين، ويقاس بالمتر أو أجزائه أو مضاعفاته. والكتلة: كمية المادة الموجودة في جسم ما، والكيلوغرام المعياري كتلة أسطوانة من البلاتين والإيريديوم.</div></div></div></section>
+<section id="qz" class="pane hidden"><div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div></section>
+</main>
+<script src="lib/c3d.js"></script><script src="lib/p2d.js"></script>
+<script>
+C3D.init({ns:'ps',accent:'#1565C0',accentDark:'#64B5F6'});
+const $=C3D.$,mk=C3D.mk,fm=C3D.fm,P=P2D;
+
+const Q=[
+ {n:'الطول',sys:[['النظام الدولي MKS','المتر',1,'#1565C0'],['النظام cgs','السنتيمتر',.01,'#D32F2F'],['النظام الأمريكي','القدم',.3048,'#EF6C00']],u:'م',note:'الطول: المسافة بين نقطتين. المتر هو وحدته في النظام الدولي، والسنتيمتر جزء من مئة من المتر، والقدم وحدة النظام الأمريكي.'},
+ {n:'الكتلة',sys:[['النظام الدولي MKS','الكيلوغرام',1,'#1565C0'],['النظام cgs','الغرام',.001,'#D32F2F'],['النظام الأمريكي','الباوند',.4536,'#EF6C00']],u:'كغم',note:'الكتلة: كمية المادة الموجودة في جسم ما. والكيلوغرام المعياري كتلة أسطوانة من البلاتين والإيريديوم.'},
+ {n:'الزمن',sys:[['النظام الدولي MKS','الثانية',1,'#1565C0'],['النظام cgs','الثانية',1,'#D32F2F'],['النظام الأمريكي','الثانية',1,'#EF6C00']],u:'ث',note:'الثانية هي وحدة الزمن في الأنظمة الثلاثة جميعاً.'}];
+let qi=0,sw=0;
+const cv=P.canvas($('cst'));
+const bt=$('qch');Q.forEach((q,i)=>{const b=mk('button',i===0?'on':'',q.n);b.onclick=()=>{qi=i;sw=0;[...bt.children].forEach((x,j)=>x.classList.toggle('on',j===i));info();cv.dirty=true};bt.appendChild(b)});
+cv.anim=()=>{if(sw<1){sw=Math.min(1,sw+.03);return true}return false};
+cv.draw=(g,w,h)=>{const q=Q[qi],bw=w-110,e=1-Math.pow(1-sw,3);
+  q.sys.forEach((s,i)=>{const y=14+i*70,len=Math.max(14,bw*(qi===1&&s[2]<.01?.02:s[2])*e);
+    P.text(g,s[0]+' : '+s[1],w-20,y+8,{align:'right',size:14,color:s[3]});
+    g.fillStyle=s[3];P.rrect(g,w-20-len,y+22,len,22,8);g.fill();
+    P.text(g,s[2]===1?'1 '+q.u:(s[2]<.01&&qi===1?'0.001 '+q.u:s[2]+' '+q.u),w-20-len-8,y+33,{align:'right',size:12,color:P.col('--muted')})})};
+function info(){$('cinfo').innerHTML='<h2>'+Q[qi].n+'</h2><p>'+Q[qi].note+'</p>'}info();
+/* مصفوفة الأنظمة */
+const CELLS=[[0,'المتر'],[1,'السنتيمتر'],[2,'القدم'],[3,'الكيلوغرام'],[4,'الغرام'],[5,'الباوند'],[6,'الثانية'],[7,'الثانية'],[8,'الثانية']];
+const OP=[['المتر','السنتيمتر','القدم','الكيلومتر'],['الكيلوغرام','الغرام','الباوند','الطن'],['الثانية','الدقيقة','الساعة','اليوم']];
+let sc=-1;
+function tbl(){const t=$('mt');t.innerHTML='<tr><th></th><th>النظام الدولي</th><th>نظام cgs</th><th>النظام الأمريكي</th></tr>';
+  ['الطول','الكتلة','الزمن'].forEach((r,ri)=>{const tr=mk('tr','','<th style="padding:6px">'+r+'</th>');for(let c=0;c<3;c++){const i=ri*3+c,s=C3D.get('cell'+i),td=mk('td');const b=mk('button','',s?(s.k):(sc===i?'؟؟':'؟'));b.style.cssText='width:100%;padding:8px 4px;font-size:13px';if(s){b.style.background=s.ok?'var(--ok)':'var(--bad)';b.style.color='#fff';b.disabled=true}else if(sc===i)b.style.outline='3px solid var(--accent)';b.onclick=()=>{if(!s){sc=i;tbl();opts()}};td.appendChild(b);tr.appendChild(td)}t.appendChild(tr)});
+  let ok=0,n=0;for(let i=0;i<9;i++){const s=C3D.get('cell'+i);if(s){n++;if(s.ok)ok++}}$('tscore').textContent=n===9?'نتيجتك: '+ok+' من 9 🔒':''}
+function opts(){const o=$('opts');o.innerHTML='';if(sc<0)return;OP[Math.floor(sc/3)].forEach(t=>{const b=mk('button','',t);b.onclick=()=>{if(C3D.get('cell'+sc))return;C3D.save('cell'+sc,{k:t,ok:t===CELLS[sc][1]});sc=-1;tbl();opts()};o.appendChild(b)})}
+tbl();C3D.onRefresh(tbl);
+C3D.quiz('qbox','qscore','q',[
+ {q:'الكمية الفيزيائية هي:',o:['أي شيء يمكن قياسه والتعبير عنه بقيمة عددية ووحدة قياس','أي شيء نراه بالعين','أي شيء له لون','أي شيء له اسم'],a:0,e:'الكمية الفيزيائية: أي شيء يمكن قياسه والتعبير عنه بقيمة عددية ووحدة قياس.'},
+ {q:'ما المقصود بعملية القياس؟',o:['مقارنة كمية مجهولة بكمية أخرى من نوعها تسمى وحدة القياس','حساب كتلة الجسم فقط','رسم الجسم','وزن الجسم فقط'],a:0,e:'القياس مقارنة كمية مجهولة بكمية أخرى من نوعها تسمى وحدة القياس.'},
+ {q:'من مواصفات الوحدة المناسبة:',o:['أن تتغير من مكان لآخر','أن تكون ثابتة ويمكن الرجوع إليها بسهولة','أن تكون كبيرة جداً','أن تكون بالأجنبية'],a:1,e:'أن تكون ثابتة ويمكن الرجوع إليها بسهولة.'},
+ {q:'وحدات النظام الدولي MKS للطول والكتلة والزمن:',o:['السنتيمتر والغرام والثانية','القدم والباوند والثانية','المتر والكيلوغرام والثانية','المتر والغرام والدقيقة'],a:2,e:'النظام الدولي MKS: المتر والكيلوغرام والثانية.'},
+ {q:'وحدات النظام الأمريكي للطول والكتلة:',o:['المتر والكيلوغرام','السنتيمتر والغرام','القدم والباوند','الميل والطن'],a:2,e:'النظام الأمريكي: القدم والباوند والثانية.'},
+ {q:'الكيلوغرام المعياري هو كتلة أسطوانة من:',o:['الحديد','البلاتين والإيريديوم','النحاس','الألمنيوم'],a:1,e:'الكيلوغرام المعياري كتلة أسطوانة من البلاتين والإيريديوم.'}
+]);
+C3D.tabs([{id:'cmp',l:'📏 أنظمة القياس'},{id:'tbl',l:'🧩 أكمل الجدول'},{id:'def',l:'📘 المفاهيم'},{id:'qz',l:'✍️ أسئلة'}],()=>P.redraw());
+
+</script></body></html>

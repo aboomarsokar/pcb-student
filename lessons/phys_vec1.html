@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>الكميات القياسية والمتجهة</title><base href="../"><script src="lib/icons.js"></script></head>
+<body><main>
+<h1>🧭 القياسية والمتجهة</h1>
+<div class="tabs" id="tabs"></div>
+<section id="srt" class="pane"><div class="card"><h2>🧺 قياسية أم متجهة؟</h2><p class="hint" style="margin:0">اسحب كل بطاقة إلى سلتها. لكل بطاقة محاولة واحدة.</p>
+<div class="stage3" id="sst" style="height:460px;cursor:default"></div><div class="score" id="sscore"></div></div></section>
+<section id="nd" class="pane hidden"><div class="card"><h2>🧭 ماذا نحتاج لوصف الكمية؟</h2><p class="hint" style="margin:0">اختر كمية، وأضف عناصر الوصف ثم حرّك السهم لتحديد الاتجاه إن لزم.</p>
+<div class="chips" id="nch"></div>
+<div class="stage3" id="nst" style="height:250px;cursor:default"></div>
+<div class="steps" id="nstep"></div></div></section>
+<section id="qz" class="pane hidden"><div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div></section>
+</main>
+<script src="lib/c3d.js"></script><script src="lib/p2d.js"></script>
+<script>
+C3D.init({ns:'pv1',accent:'#1565C0',accentDark:'#64B5F6'});
+const $=C3D.$,mk=C3D.mk,fm=C3D.fm,P=P2D;
+
+const IT=[['الكتلة',0],['الزمن',0],['المسافة',0],['الطاقة',0],['شدة التيار',0],['درجة الحرارة',0],['الحجم',0],['المساحة',0],['الإزاحة',1],['السرعة المتجهة',1],['التسارع',1],['القوة',1],['الوزن',1]];
+const sv=P.sorter($('sst'),{items:IT,bins:['كمية قياسية','كمية متجهة'],get:i=>C3D.get('s'+i),save:(i,r)=>C3D.save('s'+i,r),onDone:upd});
+function upd(){let ok=0,n=0;IT.forEach((x,i)=>{const r=C3D.get('s'+i);if(r){n++;if(r.ok)ok++}});$('sscore').textContent=n===IT.length?'نتيجتك: '+ok+' من '+IT.length+' 🔒':n+' من '+IT.length;sv.dirty=true}
+upd();C3D.onRefresh(upd);
+const NQ=[{n:'كتلة جسم 20 كغم',vec:0,val:'20',u:'كغم',d:''},{n:'سرعة سيارة 20 كم/ساعة',vec:1,val:'20',u:'كم/ساعة',d:'الشرق'}];
+let ni=0,ad={m:0,u:0,d:0},ang=0;
+const DN=['الشرق','شمال شرقي','الشمال','شمال غربي','الغرب','جنوب غربي','الجنوب','جنوب شرقي'];
+const nc=P.canvas($('nst')),ch=$('nch');NQ.forEach((q,i)=>{const b=mk('button',i===0?'on':'',q.n);b.onclick=()=>{ni=i;ad={m:0,u:0,d:0};ang=0;[...ch.children].forEach((x,j)=>x.classList.toggle('on',j===i));ns()};ch.appendChild(b)});
+nc.down=nc.move=p=>{if(NQ[ni].vec&&ad.d===1&&(p.x!==undefined)&&nc.holdP){const cx=70,cy=nc.h/2+10;ang=Math.atan2(cy-p.y,p.x-cx);ns()}};
+nc.draw=(g,w,h)=>{const q=NQ[ni];const lab=[['مقدار',ad.m],['وحدة قياس',ad.u],['اتجاه',ad.d]];
+ lab.forEach((l,i)=>{const x=w-14-i*84,need=i<2||q.vec;g.fillStyle=l[1]?P.col('--ok'):need?P.col('--soft'):P.col('--card');P.rrect(g,x-78,12,76,34,10);g.fill();g.strokeStyle=need?P.col('--accent'):P.col('--line');g.lineWidth=2;if(!need)g.setLineDash([4,4]);P.rrect(g,x-78,12,76,34,10);g.stroke();g.setLineDash([]);P.text(g,l[0],x-40,29,{size:13,color:l[1]?'#fff':need?P.col('--ink'):P.col('--muted')})});
+ const cx=70,cy=h/2+10,R=58;g.strokeStyle=P.col('--line');g.lineWidth=2;g.beginPath();g.arc(cx,cy,R,0,7);g.stroke();
+ ['شرق','شمال','غرب','جنوب'].forEach((n,i)=>{const a=i*Math.PI/2;P.text(g,n,cx+Math.cos(a)*(R+16),cy-Math.sin(a)*(R+16),{size:11,color:P.col('--muted')})});
+ if(q.vec&&ad.d===1){P.arrow(g,cx,cy,cx+Math.cos(ang)*R,cy-Math.sin(ang)*R,P.col('--accent'),4,13)}
+ const desc=(ad.m?q.val+' ':'')+(ad.u?q.u:'')+(q.vec&&ad.d===1?' باتجاه '+DN[((Math.round(ang/(Math.PI/4))%8)+8)%8]:'');
+ P.text(g,desc||'...',w/2+40,h-30,{size:20,color:P.col('--accent')})};
+function ns(){const q=NQ[ni];const st=$('nstep');st.innerHTML='';
+ const mkb=(t,k)=>{const b=mk('button',ad[k]?'main':'',t);b.onclick=()=>{ad[k]=1;ns()};return b};
+ const row=mk('div','row');row.appendChild(mkb('إضافة المقدار','m'));row.appendChild(mkb('إضافة وحدة القياس','u'));if(q.vec)row.appendChild(mkb('إضافة الاتجاه','d'));st.appendChild(row);
+ st.appendChild(mk('div','',q.vec?'الكمية المتجهة = <b>مقدار + وحدة قياس + اتجاه</b>. مثال: 20 كم/ساعة باتجاه الشرق.':'الكمية القياسية = <b>مقدار + وحدة قياس</b>، ولا تحتاج إلى تحديد الاتجاه.'));
+ if(q.vec&&ad.d===1)st.appendChild(mk('div','','حرّك السهم على البوصلة لتحديد الاتجاه.'));nc.dirty=true}
+ns();
+C3D.quiz('qbox','qscore','q',[
+ {q:'ماذا نحتاج لوصف كتلة جسم 20 كغم؟',o:['مقدار ووحدة قياس واتجاه','مقدار فقط','مقدار ووحدة قياس فقط','اتجاه فقط'],a:2,e:'الكتلة كمية قياسية: مقدار + وحدة قياس.'},
+ {q:'ماذا نحتاج لوصف سرعة سيارة 20 كم/ساعة؟',o:['مقدار ووحدة قياس فقط','مقدار ووحدة قياس واتجاه','اتجاه فقط','وحدة فقط'],a:1,e:'السرعة المتجهة: مقدار + وحدة قياس + اتجاه (مثلاً باتجاه الشرق).'},
+ {q:'أي مجموعة جميعها كميات قياسية؟',o:['الكتلة والزمن والمسافة','الكتلة والإزاحة والقوة','الزمن والتسارع والوزن','المسافة والسرعة المتجهة'],a:0,e:'الكتلة والزمن والمسافة قياسية، أما الإزاحة والقوة والتسارع والوزن فمتجهة.'},
+ {q:'أي مجموعة جميعها كميات متجهة؟',o:['الطاقة والمسافة والحجم','الإزاحة والتسارع والقوة','الكتلة والقوة والزمن','درجة الحرارة والوزن'],a:1,e:'الإزاحة والتسارع والقوة كميات متجهة.'},
+ {q:'الوزن والكتلة:',o:['كلاهما قياسيتان','كلاهما متجهتان','الوزن متجه والكتلة قياسية','الوزن قياسي والكتلة متجهة'],a:2,e:'الوزن كمية متجهة والكتلة كمية قياسية.'},
+ {q:'الكمية القياسية =',o:['مقدار + وحدة قياس','مقدار + وحدة قياس + اتجاه','اتجاه فقط','مقدار فقط'],a:0,e:'الكمية القياسية = مقدار + وحدة قياس.'}
+]);
+C3D.tabs([{id:'srt',l:'🧺 صنّف'},{id:'nd',l:'🧭 ماذا نحتاج؟'},{id:'qz',l:'✍️ أسئلة'}],()=>P.redraw());
+
+</script></body></html>

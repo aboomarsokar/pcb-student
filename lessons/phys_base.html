@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>الكميات الأساسية والمشتقة</title><base href="../"><script src="lib/icons.js"></script></head>
+<body><main>
+<h1>🧬 الكميات الأساسية والمشتقة</h1>
+<div class="tabs" id="tabs"></div>
+<section id="srt" class="pane"><div class="card"><h2>🧺 صنّف بالسحب</h2><p class="hint" style="margin:0">اسحب كل بطاقة إلى سلتها: كمية أساسية أم مشتقة. لكل بطاقة محاولة واحدة.</p>
+<div class="stage3" id="sst" style="height:440px;cursor:default"></div><div class="score" id="sscore"></div></div></section>
+<section id="der" class="pane hidden"><div class="card"><h2>🧬 كيف تُشتق الوحدة؟</h2><p class="hint" style="margin:0">اختر كمية مشتقة وشاهد كيف تتحد وحدات الكميات الأساسية.</p>
+<div class="chips" id="dch"></div>
+<div class="stage3" id="dst" style="height:170px;cursor:default"></div>
+<div class="row" style="justify-content:center"><button class="main" id="rep">↻ أعد العرض</button></div>
+<div class="card info" id="dinfo"></div></div></section>
+<section id="bas" class="pane hidden"><div class="card"><h2>📋 الكميات الأساسية السبع</h2><p class="hint" style="margin:0">كمية فيزيائية لا يمكن اشتقاقها من كميات أخرى، ووحداتها هي الوحدات الأساسية.</p><div class="steps" id="blist"></div></div></section>
+<section id="qz" class="pane hidden"><div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div></section>
+</main>
+<script src="lib/c3d.js"></script><script src="lib/p2d.js"></script>
+<script>
+C3D.init({ns:'pb',accent:'#1565C0',accentDark:'#64B5F6'});
+const $=C3D.$,mk=C3D.mk,fm=C3D.fm,P=P2D;
+
+const ITEMS=[['الطول',0],['الكتلة',0],['الزمن',0],['التيار الكهربائي',0],['شدة الإضاءة',0],['كمية المادة',0],['درجة الحرارة',0],['السرعة',1],['التسارع',1],['الكثافة',1],['القوة',1],['الضغط',1],['المساحة',1],['الحجم',1]];
+const sv=P.sorter($('sst'),{items:ITEMS,bins:['كمية أساسية','كمية مشتقة'],get:i=>C3D.get('s'+i),save:(i,r)=>C3D.save('s'+i,r),onDone:upd});
+function upd(){let ok=0,n=0;ITEMS.forEach((x,i)=>{const r=C3D.get('s'+i);if(r){n++;if(r.ok)ok++}});$('sscore').textContent=n===ITEMS.length?'نتيجتك: '+ok+' من '+ITEMS.length+' 🔒':n+' من '+ITEMS.length;sv.dirty=true}
+upd();C3D.onRefresh(upd);
+const BL=[['الطول','متر (م)'],['الكتلة','كيلوغرام (كغم)'],['الزمن','ثانية (ث)'],['التيار الكهربائي','أمبير (A)'],['شدة الإضاءة','شمعة (كانديلا)'],['كمية المادة','مول'],['درجة الحرارة','كلفن (K)']];
+BL.forEach(b=>$('blist').appendChild(mk('div','','<b>'+b[0]+'</b>: '+b[1])));
+const CL={'م':'#1565C0','كغم':'#D32F2F','ث':'#2E7D32'};
+const DV=[
+ {n:'السرعة',rel:'المسافة ÷ الزمن',tk:[['م','م'],['÷'],['ث','ث']],res:'م/ث',res2:'م/ث'},
+ {n:'التسارع',rel:'التغير في السرعة ÷ الزمن',tk:[['م','م'],['÷'],['ث','ث'],['÷'],['ث','ث']],res:'م/ث²'},
+ {n:'الكثافة',rel:'الكتلة ÷ الحجم',tk:[['كغم','كغم'],['÷'],['م³','م']],res:'كغم/م³'},
+ {n:'القوة',rel:'الكتلة × التسارع',tk:[['كغم','كغم'],['×'],['م/ث²','م']],res:'كغم·م/ث² (نيوتن)'},
+ {n:'الضغط',rel:'القوة ÷ المساحة',tk:[['نيوتن','كغم'],['÷'],['م²','م']],res:'نيوتن/م² (باسكال)'}];
+let di=0,dp=0;
+const dc=P.canvas($('dst'));
+const ch=$('dch');DV.forEach((d,i)=>{const b=mk('button',i===0?'on':'',d.n);b.onclick=()=>{di=i;dp=0;[...ch.children].forEach((x,j)=>x.classList.toggle('on',j===i));inf()};ch.appendChild(b)});
+$('rep').onclick=()=>{dp=0};
+dc.anim=()=>{if(dp<1.4){dp+=.012;return true}return false};
+dc.draw=(g,w,h)=>{const d=DV[di],n=d.tk.length,e=Math.min(1,dp/1),m=Math.max(0,Math.min(1,(dp-1)/.4));let x=w-14;const cw=52,gap=12,tot=n*(cw+gap)-gap,cx=w/2;
+  const spread=1-e*.0;
+  d.tk.forEach((t,i)=>{const px=cx+tot/2-(i+1)*(cw+gap)+gap+cw/2;if(t.length===1){P.text(g,t[0],px,h/2-10,{size:26,color:P.col('--muted')});return}
+    const y=h/2-10-(1-Math.min(1,dp*1.6-i*.2))*40*(i%2?-1:1)*.0,a=Math.min(1,Math.max(0,dp*3-i*.3));g.globalAlpha=a;g.fillStyle=CL[t[1]]||'#555';P.rrect(g,px-cw/2,y-24,cw,48,12);g.fill();P.text(g,t[0],px,y,{size:15,color:'#fff'});g.globalAlpha=1});
+  P.text(g,'↓',cx,h/2+32,{size:22,color:P.col('--muted')});g.globalAlpha=m;P.text(g,d.res,cx,h-22,{size:19,color:P.col('--accent')});g.globalAlpha=1};
+function inf(){const d=DV[di];$('dinfo').innerHTML='<h2>'+d.n+'</h2><p><span class="tag">العلاقة</span>'+d.rel+'</p><p><span class="tag">الوحدة</span><b>'+d.res+'</b></p><p class="hint" style="margin:0">اشتقاق الوحدات يكون من العلاقة الفيزيائية التي تعرّف الكمية.</p>'}inf();
+C3D.quiz('qbox','qscore','q',[
+ {q:'الكمية الأساسية هي كمية:',o:['تشتق من كميات أخرى','لا يمكن اشتقاقها من كميات أخرى','دائماً متجهة','دائماً كبيرة'],a:1,e:'الكمية الأساسية لا يمكن اشتقاقها من كميات أخرى، ووحداتها هي الوحدات الأساسية.'},
+ {q:'وحدة قياس التيار الكهربائي:',o:['فولت','كلفن','أمبير (A)','مول'],a:2,e:'التيار الكهربائي كمية أساسية وحدتها الأمبير (A).'},
+ {q:'وحدة قياس كمية المادة:',o:['كانديلا','مول','كلفن','غرام'],a:1,e:'كمية المادة وحدتها المول.'},
+ {q:'أي مما يلي كمية مشتقة؟',o:['الزمن','الكتلة','درجة الحرارة','السرعة'],a:3,e:'السرعة تُشتق من الطول والزمن (المسافة ÷ الزمن).'},
+ {q:'وحدة الكثافة هي:',o:['م/ث','كغم/م³','نيوتن','باسكال'],a:1,e:'الكثافة = الكتلة ÷ الحجم، ووحدتها كغم/م³.'},
+ {q:'وحدة القوة (النيوتن) تعادل:',o:['كغم·م/ث²','م/ث','كغم/م³','نيوتن/م²'],a:0,e:'القوة = الكتلة × التسارع، فوحدتها كغم·م/ث² وتسمى نيوتن.'}
+]);
+C3D.tabs([{id:'srt',l:'🧺 صنّف'},{id:'der',l:'🧬 الاشتقاق'},{id:'bas',l:'📋 الأساسية'},{id:'qz',l:'✍️ أسئلة'}],()=>P.redraw());
+
+</script></body></html>

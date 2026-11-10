@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>تمثيل المتجه والاتجاهات</title><base href="../"><script src="lib/icons.js"></script></head>
+<body><main>
+<h1>➡️ تمثيل المتجه والاتجاهات</h1>
+<div class="tabs" id="tabs"></div>
+<section id="drw" class="pane"><div class="card"><h2>➡️ ارسم المتجه</h2><p class="hint" style="margin:0">اسحب رأس السهم. الطول يمثل المقدار بمقياس الرسم، واتجاه السهم هو اتجاه الكمية.</p>
+<div class="chips" id="sch"></div>
+<div class="stage3" id="vst" style="height:330px;cursor:default"></div>
+<div class="steps" id="vstep"></div></div></section>
+<section id="scl" class="pane hidden"><div class="card"><h2>📐 مقياس الرسم</h2><p class="hint" style="margin:0">إذا كان 1 سم على الورقة يمثل 10 م في الواقع... حرّك المسافة الحقيقية.</p>
+<div class="row"><label>المسافة الحقيقية:</label><input type="range" id="sr" min="10" max="200" step="10" value="100"><span class="val" id="sv"></span></div>
+<div class="stage3" id="cst" style="height:130px;cursor:default"></div><div class="steps" id="sstep"></div></div></section>
+<section id="dir" class="pane hidden"><div class="card"><h2>🧭 اتجه نحو...</h2><p class="hint" style="margin:0">حرّك السهم نحو الاتجاه المطلوب ثم اضغط «تأكيد». لكل اتجاه محاولة واحدة فقط.</p>
+<div class="stage3" id="dst" style="height:300px;cursor:default"></div>
+<div class="row" style="justify-content:center"><button class="main" id="cf">تأكيد</button></div><div class="fb" id="dfb"></div><div class="score" id="dscore"></div></div></section>
+<section id="qz" class="pane hidden"><div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div></section>
+</main>
+<script src="lib/c3d.js"></script><script src="lib/p2d.js"></script>
+<script>
+C3D.init({ns:'pv2',accent:'#1565C0',accentDark:'#64B5F6'});
+const $=C3D.$,mk=C3D.mk,fm=C3D.fm,P=P2D;
+
+const DN=['الشرق','شمال شرقي','الشمال','شمال غربي','الغرب','جنوب غربي','الجنوب','جنوب شرقي'];
+function dname(a){return DN[((Math.round(a/(Math.PI/4))%8)+8)%8]}
+let sc=10,hx=2.5,hy=1.5;
+const vc=P.canvas($('vst')),sch=$('sch');[5,10,20].forEach((s,i)=>{const b=mk('button',i===1?'on':'','1 مربع = '+s+' م');b.onclick=()=>{sc=s;[...sch.children].forEach((x,j)=>x.classList.toggle('on',j===i));vu()};sch.appendChild(b)});
+const CELL=34;
+vc.draw=(g,w,h)=>{const ox=w/2,oy=h/2;g.save();g.strokeStyle=P.col('--line');g.lineWidth=1;g.globalAlpha=.6;for(let x=ox%CELL;x<w;x+=CELL){g.beginPath();g.moveTo(x,0);g.lineTo(x,h);g.stroke()}for(let y=oy%CELL;y<h;y+=CELL){g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke()}g.restore();
+ g.strokeStyle=P.col('--muted');g.lineWidth=2;g.beginPath();g.moveTo(0,oy);g.lineTo(w,oy);g.moveTo(ox,0);g.lineTo(ox,h);g.stroke();
+ P.text(g,'شمال',ox+22,12,{size:12,color:P.col('--muted')});P.text(g,'جنوب',ox+22,h-12,{size:12,color:P.col('--muted')});P.text(g,'شرق',w-22,oy-12,{size:12,color:P.col('--muted')});P.text(g,'غرب',22,oy-12,{size:12,color:P.col('--muted')});
+ const ex=ox+hx*CELL,ey=oy-hy*CELL;P.arrow(g,ox,oy,ex,ey,P.col('--accent'),5,16);g.fillStyle=P.col('--ink');g.beginPath();g.arc(ox,oy,5,0,7);g.fill();P.text(g,'الذيل (0,0)',ox-4,oy+16,{size:11,color:P.col('--muted')});
+ g.fillStyle=P.col('--accent');g.beginPath();g.arc(ex,ey,9,0,7);g.fill();g.strokeStyle='#fff';g.lineWidth=2;g.stroke();P.text(g,'الرأس',ex+(hx>=0?26:-26),ey-14,{size:11,color:P.col('--accent')});
+ const a=Math.atan2(hy,hx);g.strokeStyle=P.col('--bad');g.lineWidth=2;g.beginPath();g.arc(ox,oy,30,0,-a,a>0);g.stroke()};
+vc.down=vc.move=p=>{if(!vc.holdP)return;const ox=vc.w/2,oy=vc.h/2;hx=Math.round((p.x-ox)/CELL*2)/2;hy=Math.round((oy-p.y)/CELL*2)/2;hx=Math.max(-(ox/CELL-.5),Math.min(ox/CELL-.5,hx));hy=Math.max(-(oy/CELL-.5),Math.min(oy/CELL-.5,hy));vu()};
+function vu(){const L=Math.hypot(hx,hy),a=Math.atan2(hy,hx),st=$('vstep');st.innerHTML='';
+ st.appendChild(mk('div','','طول المتجه = '+(Math.round(L*100)/100)+' مربع × '+sc+' م = <b>'+(Math.round(L*sc*10)/10)+' م</b> (المقدار).'));
+ st.appendChild(mk('div','','الاتجاه: <b>'+(L<.1?'—':dname(a))+'</b> (زاوية '+Math.round((a*180/Math.PI+360)%360)+'° عن الشرق).'));
+ st.appendChild(mk('div','','المتجه: قطعة مستقيمة موجهة (سهم): ذيله نقطة البداية، ورأسه نقطة النهاية، وطوله يمثل مقدار الكمية، واتجاه السهم يمثل اتجاهها.'));vc.dirty=true}
+vu();
+/* مقياس الرسم */
+const cc=P.canvas($('cst'));
+cc.draw=(g,w,h)=>{const d=+$('sr').value,cm=d/10,px=Math.min(w-40,cm*30);g.fillStyle=P.col('--soft');P.rrect(g,20,20,w-40,40,8);g.fill();g.strokeStyle=P.col('--ink');g.lineWidth=1.5;for(let i=0;i<=cm&&i*30<=w-40;i++){g.beginPath();g.moveTo(20+i*30,40);g.lineTo(20+i*30,60);g.stroke()}
+ P.arrow(g,20,40,20+Math.min(px,w-40),40,P.col('--accent'),5,12);P.text(g,'على الورقة: '+cm+' سم',w/2,86,{size:14,color:P.col('--accent')});P.text(g,'في الواقع: '+d+' م',w/2,110,{size:14})};
+function su(){const d=+$('sr').value;$('sv').textContent=d+' م';const st=$('sstep');st.innerHTML='';st.appendChild(mk('div','','1 سم = 10 م، فكل '+d+' م تمثل '+d+' ÷ 10 = <b>'+d/10+' سم</b> على الورقة.'));cc.dirty=true}
+$('sr').oninput=su;su();
+/* لعبة الاتجاهات */
+const ORD=[2,0,5,3,6,1,4,7];let dang=0.4;
+const dc=P.canvas($('dst'));
+function cur(){for(let i=0;i<8;i++)if(!C3D.get('d'+i))return i;return -1}
+dc.draw=(g,w,h)=>{const cx=w/2,cy=h/2+10,R=Math.min(w,h)/2-52;g.strokeStyle=P.col('--line');g.lineWidth=3;g.beginPath();g.arc(cx,cy,R,0,7);g.stroke();
+ for(let i=0;i<8;i++){const a=i*Math.PI/4;g.strokeStyle=P.col('--line');g.lineWidth=1;g.beginPath();g.moveTo(cx+Math.cos(a)*R*.9,cy-Math.sin(a)*R*.9);g.lineTo(cx+Math.cos(a)*R,cy-Math.sin(a)*R);g.stroke()}
+ ['شرق','شمال','غرب','جنوب'].forEach((n,i)=>{const a=i*Math.PI/2;P.text(g,n,cx+Math.cos(a)*(R+20),cy-Math.sin(a)*(R+20),{size:12,color:P.col('--muted')})});
+ const k=cur();P.arrow(g,cx,cy,cx+Math.cos(dang)*R*.88,cy-Math.sin(dang)*R*.88,k<0?P.col('--muted'):P.col('--accent'),5,15);g.fillStyle=P.col('--ink');g.beginPath();g.arc(cx,cy,6,0,7);g.fill();
+ P.text(g,k<0?'انتهت الاتجاهات':'اتجه نحو: '+DN[ORD[k]],cx,12,{size:17,color:P.col('--accent')})};
+dc.down=dc.move=p=>{if(!dc.holdP||cur()<0)return;dang=Math.atan2(dc.h/2+10-p.y,p.x-dc.w/2);dc.dirty=true};
+function du(){let ok=0,n=0;for(let i=0;i<8;i++){const r=C3D.get('d'+i);if(r){n++;if(r.ok)ok++}}$('dscore').textContent=n===8?'نتيجتك: '+ok+' من 8 🔒':n+' من 8';$('dfb').textContent=cur()<0?'أنهيتَ كل الاتجاهات ولا يمكن إعادتها.':'الاتجاهات الأصلية: شمال وجنوب وشرق وغرب. والفرعية بينها بزاوية 45°: شمال شرقي، شمال غربي، جنوب شرقي، جنوب غربي.';dc.dirty=true}
+$('cf').onclick=()=>{const k=cur();if(k<0)return;const t=ORD[k]*Math.PI/4,d=Math.abs(((dang-t+Math.PI*3)%(Math.PI*2))-Math.PI),ok=d<Math.PI/8;C3D.save('d'+k,{ok:ok,t:DN[ORD[k]]});$('dfb').innerHTML=ok?'<b style="color:var(--ok)">✔ صحيح!</b>':'<b style="color:var(--bad)">✘ غير صحيح.</b> الاتجاه الصحيح هو '+DN[ORD[k]]+'.';setTimeout(du,900)};
+du();C3D.onRefresh(du);
+C3D.quiz('qbox','qscore','q',[
+ {q:'المتجه هو:',o:['عدد فقط','قطعة مستقيمة موجهة (سهم) تمثل كمية متجهة','دائرة','وحدة قياس'],a:1,e:'المتجه: قطعة مستقيمة موجهة (سهم) تستخدم لتمثيل الكمية المتجهة.'},
+ {q:'طول المتجه يمثل:',o:['اتجاه الكمية','مقدار الكمية بمقياس رسم مناسب','وحدة الكمية','زمن الحركة'],a:1,e:'طول المتجه يمثل مقدار الكمية المتجهة بمقياس رسم مناسب.'},
+ {q:'إذا كان 1 سم يمثل 10 م، فإن 100 م تمثل على الورقة:',o:['1 سم','100 سم','10 سم','0.1 سم'],a:2,e:'100 ÷ 10 = 10 سم.'},
+ {q:'ذيل المتجه هو:',o:['نقطة النهاية','نقطة البداية','منتصفه','طوله'],a:1,e:'ذيل المتجه نقطة البداية، ورأسه نقطة النهاية.'},
+ {q:'نقطة الإسناد هي:',o:['نقطة تتقاطع عندها محاور الإحداثيات ونقيس منها موقع الجسم','أعلى نقطة','نهاية المتجه','أي نقطة'],a:0,e:'نقطة الإسناد (0,0) تتقاطع عندها محاور الإحداثيات ونقيس منها موقع الجسم.'},
+ {q:'الاتجاه الفرعي الواقع بين الشمال والشرق بزاوية 45° هو:',o:['جنوب غربي','شمال شرقي','شمال غربي','جنوب شرقي'],a:1,e:'الاتجاهات الفرعية بين الأصلية بزاوية 45°: شمال شرقي، شمال غربي، جنوب شرقي، جنوب غربي.'}
+]);
+C3D.tabs([{id:'drw',l:'➡️ ارسم المتجه'},{id:'scl',l:'📐 مقياس الرسم'},{id:'dir',l:'🧭 الاتجاهات'},{id:'qz',l:'✍️ أسئلة'}],()=>P.redraw());
+
+</script></body></html>
