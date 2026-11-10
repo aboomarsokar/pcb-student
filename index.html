@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>PCB - نسخة الطالب v43</title>
 <style>
-:root{--bg:#E5EADF;--card:#F7F9F4;--text:#1b2620;--muted:#4e5d55;--bd:#C2CBBC;--pri:#8a5a22;--ink:#1b2620;--c1:#1565C0;--c1b:#DBE5D5;--c2:#D32F2F;--c2b:#f7e0dc;--c3:#2E7D32;--c3b:#dcebd9;
+:root{--bg:#FBDDBA;--card:#FFF1DE;--text:#2b1808;--muted:#6b4a2b;--bd:#E2A864;--pri:#8a5a22;--ink:#2b1808;--c1:#1565C0;--c1b:#F6C890;--c2:#D32F2F;--c2b:#f7e0dc;--c3:#2E7D32;--c3b:#dcebd9;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#202D29;--card:#2A3A35;--text:#EEF3EE;--muted:#A9B9B0;--bd:#41554D;--pri:#E3B873;--ink:#EEF3EE;--c1:#1565C0;--c1b:#33463F;--c2:#D32F2F;--c2b:#4d2f2b;--c3:#2E7D32;--c3b:#2c4a3a}}
-:root[data-theme="dark"]{--bg:#202D29;--card:#2A3A35;--text:#EEF3EE;--muted:#A9B9B0;--bd:#41554D;--pri:#E3B873;--ink:#EEF3EE;--c1:#1565C0;--c1b:#33463F;--c2:#D32F2F;--c2b:#4d2f2b;--c3:#2E7D32;--c3b:#2c4a3a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#3D2411;--card:#4C2F17;--text:#FFF1DF;--muted:#E3C7A2;--bd:#7C5128;--pri:#E3B873;--ink:#FFF1DF;--c1:#1565C0;--c1b:#5E3B1E;--c2:#D32F2F;--c2b:#4d2f2b;--c3:#2E7D32;--c3b:#2c4a3a}}
+:root[data-theme="dark"]{--bg:#3D2411;--card:#4C2F17;--text:#FFF1DF;--muted:#E3C7A2;--bd:#7C5128;--pri:#E3B873;--ink:#FFF1DF;--c1:#1565C0;--c1b:#5E3B1E;--c2:#D32F2F;--c2b:#4d2f2b;--c3:#2E7D32;--c3b:#2c4a3a}
 @font-face{font-family:"PCB Naskh";font-style:normal;font-weight:400 700;font-display:swap;src:url("fonts/naskh-arabic.woff2") format("woff2");unicode-range:U+0600-06FF,U+0750-077F,U+0870-0891,U+0897-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC}
 @font-face{font-family:"PCB Naskh";font-style:normal;font-weight:400 700;font-display:swap;src:url("fonts/naskh-latin.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -148,7 +148,7 @@ input[type=text]{width:100%;padding:14px;border-radius:12px;border:1.5px solid v
 #calc.cx .cxg{touch-action:manipulation}
 #calc.cx .cxk{ -webkit-tap-highlight-color:transparent; touch-action:manipulation}
 </style>
-</head>
+<script src="lib/icons.js"></script></head>
 <body>
 <div id="app"></div>
 <div class="veil" id="veil" onclick="mn(false)"></div>
@@ -789,8 +789,8 @@ $("app").innerHTML=bar("🧠 اختبر نفسك",1)+'<div class="col"><div clas
 else{$("app").innerHTML=bar("📝 "+QSN[QSB][0],1)+'<div class="col"><p class="sub">اختر مستوى الاختبار — ٩ أسئلة تُسحب عشوائياً من بنك الأسئلة</p>'+[0,1,2,3].map(function(l){return lvCard(l,l>2?null:Math.min(9,POOL(QSB,l).length),"startQL")}).join("")+'</div>'+nvb("quiz")}
 window.scrollTo(0,0);mdraw()};
 var AV="";try{AV=localStorage.getItem("pcbAv")||""}catch(e){}
-var AVD=[["👦🏻","#1E6FD9","#5C9BFF"],["👦🏽","#D92B2B","#FF8A8A"],["👦🏼","#7c3aed","#b794f6"],["👨🏻‍🎓","#1f9d55","#6fd39a"],["👨🏽‍🎓","#F07A0A","#ffc069"],["👨🏻‍🔬","#0d9488","#5eead4"],["👨🏽‍🔬","#c026d3","#f0abfc"],["👨🏻‍🏫","#a8743a","#e0b97a"],["⚛️","#1E6FD9","#7dd3fc"],["🧬","#7c3aed","#c4b5fd"],["🧪","#1f9d55","#86efac"],["🔭","#334155","#94a3b8"],["📚","#a8743a","#fcd34d"],["🚀","#D92B2B","#fdba74"],["🌙","#1e3a8a","#93c5fd"],["⭐","#F07A0A","#fde047"]];
-function avSvg(i){var a=AVD[i];return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+a[1]+'"/><stop offset="1" stop-color="'+a[2]+'"/></linearGradient></defs><rect width="100" height="100" fill="url(#g)"/><text x="50" y="50" font-size="54" text-anchor="middle" dominant-baseline="central">'+a[0]+'</text></svg>')}
+var AVD=[["atom","#1E6FD9","#5C9BFF"],["flask","#D92B2B","#FF8A8A"],["dna","#7c3aed","#b794f6"],["microscope","#1f9d55","#6fd39a"],["cell","#F07A0A","#ffc069"],["bulb","#0d9488","#5eead4"],["wave","#c026d3","#f0abfc"],["book","#a8743a","#e0b97a"],["grad","#1E6FD9","#7dd3fc"],["vector","#7c3aed","#c4b5fd"],["magnet","#1f9d55","#86efac"],["rocket","#334155","#94a3b8"],["star","#a8743a","#fcd34d"],["moon","#D92B2B","#fdba74"],["calc","#1e3a8a","#93c5fd"],["target","#F07A0A","#fde047"]];
+function avSvg(i){var a=AVD[i],ic=window.ICONS?ICONS.body(a[0]):"";return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+a[1]+'"/><stop offset="1" stop-color="'+a[2]+'"/></linearGradient></defs><rect width="100" height="100" fill="url(#g)"/><g transform="translate(22 22) scale(2.3)" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+ic+'</g></svg>')}
 function avHTML(sz){return '<div class="av" style="width:'+sz+'px;height:'+sz+'px" onclick="avOpen()">'+(AV?'<img alt="" src="'+AV+'">':'👤')+'<b>✎</b></div>'}
 function avClose(){var m=$("avm");if(m)m.remove()}
 function avSave(v){AV=v;try{if(v)localStorage.setItem("pcbAv",v);else localStorage.removeItem("pcbAv")}catch(x){}var n=$("nm");if(n)nm=n.value;avClose();draw()}

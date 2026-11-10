@@ -84,6 +84,9 @@ def main() -> None:
     html = FONT_REF.sub(inline_font, html)
     html = VID_REF.sub(inline_vid, html)
 
+    ic = ROOT / "lib" / "icons.js"
+    html = html.replace('<script src="lib/icons.js"></script>', "<script>" + ic.read_text(encoding="utf-8") + "</script>", 1)
+
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_bytes(html.encode("utf-8"))
     size = OUT.stat().st_size / 1024 / 1024
