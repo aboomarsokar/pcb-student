@@ -4,6 +4,7 @@
 الناتج:     dist/pcb-student.html  (يُرسل كما هو على واتساب ويعمل بلا إنترنت)
 
 - كلُّ مرجعٍ مثل  images/اسم.jpg  داخل index.html يصير  data:image/...;base64,...
+- كلُّ مرجعٍ مثل  fonts/اسم.woff2  يصير data:font/woff2;base64,...
 - كلُّ قيمةٍ مثل  "videos/اسم.mp4"  داخل var VID تصير نصَّ base64 (تفكّه الدالة vurl).
 """
 import base64
@@ -26,6 +27,7 @@ MIME = {
 
 IMG_REF = re.compile(r"images/[\w.-]+\.(jpg|jpeg|png|gif|webp|svg)\b")
 VID_REF = re.compile(r'"videos/([\w.-]+\.mp4)"')
+FONT_REF = re.compile(r"fonts/[\w.-]+\.woff2")
 
 
 def b64(path: Path) -> str:
@@ -46,7 +48,12 @@ def main() -> None:
         counts["vid"] += 1
         return f'"{b64(ROOT / "videos" / m.group(1))}"'
 
+    def inline_font(m: re.Match) -> str:
+        counts["font"] = counts.get("font", 0) + 1
+        return f"data:font/woff2;base64,{b64(ROOT / m.group(0))}"
+
     html = IMG_REF.sub(inline_img, html)
+    html = FONT_REF.sub(inline_font, html)
     html = VID_REF.sub(inline_vid, html)
 
     OUT.parent.mkdir(exist_ok=True)

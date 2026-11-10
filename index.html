@@ -5,13 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>PCB - نسخة الطالب v43</title>
 <style>
-:root{--bg:#f7f0e3;--card:#fffaf1;--text:#3b3226;--muted:#8a7d6a;--bd:#e6d9c3;--pri:#a8743a;--c1:#1E6FD9;--c1b:#f3e6d0;--c2:#D92B2B;--c2b:#f7e0dc;--c3:#F07A0A;--c3b:#e6eedb;
+:root{--bg:#E5EADF;--card:#F7F9F4;--text:#1b2620;--muted:#4e5d55;--bd:#C2CBBC;--pri:#8a5a22;--ink:#1b2620;--c1:#1E6FD9;--c1b:#DBE5D5;--c2:#D92B2B;--c2b:#f7e0dc;--c3:#F07A0A;--c3b:#e6eedb;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2a241c;--card:#353024;--text:#f3ead8;--muted:#b8aa92;--bd:#4a4131;--pri:#d9a866;--c1:#5C9BFF;--c1b:#4a3c28;--c2:#FF6B6B;--c2b:#4d2f2b;--c3:#FFA347;--c3b:#2f3d28}}
-:root[data-theme="dark"]{--bg:#2a241c;--card:#353024;--text:#f3ead8;--muted:#b8aa92;--bd:#4a4131;--pri:#d9a866;--c1:#5C9BFF;--c1b:#4a3c28;--c2:#FF6B6B;--c2b:#4d2f2b;--c3:#FFA347;--c3b:#2f3d28}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#202D29;--card:#2A3A35;--text:#EEF3EE;--muted:#A9B9B0;--bd:#41554D;--pri:#E3B873;--ink:#EEF3EE;--c1:#5C9BFF;--c1b:#33463F;--c2:#FF6B6B;--c2b:#4d2f2b;--c3:#FFA347;--c3b:#2c4a3a}}
+:root[data-theme="dark"]{--bg:#202D29;--card:#2A3A35;--text:#EEF3EE;--muted:#A9B9B0;--bd:#41554D;--pri:#E3B873;--ink:#EEF3EE;--c1:#5C9BFF;--c1b:#33463F;--c2:#FF6B6B;--c2b:#4d2f2b;--c3:#FFA347;--c3b:#2c4a3a}
+@font-face{font-family:"PCB Naskh";font-style:normal;font-weight:400 700;font-display:swap;src:url("fonts/naskh-arabic.woff2") format("woff2");unicode-range:U+0600-06FF,U+0750-077F,U+0870-0891,U+0897-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC}
+@font-face{font-family:"PCB Naskh";font-style:normal;font-weight:400 700;font-display:swap;src:url("fonts/naskh-latin.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"PCB Naskh","Noto Naskh Arabic","Amiri","Traditional Arabic",system-ui,sans-serif;font-weight:600}
 body.sp{background:linear-gradient(135deg,#a8743a 0%,#6f8f5e 52%,#c0504a 100%)}
 #app{max-width:480px;margin:0 auto;min-height:100vh;padding:16px 16px 96px}
 .sp #app{padding-bottom:20px}
@@ -146,7 +148,7 @@ input[type=text]{width:100%;padding:14px;border-radius:12px;border:1.5px solid v
 #calc.cx .cxg{touch-action:manipulation}
 #calc.cx .cxk{ -webkit-tap-highlight-color:transparent; touch-action:manipulation}
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@700&family=Reem+Kufi:wght@600&display=swap" rel="stylesheet"></head>
+</head>
 <body>
 <div id="app"></div>
 <div class="veil" id="veil" onclick="mn(false)"></div>
@@ -1472,6 +1474,18 @@ var _dlv=draw;draw=function(){if(V!="lvq"&&V!="lvr"&&V!="afk"&&V!="afkq"){var r=
 document.documentElement.lang="ar";document.documentElement.dir="rtl";document.body.className="";$("app").innerHTML=(V=="lvq"?lvqHTML():V=="afk"?afkHTML():lvrHTML());window.scrollTo(0,0);try{mdraw()}catch(e){}};
 try{var _ap=document.getElementById("app");if(_ap)new MutationObserver(function(){try{lvPanel()}catch(e){}}).observe(_ap,{childList:true,subtree:true})}catch(e){}
 })();
+/*PCB-THEME: ألوان التطبيق + خط النسخ*/
+(function(){var st=document.createElement("style");st.id="pcbTheme";st.textContent=
+'html body,html body.sp,html body.pgp{background:var(--bg)!important;background-image:none!important;color:var(--text)}'+
+'body *{font-family:inherit!important}'+
+'body,button,input,textarea,select{font-family:"PCB Naskh","Noto Naskh Arabic","Amiri","Traditional Arabic",system-ui,sans-serif!important}'+
+'#calc .dp,#calc .dp *{font-family:monospace!important}#tour .nm b,#tour .nm2,#kxf span.en{font-family:Arial,sans-serif!important}'+
+'b,strong,h1,h2,h3,h4,.hd,.btn,.tab,.mi{font-weight:800}.rd,.card,.opt,.ui,.sub,.nv div{font-weight:600}'+
+'.hd,.ft,.col>.sub,.pgp .hd,.hm h2,.hm .sub,.sp h1,.sp p,.sup,.ld,.cl,.logos .x,h2[style*="color:#fff"],.lvr>p,.lvp>p.lvs,.lvp.ctr .bt2,.lvp.ctr h2,.lvr h2{color:var(--ink)!important;text-shadow:none!important}'+
+'.chip{background:var(--card)!important;color:var(--ink)!important;border:1.5px solid var(--bd)}.btn.w{background:var(--card)!important;color:var(--ink)!important;border:1.5px solid var(--bd)}.ld .pg{background:var(--bd)!important}.ld .pg i{background:var(--pri)!important}'+
+'.pgp .pgw{color:var(--text)!important}.pgw .me,.pgw .st3 div,.pgw .rw,.pgw .pr{background:var(--card)!important;border-color:var(--bd)!important;color:var(--text)!important}.pgw .rw .b{background:var(--bd)!important}.pgw .me small{color:var(--muted)!important}'+
+'.vs0{color:var(--ink)!important}.vs0 .vc{background:var(--card)!important;border-color:var(--bd)!important;color:var(--ink)!important;text-shadow:none!important}.vs0 .va,.vs0 .vm,.vs0 .vk,.vs0 .vh{color:var(--ink)!important;text-shadow:none!important}.vs0 hr{border-top-color:var(--bd)!important}.vs0 .vi{border-color:var(--bd)!important}';
+document.head.appendChild(st)})();
 </script>
 </body>
 </html>
