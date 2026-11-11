@@ -139,7 +139,7 @@ v.onframe=()=>{let ch=false;const d=cur*X-v.tx;if(Math.abs(d)>.01){v.tx+=d*.14;c
 
 /* ============ 2) النسيج الطلائي ============ */
 (function(){
-const v=C3D.viewer($('epst'),{yaw:-18,pitch:24,r:15,ty:.6,floor:false,maxYaw:70,rmin:8,rmax:30});
+const v=C3D.viewer($('epst'),{yaw:-18,pitch:24,r:13,ty:.9,floor:false,maxYaw:70,rmin:8,rmax:30});
 const TY={
  sq:{n:'طلائي حرشفي بسيط',en:'Simple squamous',t:'طبقة واحدة من خلايا رقيقة مسطحة، تسمح بمرور المواد بسهولة (الانتشار). يبطّن الأوعية الدموية والحويصلات الهوائية في الرئتين.'},
  cu:{n:'طلائي مكعبي بسيط',en:'Simple cuboidal',t:'طبقة واحدة من خلايا مكعبة الشكل ونواتها مركزية. يوجد في الغدد وأنابيب الكلية، ووظيفته الإفراز والامتصاص.'},
@@ -209,10 +209,10 @@ if(!v){chips('cnch',TY,k=>{show(k);setCtl(k)});show('bone');setCtl('bone');retur
 const sc=v.scene,G={},flow={blood:[],lymph:[]};
 function rnd(i){const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x)}
 let rings=[];
-function buildBone(){const g=new T.Group(),mats=[S(0xf5ecd0,.55),S(0xe3d2a1,.55)];
+function buildBone(){const g=new T.Group(),mats=[tr(0xf5ecd0,.62,.5),tr(0xe3d2a1,.62,.5)];
   for(let i=0;i<4;i++){const ri=.65+i*.62,ro=ri+.56,geo=new T.LatheGeometry([V2(ri,-.6),V2(ro,-.6),V2(ro,.6),V2(ri,.6),V2(ri,-.6)].map(p=>p),56);
     const r=part(m(geo,mats[i%2]),'osteon');g.add(r);rings.push(r);
-    const n=5+i*3,og=sp(.15,1.5,.7,1),om=S(0x6d4c41,.5);
+    const n=5+i*3,og=sp(.2,1.6,.8,1),om=S(0x4e342e,.5);
     for(let j=0;j<n;j++){const a=j/n*6.283+i,rr=(ri+ro)/2,o=part(m(og,om,Math.cos(a)*rr,0,Math.sin(a)*rr),'ost');o.rotation.y=-a;r.add(o)}}
   const ca=part(m(new T.CylinderGeometry(.42,.42,1.9,20),S(0xd32f2f,.35)),'can');g.add(ca);
   const cap=m(new T.CylinderGeometry(.43,.43,.04,20),S(0xb71c1c,.4),0,.96,0);g.add(cap);return g}
@@ -226,7 +226,7 @@ function buildCart(){const g=new T.Group();
     const a=m(ce,cmat,x-.17,y,z),b=m(ce,cmat,x+.19,y+.02,z+.04);part(a,'chon');part(b,'chon');g.add(a,b);if(i%3===0){const d=m(ce,cmat,x,y-.12,z+.28);d.scale.setScalar(.8);g.add(d)}}
   return g}
 function vessel(color,op){const t=m(new T.CylinderGeometry(1.8,1.8,16,36,1,true).rotateZ(Math.PI/2),new T.MeshPhysicalMaterial({color:color,roughness:.1,transparent:true,opacity:op,side:T.DoubleSide,depthWrite:false,clearcoat:1}));return t}
-function buildBlood(){const g=new T.Group();g.add(vessel(0xffe082,.2));
+function buildBlood(){const g=new T.Group();g.add(vessel(0xffe082,.28));
   const lp=[[0,.1],[.2,.17],[.4,.2],[.55,.13],[.6,0],[.55,-.13],[.4,-.2],[.2,-.17],[0,-.1]];
   const rg=new T.LatheGeometry(lp.map(p=>V2(p[0],p[1])),20),rm=S(0xc62828,.45);
   for(let i=0;i<46;i++){const rr=Math.sqrt(rnd(i+3))*1.15,a=rnd(i+50)*6.283;
@@ -237,31 +237,30 @@ function buildBlood(){const g=new T.Group();g.add(vessel(0xffe082,.2));
   const pg=new T.CylinderGeometry(.2,.2,.06,10),pm=S(0xffb74d,.5);
   for(let i=0;i<14;i++){const rr=Math.sqrt(rnd(i+130))*1.3,a=rnd(i+140)*6.283;const p=part(m(pg,pm,(rnd(i+120)-.5)*15.5,Math.sin(a)*rr,Math.cos(a)*rr),'plt');p.rotation.set(rnd(i)*3,0,rnd(i+1)*3);p.userData.sp=.025;g.add(p);flow.blood.push(p)}
   return g}
-function buildLymph(){const g=new T.Group();g.add(vessel(0xc5e1a5,.22));
+function buildLymph(){const g=new T.Group();g.add(vessel(0xaed581,.34));
   const cg=sp(.55),cmat=tr(0xb3e5fc,.55,.3),ng=sp(.38),nm=S(0x4527a0,.4);
   for(let i=0;i<10;i++){const l=part(new T.Group(),'lym');l.add(m(cg,cmat));l.add(m(ng,nm));const rr=Math.sqrt(rnd(i+3))*1.0,a=rnd(i+30)*6.283;l.position.set((rnd(i)-.5)*15,Math.sin(a)*rr,Math.cos(a)*rr);l.userData.sp=.02+.012*rnd(i+5);g.add(l);flow.lymph.push(l)}
   const vg=new T.CylinderGeometry(1.75,.65,1.6,28,1,true).rotateZ(-Math.PI/2),vm=new T.MeshPhysicalMaterial({color:0xf48fb1,roughness:.5,side:T.DoubleSide,transparent:true,opacity:.8});
   [-4,3.5].forEach(x=>g.add(part(m(vg,vm,x,0,0),'valve')));
-  const ag=new T.ConeGeometry(.22,.7,10).rotateZ(-Math.PI/2),am=S(0x2e7d32,.4);[-6.6,-5.7].forEach((x,i)=>g.add(m(ag,am,x,-2.4,0)));
   return g}
 function buildFib(){const g=new T.Group();
   const gel=tr(0xfff3e0,.35,.5);
-  [-6.2,0,6.2].forEach((x,i)=>{g.add(m(new T.BoxGeometry(5.4,2.6,2.6),gel,x,0,0));const l=lab(['كولاجين','مرنة','شبكية'][i],3.2,1,['#8d6e63','#f9a825','#546e7a'][i]);l.position.set(x,2.2,0);g.add(l);
+  [-5.8,0,5.8].forEach((x,i)=>{g.add(m(new T.BoxGeometry(5.4,2.4,2.6),gel,x,0,0));const l=lab(['كولاجين','مرنة','شبكية'][i],3.2,1,['#8d6e63','#f9a825','#546e7a'][i]);l.position.set(x,2.2,0);g.add(l);
     const c=m(sp(.55,1.6,.7,1),tr(0xf48fb1,.6),x+(i-1)*1.4,-1.0,.5);g.add(c);g.add(m(sp(.22),S(0x7e57c2,.4),x+(i-1)*1.4,-.95,.62))});
   const col=part(new T.Group(),'col'),cmt=S(0xfff8e1,.6);
   for(let k=0;k<5;k++){const pts=[];for(let s=0;s<=10;s++)pts.push([-2.4+s*.48,Math.sin(s*1.1+k)*.07+(k-2)*.4,(k%2?.3:-.3)]);col.add(tube(pts,.12,cmt,30))}
-  col.position.x=-6.2;g.add(col);g.userData.col=col;
+  col.position.x=-5.8;g.add(col);g.userData.col=col;
   const ela=part(new T.Group(),'ela'),emt=S(0xfdd835,.4);
   for(let k=0;k<3;k++){const pts=[];for(let s=0;s<=60;s++){const a=s/60*6.283*7;pts.push([-2.2+s/60*4.4,Math.cos(a)*.3+(k-1)*.7,Math.sin(a)*.3])}ela.add(tube(pts,.05,emt,160))}
   ela.position.x=0;g.add(ela);g.userData.ela=ela;
   const ret=part(new T.Group(),'ret'),rmt=S(0x90a4ae,.5),nd=[];
   for(let i=0;i<14;i++)nd.push([(rnd(i)-.5)*4.4,(rnd(i+20)-.5)*2,(rnd(i+40)-.5)*1.6]);
   nd.forEach((a,i)=>{const b=nd[(i*5+3)%14],c=nd[(i*3+7)%14];[b,c].forEach(q=>{const A=V3(a[0],a[1],a[2]),B=V3(q[0],q[1],q[2]),d=A.distanceTo(B);const o=m(new T.CylinderGeometry(.035,.035,d,5),rmt);o.position.copy(A).add(B).multiplyScalar(.5);o.quaternion.setFromUnitVectors(V3(0,1,0),B.clone().sub(A).normalize());ret.add(o)});ret.add(m(sp(.07),rmt,a[0],a[1],a[2]))});
-  ret.position.x=6.2;g.add(ret);g.userData.ret=ret;return g}
+  ret.position.x=5.8;g.add(ret);g.userData.ret=ret;return g}
 const BUILD={bone:buildBone,cart:buildCart,blood:buildBlood,lymph:buildLymph,fib:buildFib};
 function ensure(k){if(!G[k]){G[k]=BUILD[k]();G[k].visible=false;sc.add(G[k])}}
 function select(k){ensure(k);key=k;Object.keys(G).forEach(q=>G[q].visible=q===k);
-  v.yaw=-16;v.pitch=20;v.tx=0;v.r=k==='fib'?30:(k==='blood'||k==='lymph'?21:(k==='bone'?10:11));v.ty=0;
+  v.yaw=k==='fib'?0:-16;v.pitch=20;v.tx=0;v.r=k==='fib'?28:(k==='blood'||k==='lymph'?21:(k==='bone'?14:16));v.pitch=k==='bone'?38:20;v.ty=0;
   v.pick=[G[k]];setCtl(k);show(k);v.dirty=true}
 chips('cnch',TY,select);
 v.onpick=p=>{if(p&&PT[p])info('cninfo',PT[p][0],PT[p][1])};
@@ -305,11 +304,10 @@ function buildCa(){const g=new T.Group(),cg=cyl(2.3,.43),ng=sp(.25,1.5,1,1),dg=n
   [-3.6,-1.2,1.2,3.6].forEach(x=>seg(x,-1.4));[-3.6,-1.2,1.2,3.6].forEach(x=>seg(x,1.4));
   [-2.4,0,2.4].forEach(x=>{g.add(m(dg,dm,x,-1.4,0));g.add(m(dg,dm,x,1.4,0))});
   const ug=new T.CylinderGeometry(.34,.34,1,16);
-  [[-1.2,1.2],[1.2,-1.2]].forEach(q=>{const A=V3(q[0],-1.4,0),B=V3(q[1],1.4,0),d=A.distanceTo(B),o=m(ug,smat);o.scale.y=d;o.position.copy(A).add(B).multiplyScalar(.5);o.rotation.z=Math.atan2(B.x-A.x,B.y-A.y)*-1;g.add(o);
-    const dd=m(dg,dm,A.x+(B.x-A.x)*.5,0,0);dd.rotation.z=o.rotation.z+Math.PI/2*0;g.add(dd)});
+  [[-2.4,-1.2],[0,1.2]].forEach(q=>{const A=V3(q[0],-1.4,0),B=V3(q[1],1.4,0),d=A.distanceTo(B),o=m(ug,smat);o.scale.y=d;o.position.copy(A).add(B).multiplyScalar(.5);o.rotation.z=Math.atan2(B.x-A.x,B.y-A.y)*-1;g.add(o);});
   return g}
 const BU={sk:buildSk,sm:buildSm,ca:buildCa};
-function select(q){if(!G[q]){G[q]=BU[q]();sc.add(G[q])}key=q;Object.keys(G).forEach(x=>G[x].visible=x===q);show(q);apply();v.dirty=true}
+function select(q){if(!G[q]){G[q]=BU[q]();sc.add(G[q])}key=q;Object.keys(G).forEach(x=>G[x].visible=x===q);v.r={sk:17,sm:25,ca:19}[q];show(q);apply();v.dirty=true}
 function apply(){const g=G[key];if(!g)return;const s=k;
   if(key==='ca'){g.scale.set(1-.28*s,1+.12*s,1+.12*s)}
   else if(key==='sk'){g.children.forEach(f=>f.scale.set(1-.36*s,1+.12*s,1+.12*s))}
@@ -323,7 +321,7 @@ v.onframe=t=>{if(!auto)return false;k=(1-Math.cos(t/450))/2;$('mssl').value=Math
 
 /* ============ 5) النسيج العصبي ============ */
 (function(){
-const v=C3D.viewer($('nvst'),{yaw:-10,pitch:14,r:30,floor:false,maxYaw:60,rmin:12,rmax:50});
+const v=C3D.viewer($('nvst'),{yaw:-10,pitch:14,r:31,tx:-.6,floor:false,maxYaw:60,rmin:12,rmax:50});
 const PT={
  dend:['الزوائد الشجرية','Dendrites','زوائد قصيرة متفرعة تستقبل السيالات العصبية من الخلايا الأخرى وتنقلها نحو جسم الخلية.'],
  soma:['جسم الخلية','Cell body','يحتوي النواة ومعظم العضيات، وهو مركز نشاط العصبون.'],
