@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>أنسجة جسم الإنسان</title><base href="../"><script src="lib/bg.js"></script><script src="lib/icons.js"></script></head>
+<body><main>
+<h1>🔬 أنسجة جسم الإنسان</h1>
+<div class="tabs" id="tabs"></div>
+
+<section id="lv" class="pane">
+  <div class="card">
+    <h2>🧬 مستويات التنظيم</h2>
+    <p class="hint" style="margin:0">ذرات ← جزيئات ← عضيات ← خلية ← نسيج ← عضو ← جهاز ← كائن حي. اختر مستوى لتنتقل إليه، واسحب لتدير المجسّم.</p>
+    <div class="chips" id="lvch"></div>
+    <div class="stage3" id="lvst" style="height:330px"></div>
+    <div class="row" style="justify-content:center"><button id="lvprev">▶ المستوى الأصغر</button><button class="main" id="lvnext">المستوى الأكبر ◀</button></div>
+    <div class="fb" id="lvinfo"></div>
+  </div>
+</section>
+
+<section id="ep" class="pane hidden">
+  <div class="card">
+    <h2>🟣 النسيج الطلائي</h2>
+    <p class="hint" style="margin:0">خلايا متراصة تغطي الأسطح وتبطّن التجاويف. اختر نوعاً، ثم اضغط على الخلايا أو الغشاء القاعدي أو الوعاء الدموي لمعرفة دور كل منها.</p>
+    <div class="chips" id="epch"></div>
+    <div class="stage3" id="epst" style="height:330px"></div>
+    <div class="row" style="justify-content:center"><button class="main" id="epreg">♻ أتلف خلية وراقب تجدّدها</button></div>
+    <div class="fb" id="epinfo"></div>
+  </div>
+</section>
+
+<section id="cn" class="pane hidden">
+  <div class="card">
+    <h2>🦴 النسيج الضام</h2>
+    <p class="hint" style="margin:0">خلاياه غير متراصة وموجودة في مادة بين خلوية وفيرة. اختر نوعاً من الأنواع الأربعة أو شاهد الألياف الثلاثة.</p>
+    <div class="chips" id="cnch"></div>
+    <div class="stage3" id="cnst" style="height:340px"></div>
+    <div class="row hidden" id="cnrow1"><label>تباعد الصفائح:</label><input type="range" id="cnsl1" min="0" max="100" value="0"></div>
+    <div class="row hidden" id="cnrow2"><label>شدّ النسيج:</label><input type="range" id="cnsl2" min="0" max="100" value="0"><span class="val" id="cnv2"></span></div>
+    <div class="fb" id="cninfo"></div>
+  </div>
+</section>
+
+<section id="ms" class="pane hidden">
+  <div class="card">
+    <h2>💪 النسيج العضلي</h2>
+    <p class="hint" style="margin:0">ثلاثة أنواع: هيكلي (مخطط) وأملس وقلبي. اختر النوع وحرّك المنزلق لترى الانقباض.</p>
+    <div class="chips" id="msch"></div>
+    <div class="stage3" id="msst" style="height:340px"></div>
+    <div class="row"><label>الانقباض:</label><input type="range" id="mssl" min="0" max="100" value="0"><button id="msauto">▶ انقباض تلقائي</button></div>
+    <div class="fb" id="msinfo"></div>
+  </div>
+</section>
+
+<section id="nv" class="pane hidden">
+  <div class="card">
+    <h2>⚡ النسيج العصبي</h2>
+    <p class="hint" style="margin:0">يوجد في الدماغ والحبل الشوكي والأعصاب، وينقل السيالات العصبية. أرسل سيالة عصبية، واضغط على أجزاء العصبون.</p>
+    <div class="stage3" id="nvst" style="height:340px"></div>
+    <div class="row" style="justify-content:center"><button class="main" id="nvgo">⚡ أرسل سيالة عصبية</button><button id="nvgl">أظهر الخلايا الدبقية</button></div>
+    <div class="fb" id="nvinfo"></div>
+  </div>
+</section>
+
+<section id="qz" class="pane hidden">
+  <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
+</section>
+</main>
+<script src="lib/three.min.js"></script><script type="application/json" id="cmapdata">{"center":{"ar":"أنسجة جسم الإنسان","en":"Human Body Tissues"},"branches":[{"t":{"ar":"مستويات التنظيم","en":"Levels of Organization"},"icon":"atom","pts":[{"ar":"ذرات ← جزيئات ← عضيات ← خلية ← نسيج ← عضو ← جهاز ← كائن حي","en":"Atoms, molecules, organelles, cell, tissue, organ, system, organism"},{"ar":"النسيج مجموعة خلايا متشابهة تؤدي وظيفة محددة","en":"A tissue is a group of similar cells with one function"},{"ar":"العضو يتكوّن من عدة أنسجة تتعاون معاً","en":"An organ is made of several cooperating tissues"}]},{"t":{"ar":"النسيج الطلائي","en":"Epithelial Tissue"},"icon":"microscope","pts":[{"ar":"خلايا متراصة ومادة بين خلوية قليلة جداً","en":"Tightly packed cells with very little matrix"},{"ar":"وظيفته الحماية والامتصاص والإفراز","en":"Protection, absorption and secretion"},{"ar":"لا يحتوي أوعية دموية ويستند إلى غشاء قاعدي ويتجدد","en":"No blood vessels, rests on a basement membrane, regenerates"}]},{"t":{"ar":"النسيج الضام","en":"Connective Tissue"},"icon":"notes","pts":[{"ar":"خلايا غير متراصة في مادة بين خلوية وفيرة","en":"Loosely spaced cells in abundant matrix"},{"ar":"يشمل العظمي والغضروفي واللمفي والدم","en":"Bone, cartilage, lymph and blood"},{"ar":"ألياف: كولاجين ومرنة وشبكية","en":"Fibers: collagen, elastic and reticular"}]},{"t":{"ar":"النسيج العضلي","en":"Muscle Tissue"},"icon":"stopwatch","pts":[{"ar":"هيكلي (مخطط): ألياف طويلة مخططة إرادية","en":"Skeletal: long striated voluntary fibers"},{"ar":"أملس: لا إرادي يحيط بالأعضاء الجوفاء","en":"Smooth: involuntary, surrounds hollow organs"},{"ar":"قلبي: في القلب فقط","en":"Cardiac: found only in the heart"}]},{"t":{"ar":"النسيج العصبي","en":"Nervous Tissue"},"icon":"bulb","pts":[{"ar":"في الدماغ والحبل الشوكي والأعصاب","en":"In brain, spinal cord and nerves"},{"ar":"ينقل السيالات العصبية","en":"Conducts nerve impulses"},{"ar":"مكوّناته: العصبون والخلايا الدبقية","en":"Made of neurons and glial cells"}]}],"formula":{"ar":"خلايا ← نسيج ← عضو ← جهاز ← كائن حي","en":"Cells → Tissue → Organ → System → Organism"}}</script>
+<script src="lib/cmap.js"></script>
+<script src="lib/c3d.js"></script>
+<script>
+C3D.init({ns:'bt',accent:'#2E7D32',accentDark:'#66BB6A'});
+const T=C3D.T,$=C3D.$,mk=C3D.mk,S=C3D.std;
+/* ---------- أدوات مشتركة ---------- */
+const m=(g,mt,x,y,z)=>C3D.mesh(g,mt,x,y,z,false);
+const tr=(c,o,r)=>new T.MeshPhysicalMaterial({color:c,roughness:r==null?.35:r,transparent:true,opacity:o,clearcoat:.6,clearcoatRoughness:.2});
+const sp=(r,sx,sy,sz)=>{const g=new T.SphereGeometry(r,20,14);if(sx)g.scale(sx,sy,sz);return g};
+const V3=(x,y,z)=>new T.Vector3(x,y,z);
+const tube=(pts,r,mt,seg)=>m(new T.TubeGeometry(new T.CatmullRomCurve3(pts.map(p=>V3(p[0],p[1],p[2]))),seg||24,r,8,false),mt);
+const part=(o,p)=>{o.userData.part=p;return o};
+function chips(id,list,cb){const box=$(id);list.forEach((it,i)=>{const b=mk('button',i?'':'on',it[1]);b.onclick=()=>{[...box.children].forEach(x=>x.classList.toggle('on',x===b));cb(it[0])};box.appendChild(b)})}
+function info(id,t,body,en){$(id).innerHTML='<b>'+t+'</b>'+(en?' <span class="tag ltr">'+en+'</span>':'')+'<br>'+body}
+function lab(text,w,h,bg){return C3D.plane(text,w,h,{pw:256,ph:80,size:38,color:'#fff',bg:bg||'#2E7D32'})}
+
+/* ============ 1) مستويات التنظيم ============ */
+(function(){
+const v=C3D.viewer($('lvst'),{yaw:0,pitch:10,r:22,floor:false,maxYaw:35,rmin:12,rmax:50});
+const LV=[
+ ['ذرة','Atom','أصغر وحدة بنائية للمادة، مثل ذرات الكربون والهيدروجين والأكسجين.'],
+ ['جزيء','Molecule','ارتباط ذرتين أو أكثر، مثل جزيء الماء H<sub>2</sub>O.'],
+ ['عضية','Organelle','تركيب صغير داخل الخلية يؤدي وظيفة محددة، مثل الميتوكندريا.'],
+ ['خلية','Cell','وحدة البناء والوظيفة في الكائن الحي.'],
+ ['نسيج','Tissue','مجموعة من الخلايا المتشابهة تؤدي وظيفة محددة معاً.'],
+ ['عضو','Organ','تتعاون عدة أنسجة مختلفة لأداء وظيفة محددة، مثل القلب والمعدة.'],
+ ['جهاز','System','مجموعة أعضاء تعمل معاً لأداء وظيفة حيوية، مثل الجهاز الهضمي.'],
+ ['كائن حي','Organism','تعمل أجهزة الجسم معاً لتكوين الكائن الحي، مثل الإنسان.']];
+let cur=0,tx=0,groups=[];
+function setLv(i){cur=i;[...$('lvch').children].forEach((b,j)=>b.classList.toggle('on',j===i));
+  info('lvinfo',(i+1)+'. '+LV[i][0],LV[i][2]+(i<7?'<br>المستوى التالي: <b>'+LV[i+1][0]+'</b>':'<br>هذا أعلى مستوى تنظيمي.'),LV[i][1]);
+  if(v){v.auto=0}}
+LV.forEach((l,i)=>{const b=mk('button',i?'':'on',l[0]);b.onclick=()=>setLv(i);$('lvch').appendChild(b)});
+$('lvnext').onclick=()=>setLv(Math.min(7,cur+1));$('lvprev').onclick=()=>setLv(Math.max(0,cur-1));
+setLv(0);
+if(!v)return;
+const sc=v.scene,X=11;
+function atomG(){const g=new T.Group(),nm=[S(0xe53935,.4),S(0x1e88e5,.4)],ng=new T.SphereGeometry(.4,16,12);
+  for(let i=0;i<6;i++){const a=i*1.05;g.add(m(ng,nm[i%2],Math.cos(a)*.3,Math.sin(a)*.3,(i%2?.25:-.25)))}
+  const rg=new T.TorusGeometry(2.4,.04,8,64),rm=S(0x90a4ae,.5,.3),eg=new T.SphereGeometry(.2,12,10),em=S(0xffca28,.3);
+  [[.2,0],[1.2,.8],[2.1,-.8]].forEach((q,i)=>{const r=new T.Group();r.rotation.set(q[0],q[1],0);r.add(m(rg,rm));const a=i*2.1;r.add(m(eg,em,Math.cos(a)*2.4,Math.sin(a)*2.4,0));g.add(r)});return g}
+function molG(){return C3D.mol('H2O',2.3)}
+function mitoG(){const g=new T.Group();g.add(m(sp(1,2.7,1.5,1.5),tr(0xff8f3f,.38)));
+  const dg=new T.CylinderGeometry(1.05,1.05,.12,24),dm=S(0xd84315,.45);for(let i=-3;i<=3;i++){const d=m(dg,dm,i*.62,i%2?.2:-.2,0);d.rotation.z=Math.PI/2;d.scale.set(1,1,1);d.scale.x=1-Math.abs(i)*.1;g.add(d)}
+  g.add(m(sp(.1),S(0x6d4c41),1.6,.2,.2));return g}
+function cellG(){const g=new T.Group();g.add(m(sp(3.1),tr(0xf48fb1,.3,.2)));g.add(m(sp(1.2),S(0x7e57c2,.4),-.4,.3,0));g.add(m(sp(.42),S(0x4527a0,.4),-.1,.6,.9));
+  const mg=sp(.4,1.7,.8,.8),mm=S(0xff8f3f,.4);[[1.6,-.9,.5],[1.3,1.2,-.8],[-1.7,-1.5,.6]].forEach((p,i)=>{const o=m(mg,mm,p[0],p[1],p[2]);o.rotation.z=i;g.add(o)});
+  const rg=sp(.1),rm=S(0x263238);for(let i=0;i<10;i++)g.add(m(rg,rm,Math.cos(i*2.1)*1.9,Math.sin(i*1.3)*1.7,Math.sin(i*2.7)*1.2));return g}
+function tissueG(){const g=new T.Group(),cg=new T.CylinderGeometry(1.1,1.1,1.5,6),cm=S(0xf8bbd0,.5),ng=sp(.45,1,.7,1),nm=S(0x7e57c2,.4);
+  [[0,0],[1,0],[-1,0],[.5,.87],[-.5,.87],[.5,-.87],[-.5,-.87]].forEach(p=>{const x=p[0]*2.05,z=p[1]*2.05;g.add(m(cg,cm,x,0,z));g.add(m(ng,nm,x,.78,z))});
+  g.rotation.x=.15;return g}
+function heartG(){const g=new T.Group(),rm=S(0xc62828,.4);const v1=m(sp(1.7,1,1.35,1),rm,0,-.5,0);v1.rotation.z=.25;g.add(v1);
+  g.add(m(sp(.95,1,.9,1),S(0xa31515,.4),-1.2,1.4,.1));g.add(m(sp(.95,1,.9,1),S(0xa31515,.4),1.2,1.4,-.1));
+  const ao=m(new T.TorusGeometry(.9,.3,12,24,Math.PI),S(0xe57373,.4),.4,2.1,0);g.add(ao);
+  g.add(m(new T.CylinderGeometry(.3,.3,1.8,14),S(0x5c6bc0,.4),1.9,2.4,0));g.add(m(new T.CylinderGeometry(.3,.3,1.8,14),S(0x5c6bc0,.4),-1.7,2.3,0));return g}
+function sysG(){const g=new T.Group(),sm=S(0xffab91,.4);
+  g.add(tube([[0,4,0],[0,3.2,0],[-.2,2.5,0]],.22,S(0xe57373,.4)));
+  const st=m(sp(1,1.3,.85,.7),S(0xef9a9a,.4),.3,1.7,0);st.rotation.z=-.5;g.add(st);
+  g.add(m(sp(1,1.2,.6,.6),S(0x8d4b2f,.5),-1.9,2.1,-.1));
+  g.add(tube([[.9,1.2,0],[1.1,.7,0],[-1,.35,0],[1,-.05,0],[-1,-.45,0],[1,-.85,0],[-.9,-1.25,0]],.2,sm,60));
+  g.add(tube([[-1.9,-2,0],[-2.2,-.3,0],[-2.1,.9,0],[0,1.05,0],[2.1,.9,0],[2.2,-.3,0],[2,-2,0],[0,-2.5,0]],.3,S(0xbf7a5a,.5),60));return g}
+function bodyG(){const g=new T.Group(),sk=S(0xf0b27a,.55),cp=(r,l)=>new T.CapsuleGeometry(r,l,6,14);
+  g.add(m(sp(.62),sk,0,3.5,0));g.add(m(cp(.8,1.5),S(0x42a5f5,.6),0,1.7,0));
+  [[-1.25,1.8,.28],[1.25,1.8,-.28]].forEach(a=>{const o=m(cp(.27,1.5),sk,a[0],a[1],0);o.rotation.z=a[2];g.add(o)});
+  [-.38,.38].forEach(x=>g.add(m(cp(.33,1.7),S(0x37474f,.6),x,-.8,0)));return g}
+const B=[atomG,molG,mitoG,cellG,tissueG,heartG,sysG,bodyG];
+B.forEach((f,i)=>{const g=f();g.position.x=i*X;sc.add(g);groups.push(g);
+  const l=lab(LV[i][0],3.4,1.1,'#2E7D32');l.position.set(i*X,-4.2,0);sc.add(l)});
+v.onframe=()=>{let ch=false;const d=cur*X-v.tx;if(Math.abs(d)>.01){v.tx+=d*.14;ch=true}else v.tx=cur*X;
+  groups[cur].rotation.y+=.012;return true};
+})();
+
+/* ============ 2) النسيج الطلائي ============ */
+(function(){
+const v=C3D.viewer($('epst'),{yaw:-18,pitch:24,r:15,ty:.6,floor:false,maxYaw:70,rmin:8,rmax:30});
+const TY={
+ sq:{n:'طلائي حرشفي بسيط',en:'Simple squamous',t:'طبقة واحدة من خلايا رقيقة مسطحة، تسمح بمرور المواد بسهولة (الانتشار). يبطّن الأوعية الدموية والحويصلات الهوائية في الرئتين.'},
+ cu:{n:'طلائي مكعبي بسيط',en:'Simple cuboidal',t:'طبقة واحدة من خلايا مكعبة الشكل ونواتها مركزية. يوجد في الغدد وأنابيب الكلية، ووظيفته الإفراز والامتصاص.'},
+ co:{n:'طلائي عمودي بسيط',en:'Simple columnar',t:'طبقة واحدة من خلايا طويلة عمودية ونواتها قرب القاعدة. يبطّن الأمعاء والمعدة، ووظيفته الامتصاص والإفراز.'},
+ st:{n:'طلائي حرشفي مصفّف',en:'Stratified squamous',t:'عدة طبقات من الخلايا، والطبقة السطحية مسطحة. يغطي سطح الجلد، ووظيفته الحماية من الاحتكاك والجفاف والجراثيم.'}};
+const COM='<br><span class="tag">خلايا متراصة</span><span class="tag">مادة بين خلوية قليلة</span><span class="tag">بلا أوعية دموية</span><span class="tag">غشاء قاعدي</span><span class="tag">يتجدد</span>';
+let key='sq',grp=null,cells=[],reg=null;
+function show(k){info('epinfo',TY[k].n,TY[k].t+COM,TY[k].en)}
+const PART={cell:['الخلايا الطلائية','تتراص بإحكام فلا تترك مسافات بينها، فتحمي السطح وتنظّم دخول المواد وخروجها.'],
+ bm:['الغشاء القاعدي','طبقة رقيقة يستند إليها النسيج الطلائي وتفصله عن النسيج الضام تحته.'],
+ cn:['النسيج الضام تحت الطلائي','يدعم النسيج الطلائي ويحتوي الأوعية الدموية التي لا تدخل الطلائي.'],
+ bv:['وعاء دموي','يوجد في النسيج الضام تحت الغشاء القاعدي؛ يتغذى الطلائي بالانتشار منه، لأنه نفسه لا يحتوي أوعية دموية.']};
+if(!v){chips('epch',Object.keys(TY).map(k=>[k,TY[k].n]),k=>show(k));show('sq');$('epreg').disabled=true;return}
+const sc=v.scene,cm=[0xce93d8,0xba68c8,0xab47bc,0xf3c4f7],cmat=cm.map(c=>tr(c,.78,.3)),nmat=S(0x4a148c,.4);
+const hex=[0,1,2,3].map(()=>null);
+const cg=new T.CylinderGeometry(1,1,1,6),ng=new T.SphereGeometry(1,14,10);
+const base=new T.Group();sc.add(base);
+const bm=part(m(new T.BoxGeometry(7.4,.14,3.9),S(0xffe082,.5),0,-.07,0),'bm'),cn=part(m(new T.BoxGeometry(7.4,1.7,3.9),tr(0xf8bbd0,.9,.6),0,-.99,0),'cn');
+const bv=part(m(new T.CylinderGeometry(.38,.38,7.4,18).rotateZ(Math.PI/2),S(0xd32f2f,.35),0,-1.15,.2),'bv');
+base.add(bm,cn,bv);
+const fg=new T.CylinderGeometry(.04,.04,6.8,6).rotateZ(Math.PI/2),fm=S(0xfff8e1,.6);
+[[-.5,.9],[-1.4,-.9],[-.7,-.4]].forEach(p=>base.add(m(fg,fm,0,p[0]-.1,p[1])));
+v.pick=[base];
+function build(k){if(grp)sc.remove(grp);grp=new T.Group();cells=[];
+  const cols=6,rows=3,sx=1.1,sz=1.12;
+  const L={sq:[[0,.28,.62]],cu:[[0,1,.55]],co:[[0,2,.5]],st:[[0,.9,.55],[.9,.8,.56],[1.7,.6,.58],[2.3,.28,.62]]}[k];
+  L.forEach((ly,li)=>{for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+    const x=(c-(cols-1)/2)*sx+((r+li)%2?.0:.0)+(k==='st'&&(r+li)%2?.0:0),z=(r-(rows-1)/2)*sz+(c%2?.0:0);
+    const g=new T.Group();g.position.set((c-(cols-1)/2)*sx+(r%2?.0:0),ly[0],(r-(rows-1)/2)*sz);
+    const body=part(m(cg,cmat[k==='st'?Math.min(li,3):['sq','cu','co'].indexOf(k)]),'cell');body.scale.set(ly[2],ly[1],ly[2]);body.position.y=ly[1]/2;g.add(body);
+    const nu=m(ng,nmat);const hh=ly[1];
+    if(k==='sq')nu.scale.set(.42,.12,.42);else if(k==='cu')nu.scale.set(.3,.3,.3);else if(k==='co')nu.scale.set(.2,.5,.2);else nu.scale.set(.28,Math.min(.3,hh*.4),.28);
+    nu.position.y=k==='co'?.55:ly[1]*.5;g.add(nu);
+    g.userData.base=1;grp.add(g);if(li===L.length-1)cells.push({g:g,s:1,body:body,nu:nu})}});
+  sc.add(grp);reg=null;cells.forEach(c=>{c.g.scale.set(1,1,1);c.body.material=c.body.material});v.dirty=true}
+build('sq');show('sq');
+chips('epch',Object.keys(TY).map(k=>[k,TY[k].n]),k=>{key=k;build(k);show(k)});
+v.onpick=(p)=>{if(p&&PART[p])info('epinfo',PART[p][0],PART[p][1])};
+const dead=tr(0x5d4037,.9,.8),back=[];
+$('epreg').onclick=()=>{const c=cells[(Math.random()*cells.length)|0];reg={c:c,t:0,mat:c.body.material};c.body.material=dead;
+  info('epinfo','تجدّد الخلايا','الخلايا الطلائية تتجدد باستمرار: تموت الخلية التالفة وتتكاثر خلايا مجاورة بالانقسام لتعوّضها.')};
+v.onframe=()=>{if(!reg)return false;const r=reg;r.t+=1/60;let s=1;
+  if(r.t<1){s=1-r.t*.8}else if(r.t<1.8){s=.2;if(r.c.body.material===dead){r.c.body.material=r.mat}}else if(r.t<2.8){s=.2+(r.t-1.8)*.8}else{s=1;reg=null}
+  r.c.g.scale.set(s,s,s);return true};
+})();
+
+/* ============ 3) النسيج الضام ============ */
+(function(){
+const v=C3D.viewer($('cnst'),{yaw:-16,pitch:20,r:17,ty:0,floor:false,maxYaw:80,rmin:8,rmax:44});
+const TY=[['bone','عظمي'],['cart','غضروفي'],['blood','دم'],['lymph','لمف'],['fib','ألياف']];
+const COM='<span class="tag">خلايا متباعدة</span><span class="tag">مادة بين خلوية وفيرة</span><br>';
+const TX={
+ bone:['النسيج العظمي','Bone tissue','مادة بين خلوية صلبة (معدنية) تُرتَّب في صفائح دائرية حول قناة مركزية تحمل الأوعية الدموية، وتقع الخلايا العظمية في فجوات صغيرة بين الصفائح. يدعم الجسم ويحمي الأعضاء.'],
+ cart:['النسيج الغضروفي','Cartilage','مادة بين خلوية صلبة مرنة، تقع الخلايا الغضروفية داخل فجوات فيها، ولا يحتوي أوعية دموية. يوجد في الأذن والأنف وأطراف العظام.'],
+ blood:['الدم','Blood','نسيج ضام مادته بين الخلوية سائلة (البلازما) تطفو فيها كريات الدم الحمراء (تنقل الأكسجين) والبيضاء (تدافع عن الجسم) والصفائح الدموية (تساعد على التخثر).'],
+ lymph:['النسيج اللمفي','Lymph','سائل شفاف (اللمف) يجري في أوعية لمفية ذات صمامات تجعل الجريان باتجاه واحد، تسبح فيه الخلايا اللمفية التي تدافع عن الجسم.'],
+ fib:['ألياف النسيج الضام','Fibers','ثلاثة أنواع من الألياف في المادة بين الخلوية: كولاجين (قوية تتحمل الشد)، ومرنة (تتمدد وترجع)، وشبكية (دقيقة متفرعة تدعم الأعضاء). حرّك المنزلق لشدّ النسيج.']};
+const PT={osteon:['صفائح العظم','طبقات دائرية من المادة المعدنية الصلبة تعطي العظم قوته.'],can:['القناة المركزية','تحمل أوعية دموية وأعصاباً تغذي الخلايا العظمية.'],ost:['خلية عظمية','تقع في فجوة بين الصفائح وتحافظ على العظم.'],
+ chon:['خلية غضروفية','تقع داخل فجوة في المادة الصلبة المرنة.'],peri:['غلاف الغضروف','طبقة ليفية تحيط بالغضروف ومنها يتغذى، لأن الغضروف نفسه بلا أوعية دموية.'],
+ rbc:['كريات الدم الحمراء','أقراص مقعرة الوجهين تحمل الأكسجين.'],wbc:['كرية دم بيضاء','تدافع عن الجسم ضد الميكروبات.'],plt:['صفائح دموية','تساعد على تخثر الدم وإيقاف النزف.'],
+ lym:['خلية لمفية','نواتها كبيرة، وتدافع عن الجسم.'],valve:['صمام لمفي','يسمح للمف بالجريان في اتجاه واحد فقط.'],
+ col:['ألياف الكولاجين','سميكة قوية قليلة المرونة، تتحمل الشد.'],ela:['الألياف المرنة','تتمدد عند الشد وتعود لطولها عند زواله.'],ret:['الألياف الشبكية','دقيقة متفرعة تشكل شبكة تدعم الأعضاء الرخوة.']};
+let key='bone';
+function show(k){info('cninfo',TX[k][0],COM+TX[k][2],TX[k][1])}
+function setCtl(k){$('cnrow1').classList.toggle('hidden',k!=='bone');$('cnrow2').classList.toggle('hidden',k!=='fib')}
+if(!v){chips('cnch',TY,k=>{show(k);setCtl(k)});show('bone');setCtl('bone');return}
+const sc=v.scene,G={},flow={blood:[],lymph:[]};
+function rnd(i){const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x)}
+let rings=[];
+function buildBone(){const g=new T.Group(),mats=[S(0xf5ecd0,.55),S(0xe3d2a1,.55)];
+  for(let i=0;i<4;i++){const ri=.65+i*.62,ro=ri+.56,geo=new T.LatheGeometry([V2(ri,-.6),V2(ro,-.6),V2(ro,.6),V2(ri,.6),V2(ri,-.6)].map(p=>p),56);
+    const r=part(m(geo,mats[i%2]),'osteon');g.add(r);rings.push(r);
+    const n=5+i*3,og=sp(.15,1.5,.7,1),om=S(0x6d4c41,.5);
+    for(let j=0;j<n;j++){const a=j/n*6.283+i,rr=(ri+ro)/2,o=part(m(og,om,Math.cos(a)*rr,0,Math.sin(a)*rr),'ost');o.rotation.y=-a;r.add(o)}}
+  const ca=part(m(new T.CylinderGeometry(.42,.42,1.9,20),S(0xd32f2f,.35)),'can');g.add(ca);
+  const cap=m(new T.CylinderGeometry(.43,.43,.04,20),S(0xb71c1c,.4),0,.96,0);g.add(cap);return g}
+function V2(x,y){return new T.Vector2(x,y)}
+function buildCart(){const g=new T.Group();
+  g.add(part(m(new T.BoxGeometry(7,2.2,3.6),tr(0x90caf9,.55,.3),0,0,0),'chon'));
+  g.add(part(m(new T.BoxGeometry(7.1,.2,3.7),S(0xf8bbd0,.6),0,1.2,0),'peri'));
+  const cav=sp(.62),cm=tr(0xe3f2fd,.5,.2),ce=sp(.33),cmat=S(0x1565c0,.4);
+  for(let i=0;i<9;i++){const x=(rnd(i)-.5)*5.6,y=(rnd(i+9)-.5)*1.2,z=(rnd(i+19)-.5)*2.4;
+    const c=part(m(cav,cm,x,y,z),'chon');g.add(c);
+    const a=m(ce,cmat,x-.17,y,z),b=m(ce,cmat,x+.19,y+.02,z+.04);part(a,'chon');part(b,'chon');g.add(a,b);if(i%3===0){const d=m(ce,cmat,x,y-.12,z+.28);d.scale.setScalar(.8);g.add(d)}}
+  return g}
+function vessel(color,op){const t=m(new T.CylinderGeometry(1.8,1.8,16,36,1,true).rotateZ(Math.PI/2),new T.MeshPhysicalMaterial({color:color,roughness:.1,transparent:true,opacity:op,side:T.DoubleSide,depthWrite:false,clearcoat:1}));return t}
+function buildBlood(){const g=new T.Group();g.add(vessel(0xffe082,.2));
+  const lp=[[0,.1],[.2,.17],[.4,.2],[.55,.13],[.6,0],[.55,-.13],[.4,-.2],[.2,-.17],[0,-.1]];
+  const rg=new T.LatheGeometry(lp.map(p=>V2(p[0],p[1])),20),rm=S(0xc62828,.45);
+  for(let i=0;i<46;i++){const rr=Math.sqrt(rnd(i+3))*1.15,a=rnd(i+50)*6.283;
+    const r=part(m(rg,rm,(rnd(i)-.5)*15.5,Math.sin(a)*rr,Math.cos(a)*rr),'rbc');r.rotation.set(rnd(i+7)*3,0,rnd(i+8)*3);r.userData.sp=.02+.03*(1-(rr/1.8)*(rr/1.8));g.add(r);flow.blood.push(r)}
+  const wm=tr(0xf5f5f5,.7,.3),nm=S(0x5e35b1,.4),ng=sp(.2);
+  for(let i=0;i<3;i++){const w=part(new T.Group(),'wbc');w.add(m(sp(.6),wm));for(let k=0;k<3;k++)w.add(m(ng,nm,Math.cos(k*2.1)*.22,Math.sin(k*2.1)*.22,.25));
+    const rr=.5+rnd(i+90)*.4,a=rnd(i+70)*6.283;w.position.set(-5+i*5,Math.sin(a)*rr,Math.cos(a)*rr);w.userData.sp=.018;g.add(w);flow.blood.push(w)}
+  const pg=new T.CylinderGeometry(.2,.2,.06,10),pm=S(0xffb74d,.5);
+  for(let i=0;i<14;i++){const rr=Math.sqrt(rnd(i+130))*1.3,a=rnd(i+140)*6.283;const p=part(m(pg,pm,(rnd(i+120)-.5)*15.5,Math.sin(a)*rr,Math.cos(a)*rr),'plt');p.rotation.set(rnd(i)*3,0,rnd(i+1)*3);p.userData.sp=.025;g.add(p);flow.blood.push(p)}
+  return g}
+function buildLymph(){const g=new T.Group();g.add(vessel(0xc5e1a5,.22));
+  const cg=sp(.55),cmat=tr(0xb3e5fc,.55,.3),ng=sp(.38),nm=S(0x4527a0,.4);
+  for(let i=0;i<10;i++){const l=part(new T.Group(),'lym');l.add(m(cg,cmat));l.add(m(ng,nm));const rr=Math.sqrt(rnd(i+3))*1.0,a=rnd(i+30)*6.283;l.position.set((rnd(i)-.5)*15,Math.sin(a)*rr,Math.cos(a)*rr);l.userData.sp=.02+.012*rnd(i+5);g.add(l);flow.lymph.push(l)}
+  const vg=new T.CylinderGeometry(1.75,.65,1.6,28,1,true).rotateZ(-Math.PI/2),vm=new T.MeshPhysicalMaterial({color:0xf48fb1,roughness:.5,side:T.DoubleSide,transparent:true,opacity:.8});
+  [-4,3.5].forEach(x=>g.add(part(m(vg,vm,x,0,0),'valve')));
+  const ag=new T.ConeGeometry(.22,.7,10).rotateZ(-Math.PI/2),am=S(0x2e7d32,.4);[-6.6,-5.7].forEach((x,i)=>g.add(m(ag,am,x,-2.4,0)));
+  return g}
+function buildFib(){const g=new T.Group();
+  const gel=tr(0xfff3e0,.35,.5);
+  [-6.2,0,6.2].forEach((x,i)=>{g.add(m(new T.BoxGeometry(5.4,2.6,2.6),gel,x,0,0));const l=lab(['كولاجين','مرنة','شبكية'][i],3.2,1,['#8d6e63','#f9a825','#546e7a'][i]);l.position.set(x,2.2,0);g.add(l);
+    const c=m(sp(.55,1.6,.7,1),tr(0xf48fb1,.6),x+(i-1)*1.4,-1.0,.5);g.add(c);g.add(m(sp(.22),S(0x7e57c2,.4),x+(i-1)*1.4,-.95,.62))});
+  const col=part(new T.Group(),'col'),cmt=S(0xfff8e1,.6);
+  for(let k=0;k<5;k++){const pts=[];for(let s=0;s<=10;s++)pts.push([-2.4+s*.48,Math.sin(s*1.1+k)*.07+(k-2)*.4,(k%2?.3:-.3)]);col.add(tube(pts,.12,cmt,30))}
+  col.position.x=-6.2;g.add(col);g.userData.col=col;
+  const ela=part(new T.Group(),'ela'),emt=S(0xfdd835,.4);
+  for(let k=0;k<3;k++){const pts=[];for(let s=0;s<=60;s++){const a=s/60*6.283*7;pts.push([-2.2+s/60*4.4,Math.cos(a)*.3+(k-1)*.7,Math.sin(a)*.3])}ela.add(tube(pts,.05,emt,160))}
+  ela.position.x=0;g.add(ela);g.userData.ela=ela;
+  const ret=part(new T.Group(),'ret'),rmt=S(0x90a4ae,.5),nd=[];
+  for(let i=0;i<14;i++)nd.push([(rnd(i)-.5)*4.4,(rnd(i+20)-.5)*2,(rnd(i+40)-.5)*1.6]);
+  nd.forEach((a,i)=>{const b=nd[(i*5+3)%14],c=nd[(i*3+7)%14];[b,c].forEach(q=>{const A=V3(a[0],a[1],a[2]),B=V3(q[0],q[1],q[2]),d=A.distanceTo(B);const o=m(new T.CylinderGeometry(.035,.035,d,5),rmt);o.position.copy(A).add(B).multiplyScalar(.5);o.quaternion.setFromUnitVectors(V3(0,1,0),B.clone().sub(A).normalize());ret.add(o)});ret.add(m(sp(.07),rmt,a[0],a[1],a[2]))});
+  ret.position.x=6.2;g.add(ret);g.userData.ret=ret;return g}
+const BUILD={bone:buildBone,cart:buildCart,blood:buildBlood,lymph:buildLymph,fib:buildFib};
+function ensure(k){if(!G[k]){G[k]=BUILD[k]();G[k].visible=false;sc.add(G[k])}}
+function select(k){ensure(k);key=k;Object.keys(G).forEach(q=>G[q].visible=q===k);
+  v.yaw=-16;v.pitch=20;v.tx=0;v.r=k==='fib'?30:(k==='blood'||k==='lymph'?21:(k==='bone'?10:11));v.ty=0;
+  v.pick=[G[k]];setCtl(k);show(k);v.dirty=true}
+chips('cnch',TY,select);
+v.onpick=p=>{if(p&&PT[p])info('cninfo',PT[p][0],PT[p][1])};
+$('cnsl1').oninput=()=>{const s=$('cnsl1').value/100;rings.forEach((r,i)=>{r.position.y=(i-1.5)*s*1.5});v.dirty=true};
+$('cnsl2').oninput=()=>{const s=$('cnsl2').value/100,g=G.fib;if(!g)return;g.userData.col.scale.x=1+s*.04;g.userData.ela.scale.x=1+s*.85;g.userData.ret.scale.x=1+s*.15;
+  $('cnv2').textContent=s?'مرنة تتمدد أكثر':'';v.dirty=true};
+select('bone');
+v.onframe=t=>{const L=flow[key];if(!L||!L.length||reduceM)return false;for(let i=0;i<L.length;i++){const o=L[i];o.position.x+=o.userData.sp;if(o.position.x>8)o.position.x=-8;if(o.userData.sp>.02||o.isGroup===false)o.rotation.x+=.01}return true};
+})();
+const reduceM=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* ============ 4) النسيج العضلي ============ */
+(function(){
+const TY=[['sk','هيكلي (مخطط)'],['sm','أملس'],['ca','قلبي']];
+const TX={
+ sk:['العضلة الهيكلية (المخططة)','Skeletal muscle','ألياف طويلة أسطوانية مخططة، كل ليف متعدد النوى تقع نواته عند الأطراف قرب الغشاء. إرادية الحركة، وتتصل بالعظام فتحرّك الهيكل العظمي.'],
+ sm:['العضلة الملساء','Smooth muscle','خلايا مغزلية الشكل غير مخططة، لكل خلية نواة واحدة مركزية. لا إرادية، وتحيط بالأعضاء الجوفاء مثل المعدة والأمعاء والأوعية الدموية.'],
+ ca:['العضلة القلبية','Cardiac muscle','خلايا مخططة متفرعة ترتبط ببعضها بأقراص بينية داكنة، لكل خلية نواة مركزية غالباً. لا إرادية، وتوجد في القلب فقط.']};
+let key='sk',k=0,auto=false;
+const TAGS={sk:'<span class="tag">مخططة</span><span class="tag">إرادية</span><span class="tag">متعددة النوى</span>',sm:'<span class="tag">غير مخططة</span><span class="tag">لا إرادية</span><span class="tag">نواة واحدة</span>',ca:'<span class="tag">مخططة</span><span class="tag">لا إرادية</span><span class="tag">في القلب فقط</span>'};
+function show(q){info('msinfo',TX[q][0],TX[q][2]+'<br>'+TAGS[q],TX[q][1])}
+const v=C3D.viewer($('msst'),{yaw:-14,pitch:16,r:17,floor:false,maxYaw:60,rmin:8,rmax:34});
+if(!v){chips('msch',TY,q=>show(q));show('sk');$('mssl').disabled=true;$('msauto').disabled=true;return}
+const sc=v.scene,G={};
+function stripe(){const c=document.createElement('canvas');c.width=32;c.height=64;const g=c.getContext('2d');g.fillStyle='#f4b6a8';g.fillRect(0,0,32,64);g.fillStyle='#c94a4a';g.fillRect(0,14,32,36);g.fillStyle='#e58a82';g.fillRect(0,29,32,6);g.fillStyle='#6d1b1b';g.fillRect(0,0,32,2);g.fillRect(0,62,32,2);
+  const t=new T.CanvasTexture(c);t.wrapS=t.wrapT=T.RepeatWrapping;t.repeat.set(1,9);t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;return t}
+const smat=new T.MeshStandardMaterial({map:stripe(),roughness:.5}),nmat=S(0x4a148c,.4),flat=[];
+function cyl(len,r){return new T.CylinderGeometry(r,r,len,24,1).rotateZ(Math.PI/2)}
+function buildSk(){const g=new T.Group(),cg=cyl(10,.5),ng=sp(.2,1.8,.6,1);
+  [[0,0],[1.02,0],[-1.02,0],[.51,.9],[-.51,.9]].forEach((p,i)=>{const f=new T.Group();f.position.set(0,p[0],p[1]);f.add(m(cg,smat));
+    for(let j=0;j<4;j++){const a=.2+rnd2(i*7+j)*.7,x=(j-1.5)*2.3+rnd2(i+j)*.6;f.add(m(ng,nmat,x,Math.sin(a)*.48,Math.cos(a)*.48))}
+    g.add(f);flat.push(f)});g.position.y=-.4;return g}
+function rnd2(i){const x=Math.sin(i*91.7+13.3)*4375.5;return x-Math.floor(x)}
+function spindle(){const pts=[];for(let i=0;i<=12;i++){const t=i/12;pts.push(V2(.42*Math.pow(Math.sin(Math.PI*t),.85),-2.3+4.6*t))}return new T.LatheGeometry(pts,18).rotateZ(Math.PI/2)}
+function V2(x,y){return new T.Vector2(x,y)}
+function buildSm(){const g=new T.Group(),sg=spindle(),sm=tr(0xf48fb1,.82,.4),ng=sp(.3,1.7,.6,.6),nm=S(0x6a1b9a,.4);
+  for(let r=0;r<5;r++)for(let c=0;c<3;c++){const f=new T.Group();f.position.set((c-1)*4.3+(r%2?2.15:0)-(r%2?2.15:0)+(r%2?1.5:-.6),(r-2)*.72,0);
+    f.add(m(sg,sm));f.add(m(ng,nm,0,0,.14));g.add(f);flat.push(f)}return g}
+function buildCa(){const g=new T.Group(),cg=cyl(2.3,.43),ng=sp(.25,1.5,1,1),dg=new T.CylinderGeometry(.48,.48,.12,20).rotateZ(Math.PI/2),dm=S(0x4a148c,.45);
+  const seg=(x,y)=>{g.add(m(cg,smat,x,y,0));g.add(m(ng,nmat,x,y,.3))};
+  [-3.6,-1.2,1.2,3.6].forEach(x=>seg(x,-1.4));[-3.6,-1.2,1.2,3.6].forEach(x=>seg(x,1.4));
+  [-2.4,0,2.4].forEach(x=>{g.add(m(dg,dm,x,-1.4,0));g.add(m(dg,dm,x,1.4,0))});
+  const ug=new T.CylinderGeometry(.34,.34,1,16);
+  [[-1.2,1.2],[1.2,-1.2]].forEach(q=>{const A=V3(q[0],-1.4,0),B=V3(q[1],1.4,0),d=A.distanceTo(B),o=m(ug,smat);o.scale.y=d;o.position.copy(A).add(B).multiplyScalar(.5);o.rotation.z=Math.atan2(B.x-A.x,B.y-A.y)*-1;g.add(o);
+    const dd=m(dg,dm,A.x+(B.x-A.x)*.5,0,0);dd.rotation.z=o.rotation.z+Math.PI/2*0;g.add(dd)});
+  return g}
+const BU={sk:buildSk,sm:buildSm,ca:buildCa};
+function select(q){if(!G[q]){G[q]=BU[q]();sc.add(G[q])}key=q;Object.keys(G).forEach(x=>G[x].visible=x===q);show(q);apply();v.dirty=true}
+function apply(){const g=G[key];if(!g)return;const s=k;
+  if(key==='ca'){g.scale.set(1-.28*s,1+.12*s,1+.12*s)}
+  else if(key==='sk'){g.children.forEach(f=>f.scale.set(1-.36*s,1+.12*s,1+.12*s))}
+  else g.children.forEach(f=>f.scale.set(1-.42*s,1+.45*s,1+.45*s));v.dirty=true}
+chips('msch',TY,q=>{select(q)});
+$('mssl').oninput=()=>{k=$('mssl').value/100;apply()};
+$('msauto').onclick=()=>{auto=!auto;$('msauto').textContent=auto?'■ إيقاف':'▶ انقباض تلقائي'};
+select('sk');
+v.onframe=t=>{if(!auto)return false;k=(1-Math.cos(t/450))/2;$('mssl').value=Math.round(k*100);apply();return true};
+})();
+
+/* ============ 5) النسيج العصبي ============ */
+(function(){
+const v=C3D.viewer($('nvst'),{yaw:-10,pitch:14,r:30,floor:false,maxYaw:60,rmin:12,rmax:50});
+const PT={
+ dend:['الزوائد الشجرية','Dendrites','زوائد قصيرة متفرعة تستقبل السيالات العصبية من الخلايا الأخرى وتنقلها نحو جسم الخلية.'],
+ soma:['جسم الخلية','Cell body','يحتوي النواة ومعظم العضيات، وهو مركز نشاط العصبون.'],
+ axon:['المحور العصبي','Axon','ليف طويل ينقل السيالة العصبية بعيداً عن جسم الخلية نحو الخلايا التالية.'],
+ myelin:['غمد الميالين','Myelin sheath','غلاف دهني عازل يحيط بالمحور فيسرّع انتقال السيالة العصبية.'],
+ node:['عقدة رانفييه','Node of Ranvier','فجوة بين شرائح الميالين تقفز السيالة من واحدة إلى التالية.'],
+ term:['نهايات المحور','Axon terminals','تنقل السيالة إلى عصبون أو عضلة أو غدة تالية.'],
+ glia:['الخلايا الدبقية','Glial cells','تدعم العصبونات وتحميها وتغذيها، ومنها خلايا تكوّن غمد الميالين.']};
+function show(p){info('nvinfo',PT[p][0],PT[p][2],PT[p][1])}
+show('soma');$('nvinfo').innerHTML='<b>العصبون</b> <span class="tag ltr">Neuron</span><br>الوحدة البنائية والوظيفية للنسيج العصبي. يتكون من جسم خلية وزوائد شجرية ومحور عصبي. اضغط على أي جزء لمعرفة وظيفته.';
+if(!v){$('nvgo').disabled=true;$('nvgl').disabled=true;return}
+const sc=v.scene,gl=[];
+const somaM=tr(0x7986cb,.7,.3),denM=S(0x5c6bc0,.45),axM=S(0x7986cb,.4),myM=new T.MeshPhysicalMaterial({color:0xfff3c4,roughness:.45,clearcoat:.5});
+const root=new T.Group();sc.add(root);
+const soma=part(m(sp(1.25),somaM,-6,0,0),'soma');root.add(soma);
+root.add(part(m(sp(.55),S(0x311b92,.4),-6.1,.1,0),'soma'));root.add(part(m(sp(.2),S(0xd1c4e9,.4),-5.9,.25,.3),'soma'));
+function dend(){const dm=denM;const dirs=[[-1,.8,.1],[-1,-.8,.2],[-.4,1.3,-.2],[-.5,-1.3,-.1],[-1.3,.1,.6],[-1.2,.1,-.6]];
+  dirs.forEach((d,i)=>{const n=Math.hypot(d[0],d[1],d[2]),u=[d[0]/n,d[1]/n,d[2]/n],o=[-6,0,0];
+    const p1=[o[0]+u[0]*1.2,o[1]+u[1]*1.2,o[2]+u[2]*1.2],p2=[o[0]+u[0]*2.3,o[1]+u[1]*2.3+.15,o[2]+u[2]*2.3];
+    root.add(part(tube([[o[0]+u[0]*.9,o[1]+u[1]*.9,o[2]+u[2]*.9],p1,p2],.13,dm,14),'dend'));
+    [[.6,.55],[-.6,.55]].forEach((br,j)=>{const a=br[0],c=Math.cos(a),s=Math.sin(a),ux=u[0]*c-u[1]*s,uy=u[0]*s+u[1]*c,L=1.4;
+      const q=[p2[0]+ux*L,p2[1]+uy*L,p2[2]+u[2]*L*.6];root.add(part(tube([p2,[(p2[0]+q[0])/2,(p2[1]+q[1])/2+.1,(p2[2]+q[2])/2],q],.07,dm,10),'dend'));
+      const q2=[q[0]+ux*.7-uy*.25,q[1]+uy*.7+ux*.25,q[2]];root.add(part(tube([q,q2],.04,dm,6),'dend'))})})}
+dend();
+const hil=part(m(new T.ConeGeometry(.6,1.2,18).rotateZ(-Math.PI/2),axM,-4.5,0,0),'axon');root.add(hil);
+root.add(part(m(new T.CylinderGeometry(.16,.16,11,14).rotateZ(Math.PI/2),axM,.95,0,0),'axon'));
+const mg=new T.CapsuleGeometry(.44,.95,6,16).rotateZ(Math.PI/2),sheaths=[];
+for(let i=0;i<5;i++){const s=part(m(mg,myM,-3+i*2,0,0),'myelin');root.add(s);sheaths.push(s)}
+const nodes=[],ng=new T.TorusGeometry(.2,.05,8,18).rotateY(Math.PI/2);
+for(let i=0;i<4;i++){const nm=new T.MeshStandardMaterial({color:0x8e24aa,roughness:.4,emissive:0xffd54f,emissiveIntensity:0});const n=part(m(ng,nm,-2+i*2,0,0),'node');root.add(n);nodes.push({o:n,x:-2+i*2})}
+[[1,.9,.5],[1,-.8,.4],[.9,.2,-.9],[.8,-.3,.9]].forEach(d=>{const A=[6.1,0,0],B=[6.1+d[0]*1.1,d[1]*.8,d[2]*.8];root.add(part(tube([A,[(A[0]+B[0])/2,(A[1]+B[1])/2,(A[2]+B[2])/2],B],.1,axM,10),'term'));root.add(part(m(sp(.28),S(0xff7043,.4),B[0],B[1],B[2]),'term'))});
+const imp=m(sp(.34),new T.MeshStandardMaterial({color:0xffee58,emissive:0xffd600,emissiveIntensity:1.2,roughness:.3}),-4.4,0,0);imp.visible=false;root.add(imp);
+/* الخلايا الدبقية */
+const glia=new T.Group();glia.visible=false;root.add(glia);
+const gm=S(0x26a69a,.45),cg=new T.ConeGeometry(.08,.9,6);
+function astro(x,y,z){const a=part(new T.Group(),'glia');a.position.set(x,y,z);a.add(m(sp(.42),gm));
+  for(let i=0;i<9;i++){const th=i/9*6.283,ph=(i%3-1)*.7,c=m(cg,gm);const d=V3(Math.cos(th)*Math.cos(ph),Math.sin(ph),Math.sin(th)*Math.cos(ph));c.quaternion.setFromUnitVectors(V3(0,1,0),d);c.position.copy(d).multiplyScalar(.6);a.add(c)}return a}
+glia.add(astro(-3.2,3.4,-.6),astro(-.4,-3.5,.5));
+const og=part(new T.Group(),'glia');og.position.set(2,2.8,0);og.add(m(sp(.5),S(0x00897b,.45)));
+[[-1,.45],[1,.45]].forEach(q=>{const A=[0,-.3,0],B=[q[0]*0+ (q[0]), -2.4, 0];og.add(tube([[0,-.3,0],[q[0]*.5,-1.2,0],[q[0]*1.0,-2.35,0]],.07,S(0x00897b,.45),12))});glia.add(og);
+glia.children.forEach(c=>{});
+v.pick=[root];
+v.onpick=p=>{if(p&&PT[p])show(p)};
+let t0=-1,dur=2600;
+$('nvgo').onclick=()=>{t0=performance.now();imp.visible=true;info('nvinfo','انتقال السيالة العصبية','تنتقل السيالة من الزوائد الشجرية إلى جسم الخلية ثم على طول المحور، وتقفز بين عقد رانفييه لسرعة النقل، وتنتهي عند نهايات المحور.')};
+$('nvgl').onclick=()=>{glia.visible=!glia.visible;$('nvgl').textContent=glia.visible?'أخفِ الخلايا الدبقية':'أظهر الخلايا الدبقية';if(glia.visible)show('glia');v.dirty=true};
+v.onframe=t=>{if(t0<0)return false;const k=(performance.now()-t0)/dur;
+  if(k>=1){t0=-1;imp.visible=false;nodes.forEach(n=>n.o.material.emissiveIntensity=0);return true}
+  const x=-4.4+k*10.6;imp.position.x=x;imp.scale.setScalar(1+.15*Math.sin(k*60));
+  nodes.forEach(n=>{n.o.material.emissiveIntensity=Math.max(0,1-Math.abs(x-n.x)/.9)*1.4});return true};
+})();
+
+/* ============ الاختبار ============ */
+C3D.quiz('qbox','qscore','q',[
+ {q:'النسيج الذي تتراص خلاياه ووظيفته الحماية والامتصاص والإفراز:',o:['العصبي','الضام','العضلي','الطلائي'],a:3,e:'النسيج الطلائي خلاياه متراصة بإحكام، يغطي الأسطح ويبطّن التجاويف، ووظيفته الحماية والامتصاص والإفراز.'},
+ {q:'المستوى التنظيمي الذي يلي النسيج مباشرة:',o:['الجهاز','العضو','الكائن الحي','الخلية'],a:1,e:'الترتيب: خلية ← نسيج ← عضو ← جهاز ← كائن حي، فالعضو تتعاون فيه عدة أنسجة مختلفة.'},
+ {q:'النسيج العضلي الذي يوجد في القلب فقط هو:',o:['الهيكلي','الأملس','القلبي','المخطط الهيكلي'],a:2,e:'العضلة القلبية لا توجد إلا في القلب، وهي مخططة لا إرادية وخلاياها متفرعة.'},
+ {q:'أي مما يلي من أنواع النسيج الضام؟',o:['العضلي الأملس','العظمي والغضروفي والدم','الحرشفي البسيط','العصبون'],a:1,e:'يشمل النسيج الضام العظمي والغضروفي واللمفي والدم، وخلاياه متباعدة في مادة بين خلوية وفيرة.'},
+ {q:'الوحدة البنائية والوظيفية للنسيج العصبي:',o:['الكريات الحمراء','النفرون','العصبون','الكبة'],a:2,e:'العصبون هو وحدة النسيج العصبي، ويتكون من جسم خلية وزوائد شجرية ومحور عصبي.'},
+ {q:'من صفات النسيج الطلائي:',o:['لا يحتوي أوعية دموية ويستند إلى غشاء قاعدي','يحتوي أوعية دموية كثيرة','خلاياه متباعدة في مادة بين خلوية وفيرة','لا يتجدد أبداً'],a:0,e:'الطلائي بلا أوعية دموية، يتغذى بالانتشار، ويستند إلى غشاء قاعدي ويتجدد باستمرار.'},
+ {q:'الألياف الثلاثة في النسيج الضام هي:',o:['كولاجين ومرنة وشبكية','هستون ونيوكليوسوم وكروماتين','سليلوز ولجنين وبكتين','كيراتين وأكتين وميوسين'],a:0,e:'ألياف الكولاجين القوية، والألياف المرنة، والألياف الشبكية الدقيقة المتفرعة.'}
+]);
+C3D.tabs([{id:'lv',l:'🧬 المستويات'},{id:'ep',l:'🟣 الطلائي'},{id:'cn',l:'🦴 الضام'},{id:'ms',l:'💪 العضلي'},{id:'nv',l:'⚡ العصبي'},{id:'qz',l:'✍️ أسئلة'}]);
+</script></body></html>
