@@ -111,6 +111,28 @@ figure:hover{transform:perspective(800px) rotateX(3deg) rotateY(-4deg) translate
 .hxn{text-align:center;color:var(--muted);font-size:14px;margin:0 0 8px}
 @media (prefers-reduced-motion:reduce){.rv,.rv.in{transform:none!important;transition:none!important}.cloud{transition:none}}
 
+
+.fig-step h3{color:var(--accent);margin:0 0 10px;font-size:19px}
+.figimg{width:100%;height:auto;border-radius:10px;background:#fff;display:block;margin-bottom:10px;border:1px solid var(--line)}
+.legend{margin-top:12px;background:var(--soft);border-radius:12px;padding:10px 14px}
+.legend b{display:block;margin-bottom:4px}
+.legend ul{list-style:none;margin:0;padding:0}
+.legend li{margin:6px 0;display:flex;gap:8px;align-items:flex-start}
+.dot{flex:none;width:12px;height:12px;border-radius:50%;margin-top:9px;border:1px solid rgba(0,0,0,.2)}
+canvas.scene{width:100%;height:320px;display:block;touch-action:none;cursor:grab;border-radius:8px;background:#fbfcfe}
+.figs figure.wide{grid-column:1/-1}
+@media (max-width:480px){canvas.scene{height:280px}}
+
+/* ===== القرص التفاعلي ===== */
+.discw{max-width:460px;margin:6px auto 0;padding:4px}.disc{width:100%;height:auto;display:block;color:var(--ink)}
+.disc .ring{transform-origin:200px 200px;animation:dspin 60s linear infinite}@keyframes dspin{to{transform:rotate(360deg)}}
+.disc .sec{cursor:pointer;transform-box:view-box;transform-origin:200px 200px;transition:transform .25s ease,filter .25s ease,opacity .6s;filter:drop-shadow(0 6px 8px rgba(0,0,0,.25));outline:none;animation:dpop .55s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes dpop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+.disc .sec:hover,.disc .sec:focus-visible{transform:scale(1.05);filter:drop-shadow(0 8px 14px rgba(0,0,0,.35)) brightness(1.06)}
+.disc .sec.leaving{opacity:0;transform:scale(1.25)}
+.disc .st{font-size:11.5px;font-weight:800;fill:#fff;paint-order:stroke;stroke:rgba(0,0,0,.4);stroke-width:3px;stroke-linejoin:round}
+.disc .ht{font-size:20px;font-weight:800;fill:#1b3a2a}.disc .hs2{font-size:11.5px;font-weight:700;fill:#456}
+@media (prefers-reduced-motion:reduce){.disc .ring,.disc .sec{animation:none}}
 </style>
 </head>
 <body>
@@ -120,9 +142,17 @@ figure:hover{transform:perspective(800px) rotateX(3deg) rotateY(-4deg) translate
 <main>
 
   <section id="home">
-    <div class="hx" id="hx"><canvas id="hxc" aria-label="نموذج ثلاثي الأبعاد لجزيء DNA" role="img"></canvas></div><p class="hxn">اسحب الحلزون بإصبعك لتديره 🔄</p>
-    <p class="hint">اختر سحابة لتبدأ القسم. تظهر علامة ✓ بعد إنهائه.</p>
-    <div class="sky" id="sky"></div>
+    <p class="hint" style="text-align:center">اختر قطاعاً لتبدأ القسم. تظهر علامة ✓ بعد إنهائه.</p>
+    <div class="discw" id="sky"></div>
+    <div style="text-align:center;margin-top:10px"><button id="mapBtn" class="btn-main">🗺️ مخطط الدرس</button></div>
+  </section>
+
+  <section id="mapsec" class="hidden">
+    <div class="row" style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px">
+      <button id="mBack" class="btn-ghost">→ الرئيسية</button>
+      <span style="font-weight:800;color:var(--accent)">🗺️ مخطط الدرس</span>
+    </div>
+    <div class="card"><div id="cmapbox"></div></div>
   </section>
 
   <section id="pscreen" class="hidden">
@@ -148,8 +178,12 @@ figure:hover{transform:perspective(800px) rotateX(3deg) rotateY(-4deg) translate
     <div id="figsBox"></div>
     <div id="actBox"></div>
     <div id="thinkBox"></div>
-    <div class="nextrow" id="stepNav" style="gap:10px;align-items:center;flex-wrap:wrap"><button id="sPrev" class="btn-ghost">→ السابق</button><span id="sPos" style="color:var(--muted);font-weight:700"></span><button id="sNext" class="btn-main">التالي ←</button></div>
-    <div class="nextrow"><button id="aDone" class="btn-main hidden">انتهيت من هذا القسم</button></div>
+    <div class="nextrow" style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <span id="stepCount" class="hint" style="margin:0"></span>
+      <button id="sPrev" class="btn-ghost hidden">→ السابق</button>
+      <button id="nextStep" class="btn-main">التالي ←</button>
+      <button id="aDone" class="btn-main hidden">انتهيت من هذا القسم</button>
+    </div>
   </section>
 
   <section id="quiz" class="hidden">
@@ -162,10 +196,10 @@ figure:hover{transform:perspective(800px) rotateX(3deg) rotateY(-4deg) translate
   </section>
 
 </main>
-
+<footer>جميع الحقوق محفوظة ©</footer>
 
 <script>
-const D = {"secs": [{"id": "s1", "pred": {"q": "أي مكوّن في الكروموسوم تتوقع أنه يحمل المعلومات الوراثية: البروتين أم DNA؟", "opts": [{"t": "DNA", "ok": true}, {"t": "البروتين", "ok": false}, {"t": "الهستون", "ok": false}, {"t": "الفوسفات", "ok": false}], "yes": "أحسنت! العلماء توصلوا إلى أن العامل الوراثي يتركّز في جزيء DNA بعد تجارب كثيرة.", "no": "الجواب الصحيح: DNA. توصّل العلماء بعد تجارب متتالية إلى أن العامل الوراثي يتركّز فيه."}, "blocks": [{"h": "البداية", "t": "بدأ علم الوراثة مع العالم مندل، الذي وضع أسسه من خلال اكتشافاته (يذكر الكتاب عام 1850م)."}, {"h": "المكوّنات الرئيسة للكروموسوم", "t": "توصّل العلماء إلى أن مكوّنات الكروموسوم الرئيسة هي DNA والبروتين، فبدأ البحث: أيهما يحمل المعلومات الوراثية؟"}, {"h": "التجارب", "t": "استغرق الأمر عشرات السنين، وأبرزها: تجارب Griffith، وتجارب Avery ومساعديه، وأخيراً تجارب Hershey وChase."}, {"h": "الاستنتاج", "t": "العامل الوراثي يتركّز في جزيء DNA، وهناك علاقة تركيبية بين الكروموسومات وDNA، وتنتقل الكروموسومات من خلية إلى أخرى ومن جيل إلى آخر."}], "figs": ["fig1"], "act": {"type": "order", "title": "🧭 رتّب التجارب حسب ترتيبها الزمني (من الأقدم إلى الأحدث)", "items": ["تجارب Hershey وChase", "تجارب Griffith", "تجارب Avery ومساعديه"], "correct": ["تجارب Griffith", "تجارب Avery ومساعديه", "تجارب Hershey وChase"]}, "think": {"q": "لماذا استغرق اكتشاف المادة الوراثية عشرات السنين؟", "keys": ["بروتين", "تجارب", "متتال", "تتابع"], "ans": "لأن الكروموسوم يحتوي على DNA والبروتين معاً، وكان من الصعب تحديد أيهما يحمل المعلومات، فاحتاج الأمر تجارب متتالية عبر سنوات طويلة."}, "intro": "في هذا القسم نتعرّف كيف اكتشف العلماء أن المادة الوراثية هي DNA وليس البروتين، من خلال سلسلة من التجارب المتتالية."}, {"id": "s2", "pred": {"q": "ماذا تتوقع أن يحدث لطول جزيء DNA لو لم يلتف حول بروتينات الهستون؟", "opts": [{"t": "يصبح طويلاً جداً ولا يمكن تخزينه بصورة مضغوطة", "ok": true}, {"t": "يصبح أقصر", "ok": false}, {"t": "يختفي", "ok": false}, {"t": "لا يتغير أبداً", "ok": false}], "yes": "أحسنت! التفافه حول الهستون يضغطه ليمكن تخزينه داخل الكروموسوم.", "no": "الجواب: يصبح طويلاً جداً ولا يمكن تخزينه بصورة مضغوطة، لذلك يلتف حول الهستون ويتكدس."}, "blocks": [{"h": "مكوّنات الكروموسوم", "t": "يتركّب الكروموسوم في الكائنات الحية حقيقية النواة من DNA وبروتينات، ومن أهمها بروتين الهستون."}, {"h": "الخرزات", "t": "يرتبط الهستون في مجموعات من ثماني جزيئات على شكل خرزات (beads)، ويلتف حولها جزيء DNA مرتين."}, {"h": "النيوكليوسوم", "t": "يتجمع الهستون التسعة (ثمانية + جزيء تاسع) مع جزيء DNA ليكوّن ما يسمى النيوكليوسوم (Nucleosome)."}, {"h": "دوره", "t": "يلعب النيوكليوسوم دوراً مهماً في تكدّس الكروموسوم (Super coil) أثناء الانقسامات الخلوية، وله دور في تنظيم عملية الترجمة."}], "figs": ["fig2", "chrom", "nucl"], "act": {"type": "order", "title": "🔎 رتّب مستويات تكدّس DNA من الأبسط إلى الأعقد", "items": ["الكروموسوم", "جزيء DNA", "النيوكليوسوم"], "correct": ["جزيء DNA", "النيوكليوسوم", "الكروموسوم"]}, "think": {"q": "ما اسم المجموعة التي تتكوّن من الهستون التسعة مع جزيء DNA؟", "keys": ["نيوكليوسوم", "نيوكلوسوم"], "ans": "النيوكليوسوم (Nucleosome)."}, "intro": "هنا نتعلم كيف يُحزم جزيء DNA الطويل داخل الكروموسوم، فيلتف حول بروتينات الهستون مكوّناً وحدات تسمى النيوكليوسومات."}, {"id": "s3", "pred": {"q": "إذا كانت إحدى القواعد في سلسلة DNA هي A (أدينين)، فما القاعدة المقابلة لها في السلسلة الأخرى؟", "opts": [{"t": "T (ثايمين)", "ok": true}, {"t": "G (جوانين)", "ok": false}, {"t": "C (سايتوسين)", "ok": false}, {"t": "U (يوراسيل)", "ok": false}], "yes": "أحسنت! في DNA: A تقابل T، وG تقابل C. أما U فموجود في RNA فقط.", "no": "الجواب: T (ثايمين). في DNA، A ترتبط دائماً مع T، وG مع C. أما U فيوجد في RNA."}, "blocks": [{"h": "الحموض النووية", "t": "تتضمن الجزيئات الحيوية الكبيرة جزيئات تسمى الحموض النووية، ومنها RNA وDNA، وتتكون من وحدات بنائية أساسية تسمى النيوكليوتيدات (Nucleotides)."}, {"h": "تركيب النيوكليوتيد", "t": "يتكون النيوكليوتيد من ثلاثة أجزاء: سكر خماسي، ومجموعة فوسفات (ترتبط بذرة الكربون رقم 5)، وقاعدة نيتروجينية (ترتبط بذرة الكربون رقم 1)."}, {"h": "السكر", "t": "الريبوز: يدخل في تركيب RNA. الريبوز منقوص الأكسجين: يدخل في تركيب DNA."}, {"h": "القواعد النيتروجينية", "t": "DNA: الثايمين (T) والجوانين (G) والأدينين (A) والسايتوسين (C). RNA: يوجد اليوراسيل (U) بدلاً من الثايمين."}, {"h": "جزيء DNA", "t": "يتكون من سلسلتين ملتفتين بشكل لولبي، ترتبط قواعدهما ببعضها بروابط هيدروجينية، والسلسلتان متعاكستان في الاتجاه (5′ و3′)."}], "figs": ["fig3", "comp", "fig4", "nuc4", "fig5", "bp", "extract"], "act": {"type": "classify", "title": "🧩 صنّف كل عنصر: هل يخص DNA أم RNA أم كلاهما؟", "buckets": ["DNA", "RNA", "كلاهما"], "items": [{"t": "سكر الريبوز منقوص الأكسجين", "b": "DNA"}, {"t": "سكر الريبوز", "b": "RNA"}, {"t": "قاعدة الثايمين (T)", "b": "DNA"}, {"t": "قاعدة اليوراسيل (U)", "b": "RNA"}, {"t": "مجموعة الفوسفات", "b": "كلاهما"}, {"t": "قاعدة الجوانين (G)", "b": "كلاهما"}]}, "pair": true, "think": {"q": "لماذا تُسمى السلسلتان في DNA بـ 5′ و3′؟", "keys": ["كربون", "الكربون"], "ans": "لأن ترقيم ذرات الكربون في جزيء السكر يبدأ من 1′ إلى 5′، فيرتبط طرف سلسلة بالكربون 5′ والطرف الآخر بالكربون 3′، ولذلك تكون السلسلتان متعاكستين في الاتجاه."}, "intro": "هنا نتعرف إلى الحموض النووية: DNA وRNA. كل نيوكليوتيد يتكون من سكر خماسي وفوسفات وقاعدة نيتروجينية، والفرق بينهما في السكر وبعض القواعد."}, {"id": "s4", "pred": {"q": "ماذا تتوقع أن يحدث لو توقف إنزيم الهيليكيز عن فك السلسلتين أثناء التضاعف؟", "opts": [{"t": "لا يمكن نسخ السلسلتين، فلا يتضاعف DNA", "ok": true}, {"t": "يتضاعف DNA أسرع", "ok": false}, {"t": "تتكون سلسلة RNA فقط", "ok": false}, {"t": "يصبح DNA أقصر", "ok": false}], "yes": "أحسنت! لا يمكن بناء سلسلة جديدة قبل أن تنفصل السلسلتان.", "no": "الجواب: لا يمكن نسخ السلسلتين إذا لم تنفصلا، فلا يتضاعف DNA."}, "blocks": [{"h": "مكان التضاعف", "t": "يتضاعف جزيء DNA في مرحلة S من دورة الخلية، وهي مرحلة بناء DNA."}, {"h": "1) فك الالتواء", "t": "يتحرك إنزيم الهيليكيز (Helicase) على طول جزيء DNA ويعمل على فك الالتواء وفصل السلسلتين. تتباعد السلسلتان، ثم ترتبط بهما بروتينات خاصة للحفاظ على انفصالهما."}, {"h": "2) ارتباط القواعد في أزواج", "t": "تعمل إنزيمات بلمرة DNA (DNA polymerase) على ربط النيوكليوتيدات الجديدة مع السلاسل القديمة بشكل متمم."}, {"h": "3) إعادة ربط السلسلة", "t": "يقوم إنزيم ربط DNA ليغيز (DNA ligase) بربط السلسلتين، فتكون الجزيئات الناتجة متطابقة مع الأصلية."}, {"h": "شبه المحافظ", "t": "يُدعى هذا التضاعف شبه المحافظ (Semi-conservative)، لأن كل جزيء جديد يحتوي على سلسلة قديمة وسلسلة جديدة."}, {"h": "التصحيح", "t": "مع ضخامة المادة الوراثية وسرعة التضاعف، قد تحدث أخطاء في ترتيب القواعد، لكن يوجد نظام من الإنزيمات يعمل على تصويب (تصحيح) هذه الأخطاء."}, {"h": "أهميته", "t": "تعتمد الحياة على حفظ ونقل المعلومات الوراثية، فالتضاعف يحافظ على كمية المادة الوراثية ونوعيتها، وتنتقل أثناء الانقسام المتساوي ومن جيل إلى آخر عبر الخلايا التناسلية."}], "figs": ["fig6", "fig7", "repl"], "act": {"type": "order", "title": "⚙️ رتّب مراحل آلية تضاعف DNA", "items": ["إعادة ربط السلسلة (ligase)", "فك الالتواء (helicase)", "ارتباط القواعد في أزواج (polymerase)"], "correct": ["فك الالتواء (helicase)", "ارتباط القواعد في أزواج (polymerase)", "إعادة ربط السلسلة (ligase)"]}, "think": {"q": "ماذا يحدث لو لم تُصحَّح مثل هذه الأخطاء أثناء التضاعف؟", "keys": ["طفر", "تغير", "تتغير", "صفات", "تشوه", "تشوّه", "بروتين"], "ans": "تتراكم الطفرات في المادة الوراثية، فتتغير البروتينات الناتجة، وقد تظهر صفات غير مرغوبة أو تتعطل وظائف الجسم."}, "intro": "هنا نتعلم كيف يصنع الكائن الحي نسخة مطابقة من جزيء DNA، عبر فك الالتواء، ثم ارتباط القواعد المتممة، ثم إعادة ربط السلسلة."}, {"id": "s5", "pred": {"q": "هل تتوقع أن كل طفرة تؤدي إلى صفة ضارة؟", "opts": [{"t": "لا، بعضها قد يكون مرغوباً", "ok": true}, {"t": "نعم، كلها ضارة", "ok": false}, {"t": "لا تؤثر أبداً", "ok": false}, {"t": "تختفي دائماً", "ok": false}], "yes": "أحسنت! الطفرات قد تكون غير مرغوبة، وقد تكون مرغوبة يحاول الإنسان استحداثها.", "no": "الجواب: لا، فبعض الطفرات قد يكون مرغوباً. تأثيرها يختلف حسب الكائن الحي وطبيعة الصفة."}, "blocks": [{"h": "تعريف الطفرة", "t": "تغيّر مفاجئ في المادة الوراثية المتحكّمة في صفة معينة، وتُعد الطفرة مؤثرة إذا تم توارثها."}, {"h": "تأثيرها", "t": "قد ينتج عنها صفات غير مرغوبة (تشوهات في الإنسان، نقص المحصول في النبات)، أو صفات مرغوبة يحاول الإنسان استحداثها بطرق علمية."}, {"h": "أسبابها", "t": "تلقائية: أثناء الانقسامات الخلوية لأسباب غير محددة. مُحفِّزة: بسبب عوامل خارجية كالمواد الكيميائية والإشعاعات."}, {"h": "النوع الأول: الطفرة الجينية", "t": "تغيّر في التركيب الكيميائي للجين بحذف أو إضافة أو استبدال قاعدة نيتروجينية أو أكثر في DNA، فينتج بروتين مختلف يسبب ظهور صفة جديدة."}, {"h": "النوع الثاني: الطفرة الكروموسومية", "t": "تغيّر في عدد الكروموسومات أو في تركيبها، بسبب خلل أثناء الانقسام المنصف أو المتساوي، وقد يكون الخلل بزيادة أو نقصان في الكروموسومات الجنسية أو الجسمية."}], "figs": ["fig8", "mut"], "act": {"type": "classify", "title": "🔬 صنّف كل حالة: طفرة جينية أم كروموسومية؟", "buckets": ["جينية", "كروموسومية"], "items": [{"t": "استبدال قاعدة نيتروجينية واحدة في DNA", "b": "جينية"}, {"t": "حذف قاعدة نيتروجينية من جين", "b": "جينية"}, {"t": "زيادة عدد الكروموسومات", "b": "كروموسومية"}, {"t": "تغيّر في تركيب مقطع من الكروموسوم", "b": "كروموسومية"}, {"t": "تغيّر بروتين الجين وظهور صفة جديدة", "b": "جينية"}]}, "think": {"q": "هل تتوقع أن كل الطفرات تُورَّث؟ ولماذا؟", "keys": ["توارث", "تورث", "تورّث", "تنتقل", "الاجيال", "الأجيال", "جيل"], "ans": "لا؛ الطفرة تُعد مؤثرة فقط إذا تم توارثها، أي إذا انتقلت إلى الأجيال التالية."}, "intro": "هنا نتعلم ما الطفرة، وكيف تنقسم إلى طفرة جينية وطفرة كروموسومية، ولماذا تكون مؤثرة فقط إذا انتقلت إلى الأجيال التالية."}, {"id": "s6", "quiz": [{"q": "ما القاعدة النيتروجينية التي توجد في RNA ولا توجد في DNA؟", "opts": ["أدينين", "يوراسيل", "ثايمين", "سايتوسين"], "a": 1}, {"q": "أي إنزيم يربط السلسلة الجديدة ويصل قطعها أثناء التضاعف؟", "opts": ["هيليكيز", "بلمرة DNA", "ليغيز (DNA ligase)", "RNA البادئ"], "a": 2}, {"q": "مِمَّ يتركب الكروموسوم؟", "opts": ["DNA فقط", "بروتين فقط", "DNA وبروتين", "RNA"], "a": 2}, {"q": "أي إنزيم يعمل على فك الالتواء وفصل السلسلتين أثناء تضاعف DNA؟", "opts": ["بلمرة DNA", "هيليكيز", "ربط DNA ليغيز", "RNA البادئ"], "a": 1}, {"q": "ما الذي يميز التضاعف شبه المحافظ؟", "opts": ["كل جزيء جديد يحتوي على سلسلة قديمة وسلسلة جديدة", "كل جزيء جديد يحتوي سلسلتين جديدتين", "كل جزيء جديد يحتوي سلسلتين قديمتين", "لا يحتوي على سلاسل قديمة"], "a": 0}], "think": null}], "pal": {"s1": {"acc": "#D32F2F", "soft": "#fbe6e4", "line": "#efcfcb", "name": "اكتشاف المادة الوراثية", "ico": "🔬"}, "s2": {"acc": "#E65100", "soft": "#fdeedb", "line": "#f2d9b5", "name": "تركيب الكروموسوم", "ico": "🧬"}, "s3": {"acc": "#2E7D32", "soft": "#e2f4e8", "line": "#cbe6d4", "name": "الحموض النووية", "ico": "🧪"}, "s4": {"acc": "#1565C0", "soft": "#e3effb", "line": "#c9dcef", "name": "تضاعف DNA", "ico": "🔁"}, "s5": {"acc": "#6A1B9A", "soft": "#ede4fa", "line": "#dccdf2", "name": "الطفرات", "ico": "⚡"}, "s6": {"acc": "#00796B", "soft": "#dff5f2", "line": "#c4e7e2", "name": "أسئلة الفصل", "ico": "🏁"}}, "fig": {"fig1": "images/gen-fig1.webp", "fig2": "images/gen-fig2.webp", "fig3": "images/gen-fig3.webp", "fig4": "images/gen-fig4.webp", "fig5": "images/gen-fig5.webp", "fig6": "images/gen-fig6.webp", "fig7": "images/gen-fig7.webp", "fig8": "images/gen-fig8.webp", "comp": "images/gen-comp.webp", "extract": "images/gen-extract.webp", "repl": "images/gen-repl.webp", "nuc4": "images/gen-nuc4.webp", "mut": "images/gen-mut.webp", "chrom": "images/gen-chrom.webp", "bp": "images/gen-bp.webp", "nucl": "images/gen-nucl.webp"}, "cap": {"comp": "مقارنة بين DNA وRNA: السكر والقواعد النيتروجينية وبنية السلسلة", "extract": "نشاط استخلاص DNA من نبات الفراولة", "repl": "آلية تضاعف DNA شبه المحافظ: المراحل الثلاث", "nuc4": "مقارنة بين نيوكليوتيد DNA ونيوكليوتيد RNA", "mut": "أشكال مختلفة لطفرات: نبات، حيوان، إنسان، ثمرة", "chrom": "الكروموسوم: ينتج من التفاف DNA حول بروتين الهستون", "bp": "قواعد نيتروجينية متممة واتجاه السلسلتين 5′ و3′", "nucl": "النيوكليوسوم: DNA ملتف حول بروتينات الهستون", "fig1": "الشكل (1): العلاقة بين الكروموسوم وDNA", "fig2": "الشكل (2): النيوكليوسوم", "fig3": "الشكل (3): تركيب الحموض النووية", "fig4": "الشكل (4): نيوكليوتيدات DNA وRNA", "fig5": "الشكل (5): جزيء DNA", "fig6": "الشكل (6): مرحلة S في دورة الخلية", "fig7": "الشكل (7): آلية تضاعف DNA", "fig8": "الشكل (8): أشكال مختلفة لطفرات في كائنات حية"}};
+const D = {"secs": [{"id": "s1", "pred": {"q": "أي مكوّن في الكروموسوم تتوقع أنه يحمل المعلومات الوراثية: البروتين أم DNA؟", "opts": [{"t": "DNA", "ok": true}, {"t": "البروتين", "ok": false}, {"t": "الهستون", "ok": false}, {"t": "الفوسفات", "ok": false}], "yes": "أحسنت! العلماء توصلوا إلى أن العامل الوراثي يتركّز في جزيء DNA بعد تجارب كثيرة.", "no": "الجواب الصحيح: DNA. توصّل العلماء بعد تجارب متتالية إلى أن العامل الوراثي يتركّز فيه."}, "blocks": [{"h": "البداية", "t": "بدأ علم الوراثة مع العالم مندل، الذي وضع أسسه من خلال اكتشافاته (يذكر الكتاب عام 1850م)."}, {"h": "المكوّنات الرئيسة للكروموسوم", "t": "توصّل العلماء إلى أن مكوّنات الكروموسوم الرئيسة هي DNA والبروتين، فبدأ البحث: أيهما يحمل المعلومات الوراثية؟"}, {"h": "التجارب", "t": "استغرق الأمر عشرات السنين، وأبرزها: تجارب Griffith، وتجارب Avery ومساعديه، وأخيراً تجارب Hershey وChase."}, {"h": "الاستنتاج", "t": "العامل الوراثي يتركّز في جزيء DNA، وهناك علاقة تركيبية بين الكروموسومات وDNA، وتنتقل الكروموسومات من خلية إلى أخرى ومن جيل إلى آخر."}], "figs": [{"img": "cellchain", "cap": "من الخلية إلى الجين", "sc": "sc_dna", "leg": [{"c": "#5b8fd6", "t": "الخلية ← النواة ← الكروموسوم ← DNA ← الجين"}, {"c": "#f2a33c", "t": "الجين: جزء من DNA يحمل شفرة صفة معينة"}, {"c": "#5b8fd6", "t": "الهيكل الفوسفاتي والسكري: الجانبان الملتفان"}]}], "act": {"type": "order", "title": "🧭 رتّب التجارب حسب ترتيبها الزمني (من الأقدم إلى الأحدث)", "items": ["تجارب Hershey وChase", "تجارب Griffith", "تجارب Avery ومساعديه"], "correct": ["تجارب Griffith", "تجارب Avery ومساعديه", "تجارب Hershey وChase"]}, "think": {"q": "لماذا استغرق اكتشاف المادة الوراثية عشرات السنين؟", "keys": ["بروتين", "تجارب", "متتال", "تتابع"], "ans": "لأن الكروموسوم يحتوي على DNA والبروتين معاً، وكان من الصعب تحديد أيهما يحمل المعلومات، فاحتاج الأمر تجارب متتالية عبر سنوات طويلة."}, "intro": "في هذا القسم نتعرّف كيف اكتشف العلماء أن المادة الوراثية هي DNA وليس البروتين، من خلال سلسلة من التجارب المتتالية."}, {"id": "s2", "pred": {"q": "ماذا تتوقع أن يحدث لطول جزيء DNA لو لم يلتف حول بروتينات الهستون؟", "opts": [{"t": "يصبح طويلاً جداً ولا يمكن تخزينه بصورة مضغوطة", "ok": true}, {"t": "يصبح أقصر", "ok": false}, {"t": "يختفي", "ok": false}, {"t": "لا يتغير أبداً", "ok": false}], "yes": "أحسنت! التفافه حول الهستون يضغطه ليمكن تخزينه داخل الكروموسوم.", "no": "الجواب: يصبح طويلاً جداً ولا يمكن تخزينه بصورة مضغوطة، لذلك يلتف حول الهستون ويتكدس."}, "blocks": [{"h": "مكوّنات الكروموسوم", "t": "يتركّب الكروموسوم في الكائنات الحية حقيقية النواة من DNA وبروتينات، ومن أهمها بروتين الهستون."}, {"h": "الخرزات", "t": "يرتبط الهستون في مجموعات من ثماني جزيئات على شكل خرزات (beads)، ويلتف حولها جزيء DNA مرتين."}, {"h": "النيوكليوسوم", "t": "يتجمع الهستون التسعة (ثمانية + جزيء تاسع) مع جزيء DNA ليكوّن ما يسمى النيوكليوسوم (Nucleosome)."}, {"h": "دوره", "t": "يلعب النيوكليوسوم دوراً مهماً في تكدّس الكروموسوم (Super coil) أثناء الانقسامات الخلوية، وله دور في تنظيم عملية الترجمة."}], "figs": [{"img": "chrom_gene", "cap": "الكروموسوم والجين", "sc": "sc_dna", "leg": [{"c": "#3b82c4", "t": "DNA: شريط مزدوج"}, {"c": "#c9a64a", "t": "بروتين الهستون"}, {"c": "#3fae5a", "t": "الجين: جزء من DNA ينتج بروتيناً معيناً"}]}, {"img": "chromanat", "cap": "تركيب الكروموسوم", "sc": "sc_chrom", "leg": [{"c": "#6f7fd0", "t": "الكروماتيد: نصف الكروموسوم"}, {"c": "#e0b050", "t": "السنترومير: يربط الكروماتيدين"}, {"c": "#c9a64a", "t": "بروتين الهستون"}, {"c": "#3b82c4", "t": "DNA ملتف حول الهستون"}]}, {"img": "nucleo_img", "cap": "النيوكليوسوم", "sc": "sc_nuc", "leg": [{"c": "#8c7fd9", "t": "بروتين الهستون: ثماني خرزات"}, {"c": "#3b82c4", "t": "DNA ملتف حول الخرزات"}, {"c": "#d4a84b", "t": "بروتين رابط H1"}]}], "act": {"type": "order", "title": "🔎 رتّب مستويات تكدّس DNA من الأبسط إلى الأعقد", "items": ["الكروموسوم", "جزيء DNA", "النيوكليوسوم"], "correct": ["جزيء DNA", "النيوكليوسوم", "الكروموسوم"]}, "think": {"q": "ما اسم المجموعة التي تتكوّن من الهستون التسعة مع جزيء DNA؟", "keys": ["نيوكليوسوم", "نيوكلوسوم"], "ans": "النيوكليوسوم (Nucleosome)."}, "intro": "هنا نتعلم كيف يُحزم جزيء DNA الطويل داخل الكروموسوم، فيلتف حول بروتينات الهستون مكوّناً وحدات تسمى النيوكليوسومات."}, {"id": "s3", "pred": {"q": "إذا كانت إحدى القواعد في سلسلة DNA هي A (أدينين)، فما القاعدة المقابلة لها في السلسلة الأخرى؟", "opts": [{"t": "T (ثايمين)", "ok": true}, {"t": "G (جوانين)", "ok": false}, {"t": "C (سايتوسين)", "ok": false}, {"t": "U (يوراسيل)", "ok": false}], "yes": "أحسنت! في DNA: A تقابل T، وG تقابل C. أما U فموجود في RNA فقط.", "no": "الجواب: T (ثايمين). في DNA، A ترتبط دائماً مع T، وG مع C. أما U فيوجد في RNA."}, "blocks": [{"h": "الحموض النووية", "t": "تتضمن الجزيئات الحيوية الكبيرة جزيئات تسمى الحموض النووية، ومنها RNA وDNA، وتتكون من وحدات بنائية أساسية تسمى النيوكليوتيدات (Nucleotides)."}, {"h": "تركيب النيوكليوتيد", "t": "يتكون النيوكليوتيد من ثلاثة أجزاء: سكر خماسي، ومجموعة فوسفات (ترتبط بذرة الكربون رقم 5)، وقاعدة نيتروجينية (ترتبط بذرة الكربون رقم 1)."}, {"h": "السكر", "t": "الريبوز: يدخل في تركيب RNA. الريبوز منقوص الأكسجين: يدخل في تركيب DNA."}, {"h": "القواعد النيتروجينية", "t": "DNA: الثايمين (T) والجوانين (G) والأدينين (A) والسايتوسين (C). RNA: يوجد اليوراسيل (U) بدلاً من الثايمين."}, {"h": "جزيء DNA", "t": "يتكون من سلسلتين ملتفتين بشكل لولبي، ترتبط قواعدهما ببعضها بروابط هيدروجينية، والسلسلتان متعاكستان في الاتجاه (5′ و3′)."}], "figs": [{"img": "dnarna3d", "cap": "DNA وRNA", "sc": ["sc_dna", "sc_rna"], "leg": [{"c": "#5b8fd6", "t": "DNA: شريط مزدوج، سكره منقوص الأكسجين، والثايمين T"}, {"c": "#2e8b6a", "t": "RNA: شريط مفرد، سكره ريبوز، واليوراسيل U بدل T"}, {"c": "#f2a33c", "t": "الفوسفات والسكر: الهيكل الخارجي"}, {"c": "#3fae5a", "t": "القواعد النيتروجينية: الأزواج في DNA، والقواعد الحرة في RNA"}]}, {"img": "chemchart", "cap": "مقارنة بين DNA وRNA", "leg": [{"c": "#3a6fd8", "t": "DNA: سكر منقوص الأكسجين، والقواعد A وT وG وC"}, {"c": "#3fae5a", "t": "RNA: سكر ريبوز، واليوراسيل U بدل الثايمين"}]}, {"img": "nucl_chem", "cap": "النيوكليوتيد في DNA وRNA", "sc": "sc_nucl", "leg": [{"c": "#f2a33c", "t": "مجموعة الفوسفات"}, {"c": "#8a8f99", "t": "السكر الخماسي"}, {"c": "#3a6fd8", "t": "القاعدة النيتروجينية"}, {"c": "#eeeeee", "t": "H على الكربون 2′: منقوص الأكسجين (DNA)"}]}, {"img": "bp_img", "cap": "الأزواج المتممة واتجاه السلسلتين", "sc": "sc_dna", "leg": [{"c": "#5b8fd6", "t": "الهيكل الفوسفاتي والسكري: الجانبان الملتفان"}, {"c": "#3fae5a", "t": "A أدينين ↔ T ثايمين: رابطتان هيدروجينيتان"}, {"c": "#8a5cc7", "t": "G جوانين ↔ C سايتوسين: ثلاث روابط"}, {"c": "#444444", "t": "الخطوط المتقطعة: الروابط الهيدروجينية"}]}], "act": {"type": "classify", "title": "🧩 صنّف كل عنصر: هل يخص DNA أم RNA أم كلاهما؟", "buckets": ["DNA", "RNA", "كلاهما"], "items": [{"t": "سكر الريبوز منقوص الأكسجين", "b": "DNA"}, {"t": "سكر الريبوز", "b": "RNA"}, {"t": "قاعدة الثايمين (T)", "b": "DNA"}, {"t": "قاعدة اليوراسيل (U)", "b": "RNA"}, {"t": "مجموعة الفوسفات", "b": "كلاهما"}, {"t": "قاعدة الجوانين (G)", "b": "كلاهما"}]}, "pair": true, "think": {"q": "لماذا تُسمى السلسلتان في DNA بـ 5′ و3′؟", "keys": ["كربون", "الكربون"], "ans": "لأن ترقيم ذرات الكربون في جزيء السكر يبدأ من 1′ إلى 5′، فيرتبط طرف سلسلة بالكربون 5′ والطرف الآخر بالكربون 3′، ولذلك تكون السلسلتان متعاكستين في الاتجاه."}, "intro": "هنا نتعرف إلى الحموض النووية: DNA وRNA. كل نيوكليوتيد يتكون من سكر خماسي وفوسفات وقاعدة نيتروجينية، والفرق بينهما في السكر وبعض القواعد."}, {"id": "s4", "pred": {"q": "ماذا تتوقع أن يحدث لو توقف إنزيم الهيليكيز عن فك السلسلتين أثناء التضاعف؟", "opts": [{"t": "لا يمكن نسخ السلسلتين، فلا يتضاعف DNA", "ok": true}, {"t": "يتضاعف DNA أسرع", "ok": false}, {"t": "تتكون سلسلة RNA فقط", "ok": false}, {"t": "يصبح DNA أقصر", "ok": false}], "yes": "أحسنت! لا يمكن بناء سلسلة جديدة قبل أن تنفصل السلسلتان.", "no": "الجواب: لا يمكن نسخ السلسلتين إذا لم تنفصلا، فلا يتضاعف DNA."}, "blocks": [{"h": "مكان التضاعف", "t": "يتضاعف جزيء DNA في مرحلة S من دورة الخلية، وهي مرحلة بناء DNA."}, {"h": "1) فك الالتواء", "t": "يتحرك إنزيم الهيليكيز (Helicase) على طول جزيء DNA ويعمل على فك الالتواء وفصل السلسلتين. تتباعد السلسلتان، ثم ترتبط بهما بروتينات خاصة للحفاظ على انفصالهما."}, {"h": "2) ارتباط القواعد في أزواج", "t": "تعمل إنزيمات بلمرة DNA (DNA polymerase) على ربط النيوكليوتيدات الجديدة مع السلاسل القديمة بشكل متمم."}, {"h": "3) إعادة ربط السلسلة", "t": "يقوم إنزيم ربط DNA ليغيز (DNA ligase) بربط السلسلتين، فتكون الجزيئات الناتجة متطابقة مع الأصلية."}, {"h": "شبه المحافظ", "t": "يُدعى هذا التضاعف شبه المحافظ (Semi-conservative)، لأن كل جزيء جديد يحتوي على سلسلة قديمة وسلسلة جديدة."}, {"h": "التصحيح", "t": "مع ضخامة المادة الوراثية وسرعة التضاعف، قد تحدث أخطاء في ترتيب القواعد، لكن يوجد نظام من الإنزيمات يعمل على تصويب (تصحيح) هذه الأخطاء."}, {"h": "أهميته", "t": "تعتمد الحياة على حفظ ونقل المعلومات الوراثية، فالتضاعف يحافظ على كمية المادة الوراثية ونوعيتها، وتنتقل أثناء الانقسام المتساوي ومن جيل إلى آخر عبر الخلايا التناسلية."}], "figs": [{"img": "repl", "cap": "آلية تضاعف DNA شبه المحافظ", "sc": "sc_fork", "leg": [{"c": "#5b8fd6", "t": "السلسلة الأصلية (قديمة)"}, {"c": "#3fae5a", "t": "السلسلة الجديدة (مصنعة)"}, {"c": "#f2a33c", "t": "إنزيم الهيليكيز: يفك الالتواء"}, {"c": "#2e9e62", "t": "إنزيم بلمرة DNA: يبني السلسلة الجديدة"}, {"c": "#e3c341", "t": "إنزيم الليغيز: يربط القطع"}]}], "act": {"type": "order", "title": "⚙️ رتّب مراحل آلية تضاعف DNA", "items": ["إعادة ربط السلسلة (ligase)", "فك الالتواء (helicase)", "ارتباط القواعد في أزواج (polymerase)"], "correct": ["فك الالتواء (helicase)", "ارتباط القواعد في أزواج (polymerase)", "إعادة ربط السلسلة (ligase)"]}, "think": {"q": "ماذا يحدث لو لم تُصحَّح مثل هذه الأخطاء أثناء التضاعف؟", "keys": ["طفر", "تغير", "تتغير", "صفات", "تشوه", "تشوّه", "بروتين"], "ans": "تتراكم الطفرات في المادة الوراثية، فتتغير البروتينات الناتجة، وقد تظهر صفات غير مرغوبة أو تتعطل وظائف الجسم."}, "intro": "هنا نتعلم كيف يصنع الكائن الحي نسخة مطابقة من جزيء DNA، عبر فك الالتواء، ثم ارتباط القواعد المتممة، ثم إعادة ربط السلسلة."}, {"id": "s5", "pred": {"q": "هل تتوقع أن كل طفرة تؤدي إلى صفة ضارة؟", "opts": [{"t": "لا، بعضها قد يكون مرغوباً", "ok": true}, {"t": "نعم، كلها ضارة", "ok": false}, {"t": "لا تؤثر أبداً", "ok": false}, {"t": "تختفي دائماً", "ok": false}], "yes": "أحسنت! الطفرات قد تكون غير مرغوبة، وقد تكون مرغوبة يحاول الإنسان استحداثها.", "no": "الجواب: لا، فبعض الطفرات قد يكون مرغوباً. تأثيرها يختلف حسب الكائن الحي وطبيعة الصفة."}, "blocks": [{"h": "تعريف الطفرة", "t": "تغيّر مفاجئ في المادة الوراثية المتحكّمة في صفة معينة، وتُعد الطفرة مؤثرة إذا تم توارثها."}, {"h": "تأثيرها", "t": "قد ينتج عنها صفات غير مرغوبة (تشوهات في الإنسان، نقص المحصول في النبات)، أو صفات مرغوبة يحاول الإنسان استحداثها بطرق علمية."}, {"h": "أسبابها", "t": "تلقائية: أثناء الانقسامات الخلوية لأسباب غير محددة. مُحفِّزة: بسبب عوامل خارجية كالمواد الكيميائية والإشعاعات."}, {"h": "النوع الأول: الطفرة الجينية", "t": "تغيّر في التركيب الكيميائي للجين بحذف أو إضافة أو استبدال قاعدة نيتروجينية أو أكثر في DNA، فينتج بروتين مختلف يسبب ظهور صفة جديدة."}, {"h": "النوع الثاني: الطفرة الكروموسومية", "t": "تغيّر في عدد الكروموسومات أو في تركيبها، بسبب خلل أثناء الانقسام المنصف أو المتساوي، وقد يكون الخلل بزيادة أو نقصان في الكروموسومات الجنسية أو الجسمية."}], "figs": [{"img": "mutimg", "cap": "أنواع الطفرات: جينية وكروموسومية", "sc": "sc_mut", "leg": [{"c": "#8a5cc7", "t": "القاعدة الأصلية G (قبل الطفرة)"}, {"c": "#3fae5a", "t": "القاعدة بعد الطفرة A"}, {"c": "#ff4d4d", "t": "الموقع الذي تغيّر"}]}], "act": {"type": "classify", "title": "🔬 صنّف كل حالة: طفرة جينية أم كروموسومية؟", "buckets": ["جينية", "كروموسومية"], "items": [{"t": "استبدال قاعدة نيتروجينية واحدة في DNA", "b": "جينية"}, {"t": "حذف قاعدة نيتروجينية من جين", "b": "جينية"}, {"t": "زيادة عدد الكروموسومات", "b": "كروموسومية"}, {"t": "تغيّر في تركيب مقطع من الكروموسوم", "b": "كروموسومية"}, {"t": "تغيّر بروتين الجين وظهور صفة جديدة", "b": "جينية"}]}, "think": {"q": "هل تتوقع أن كل الطفرات تُورَّث؟ ولماذا؟", "keys": ["توارث", "تورث", "تورّث", "تنتقل", "الاجيال", "الأجيال", "جيل"], "ans": "لا؛ الطفرة تُعد مؤثرة فقط إذا تم توارثها، أي إذا انتقلت إلى الأجيال التالية."}, "intro": "هنا نتعلم ما الطفرة، وكيف تنقسم إلى طفرة جينية وطفرة كروموسومية، ولماذا تكون مؤثرة فقط إذا انتقلت إلى الأجيال التالية."}, {"id": "s6", "quiz": [{"q": "ما القاعدة النيتروجينية التي توجد في RNA ولا توجد في DNA؟", "opts": ["أدينين", "يوراسيل", "ثايمين", "سايتوسين"], "a": 1}, {"q": "أي إنزيم يربط السلسلة الجديدة ويصل قطعها أثناء التضاعف؟", "opts": ["هيليكيز", "بلمرة DNA", "ليغيز (DNA ligase)", "RNA البادئ"], "a": 2}, {"q": "مِمَّ يتركب الكروموسوم؟", "opts": ["DNA فقط", "بروتين فقط", "DNA وبروتين", "RNA"], "a": 2}, {"q": "أي إنزيم يعمل على فك الالتواء وفصل السلسلتين أثناء تضاعف DNA؟", "opts": ["بلمرة DNA", "هيليكيز", "ربط DNA ليغيز", "RNA البادئ"], "a": 1}, {"q": "ما الذي يميز التضاعف شبه المحافظ؟", "opts": ["كل جزيء جديد يحتوي على سلسلة قديمة وسلسلة جديدة", "كل جزيء جديد يحتوي سلسلتين جديدتين", "كل جزيء جديد يحتوي سلسلتين قديمتين", "لا يحتوي على سلاسل قديمة"], "a": 0}], "think": null}], "pal": {"s1": {"acc": "#D32F2F", "soft": "#fbe6e4", "line": "#efcfcb", "name": "اكتشاف المادة الوراثية", "ico": "🔬"}, "s2": {"acc": "#E65100", "soft": "#fdeedb", "line": "#f2d9b5", "name": "تركيب الكروموسوم", "ico": "🧬"}, "s3": {"acc": "#2E7D32", "soft": "#e2f4e8", "line": "#cbe6d4", "name": "الحموض النووية", "ico": "🧪"}, "s4": {"acc": "#1565C0", "soft": "#e3effb", "line": "#c9dcef", "name": "تضاعف DNA", "ico": "🔁"}, "s5": {"acc": "#6A1B9A", "soft": "#ede4fa", "line": "#dccdf2", "name": "الطفرات", "ico": "⚡"}, "s6": {"acc": "#00796B", "soft": "#dff5f2", "line": "#c4e7e2", "name": "أسئلة الفصل", "ico": "🏁"}}, "fig": {"cellchain": "images/gen2-cellchain.webp", "dnarna3d": "images/gen2-dnarna3d.webp", "repl": "images/gen2-repl.webp", "mutimg": "images/gen2-mutimg.webp", "chromanat": "images/gen2-chromanat.webp", "chemchart": "images/gen2-chemchart.webp", "nucl_chem": "images/gen2-nucl_chem.webp", "nucleo_img": "images/gen2-nucleo_img.webp", "chrom_gene": "images/gen2-chrom_gene.webp", "bp_img": "images/gen2-bp_img.webp"}, "cap": {"comp": "مقارنة بين DNA وRNA: السكر والقواعد النيتروجينية وبنية السلسلة", "extract": "نشاط استخلاص DNA من نبات الفراولة", "repl": "آلية تضاعف DNA شبه المحافظ: المراحل الثلاث", "nuc4": "مقارنة بين نيوكليوتيد DNA ونيوكليوتيد RNA", "mut": "أشكال مختلفة لطفرات: نبات، حيوان، إنسان، ثمرة", "chrom": "الكروموسوم: ينتج من التفاف DNA حول بروتين الهستون", "bp": "قواعد نيتروجينية متممة واتجاه السلسلتين 5′ و3′", "nucl": "النيوكليوسوم: DNA ملتف حول بروتينات الهستون", "fig1": "الشكل (1): العلاقة بين الكروموسوم وDNA", "fig2": "الشكل (2): النيوكليوسوم", "fig3": "الشكل (3): تركيب الحموض النووية", "fig4": "الشكل (4): نيوكليوتيدات DNA وRNA", "fig5": "الشكل (5): جزيء DNA", "fig6": "الشكل (6): مرحلة S في دورة الخلية", "fig7": "الشكل (7): آلية تضاعف DNA", "fig8": "الشكل (8): أشكال مختلفة لطفرات في كائنات حية", "sc_dna": "نموذج ثلاثي الأبعاد لجزيء DNA: اسحب لتدويره", "sc_mut": "طفرة في DNA ثلاثية الأبعاد: استبدال G بـ A", "sc_nuc": "النيوكليوسوم ثلاثي الأبعاد: DNA ملتف حول الهستون", "sc_nucl": "نيوكليوتيد DNA ثلاثي الأبعاد: الفوسفات والسكر والقاعدة (اسحب لتدويره)", "sc_fork": "شوكة التضاعف ثلاثية الأبعاد: الهيليكيز يفك، البلمرة تبني، الليغيز يربط (اسحب لتدويرها)"}};
 
 /* ---------- sound & speech ---------- */
 let muted = false; // tick sound only
@@ -210,10 +244,10 @@ try{parent.postMessage({pcb:'ready'},'*')}catch(e){}
 const $ = id => document.getElementById(id);
 let rvT = [];
 function show(id){
-  ['home','pscreen','app','quiz'].forEach(s => $(s).classList.toggle('hidden', s !== id));
+  ['home','pscreen','app','quiz','mapsec'].forEach(s => $(s).classList.toggle('hidden', s !== id));
   window.scrollTo({top:0,behavior:'smooth'});
   rvT.forEach(clearTimeout); rvT = [];
-  if(window.Voice)Voice.setKey(id==='home'?'home':id==='quiz'?'s6':'s'+((window._gi||0)+1));
+  if(window.Voice)Voice.setKey(id==='home'?'home':id==='mapsec'?'cmap':id==='quiz'?'s6':'s'+((window._gi||0)+1));
   if (id === 'home') return;
   const items = [...$(id).querySelectorAll('.card,.figs')].filter(n => !n.closest('.card') || n.classList.contains('card') && !n.parentElement.closest('.card'));
   items.forEach(n => { n.classList.remove('in'); n.classList.add('rv'); });
@@ -234,22 +268,32 @@ function clearTopic(){ document.body.removeAttribute('data-topic'); const st=doc
 
 /* ---------- home ---------- */
 const doneSet = {has:id=>!!ANS['g:done:'+id]};
+const SEC_ICO = {s1:'microscope',s2:'dna',s3:'tube',s4:'wave',s5:'bulb',s6:'notes'};
+function mixh(h,k){const n=parseInt(h.slice(1),16),f=v=>Math.max(0,Math.min(255,Math.round(v)));let r=n>>16,g=(n>>8)&255,b=n&255;return '#'+[r,g,b].map(v=>f(k>0?v+(255-v)*k:v*(1+k)).toString(16).padStart(2,'0')).join('')}
+function wrapW(s,n){const w=String(s).split(/\s+/),L=[];let c='';w.forEach(x=>{if((c+' '+x).trim().length>n&&c){L.push(c);c=x}else c=(c+' '+x).trim()});if(c)L.push(c);return L.slice(0,3)}
+function polar(r,d){const t=d*Math.PI/180;return [200+r*Math.cos(t),200+r*Math.sin(t)]}
 function buildHome(){
-  const sky = $('sky'); sky.innerHTML = '';
-  D.secs.forEach((s, i) => {
-    const p = D.pal[s.id];
-    const b = el('button', 'cloud c' + (i+1) + (doneSet.has(s.id) ? ' done' : ''));
-    b.innerHTML = '<span class="ico">' + p.ico + '</span><span class="nm">' + p.name + '</span><small>' + (s.quiz ? 'اختبر نفسك' : 'القسم ' + (i+1)) + '</small>';
-    b.onclick = () => enter(i, b);
-    sky.appendChild(b);
+  const box = $('sky'), n = D.secs.length, R1 = 82, R2 = 180, step = 360/n;
+  let s = '<svg class="disc" viewBox="0 0 400 400" role="group" aria-label="اختر قسماً"><defs>';
+  D.secs.forEach((q,i)=>{const c=D.pal[q.id].acc;s+='<linearGradient id="dg'+i+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+mixh(c,.25)+'"/><stop offset="1" stop-color="'+mixh(c,-.25)+'"/></linearGradient>'});
+  s += '<radialGradient id="dc" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#d8e6f3"/></radialGradient></defs><circle class="ring" cx="200" cy="200" r="195" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="2" stroke-dasharray="2 9" stroke-linecap="round"/>';
+  D.secs.forEach((q,i)=>{
+    const p = D.pal[q.id], a0 = -90 - step/2 + i*step + 1.5, a1 = a0 + step - 3;
+    const [x0,y0]=polar(R2,a0),[x1,y1]=polar(R2,a1),[x2,y2]=polar(R1,a1),[x3,y3]=polar(R1,a0), lg = step>180?1:0;
+    const mid = a0 + (step-3)/2, [lx,ly]=polar(132,mid), lines = wrapW(p.name,11), done = doneSet.has(q.id);
+    s += '<g class="sec" data-i="'+i+'" tabindex="0" role="button" aria-label="'+p.name+'" style="animation-delay:'+(i*.07)+'s"><path d="M'+x0.toFixed(1)+' '+y0.toFixed(1)+' A'+R2+' '+R2+' 0 '+lg+' 1 '+x1.toFixed(1)+' '+y1.toFixed(1)+' L'+x2.toFixed(1)+' '+y2.toFixed(1)+' A'+R1+' '+R1+' 0 '+lg+' 0 '+x3.toFixed(1)+' '+y3.toFixed(1)+' Z" fill="url(#dg'+i+')"/>';
+    s += '<g transform="translate('+lx.toFixed(1)+' '+ly.toFixed(1)+')"><circle cy="-17" r="18" fill="rgba(255,255,255,.22)"/><g transform="translate(-11 -28) scale(.92)" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+(window.ICONS?ICONS.body(SEC_ICO[q.id]||'book'):'')+'</g>';
+    lines.forEach((t,k)=>{s += '<text class="st" y="'+(14+k*13)+'" text-anchor="middle">'+t.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</text>'});
+    s += '</g>';
+    if (done){const [dx,dy]=polar(166,mid);s += '<circle cx="'+dx.toFixed(1)+'" cy="'+dy.toFixed(1)+'" r="11" fill="#fff"/><path d="M'+(dx-5).toFixed(1)+' '+dy.toFixed(1)+' l3.5 3.8 l7-8" fill="none" stroke="#2E7D32" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>'}
+    s += '</g>';
   });
+  s += '<circle cx="200" cy="200" r="70" fill="url(#dc)" stroke="#fff" stroke-width="4"/><g transform="translate(176 158) scale(2)" fill="none" stroke="#1565C0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+(window.ICONS?ICONS.body('dna'):'')+'</g><text x="200" y="226" text-anchor="middle" class="ht">المادة الوراثية</text><text x="200" y="243" text-anchor="middle" class="hs2">اختر قسماً</text></svg>';
+  box.innerHTML = s;
+  box.querySelectorAll('.sec').forEach(g => { const i = +g.dataset.i; g.onclick = () => enter(i, g); g.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enter(i, g); } }; });
 }
 function enter(i, cloud){
-  const s = D.secs[i];
-  if (cloud){
-    cloud.classList.add('leaving');
-    setTimeout(() => { cloud.classList.remove('leaving'); actuallyEnter(i); }, 750);
-  } else actuallyEnter(i);
+  if (cloud){ cloud.classList.add('leaving'); setTimeout(() => { cloud.classList.remove('leaving'); actuallyEnter(i); }, 600); } else actuallyEnter(i);
 }
 function actuallyEnter(i){
   const s = D.secs[i];
@@ -258,6 +302,8 @@ function actuallyEnter(i){
   startPredict(i);
 }
 $('bBack').onclick = goHome; $('qBack').onclick = goHome;
+$('mBack').onclick = goHome;
+$('mapBtn').onclick = () => { if(!window._cmd){ window._cmd=1; CMap.mount($('cmapbox'), JSON.parse(document.getElementById('cmapdata').textContent)); } show('mapsec'); };
 function goHome(){ clearTopic(); buildHome(); show('home'); if ('speechSynthesis' in window) speechSynthesis.cancel(); }
 
 /* ---------- predict ---------- */
@@ -288,57 +334,57 @@ function startPredict(i){window._gi=i;
 }
 
 /* ---------- content app ---------- */
+let steps = [], stepIdx = 0;
 function openApp(i){window._gi=i;
   const s = D.secs[i];
   $('aSec').textContent = D.pal[s.id].name;
   $('introTxt').textContent = s.intro || '';
   const bl = $('blocks'); bl.innerHTML = '';
-  s.blocks.forEach((b, k) => {
-    const card = el('div', 'card blk');
-    const row = el('div', 'row');
-    const left = el('div', '', '<h3>' + b.h + '</h3><p>' + b.t + '</p>');
-    row.appendChild(left); card.appendChild(row);
-    bl.appendChild(card);
-  });
-  // figures
+  s.blocks.forEach(b => { const card = el('div', 'card'); card.appendChild(el('h3', '', b.h)); card.appendChild(el('p', '', b.t)); bl.appendChild(card); });
+  SCENES.length = 0;
   const fb = $('figsBox'); fb.innerHTML = '';
-  if (s.figs && s.figs.length){
-    const g = el('div', 'figs' + (s.figs.length > 1 ? ' two' : ''));
-    s.figs.forEach(k => {
-      const cap = D.cap[k];
-      const f = el('figure'); const im = el('img'); im.src = D.fig[k]; im.alt = cap;
-      f.appendChild(im); f.appendChild(el('figcaption', '', cap)); g.appendChild(f);
-    });
-    fb.appendChild(g);
-  }
+  (s.figs || []).forEach(F => fb.appendChild(buildFigStep(F)));
   buildActivity(s);
   buildThink(s);
-  $('aDone').classList.add('hidden');
+  steps = [$('introCard'), ...bl.children, ...fb.children, ...$('actBox').children, ...$('thinkBox').children];
   $('aDone').onclick = () => { ansSave('g:done:'+s.id,1); buildHome(); goHome(); };
+  $('nextStep').onclick = () => goStep(stepIdx + 1); $('sPrev').onclick = () => goStep(stepIdx - 1);
   show('app');
-  // step-by-step: one box at a time
-  const steps = [$('introCard'), ...bl.querySelectorAll('.blk'), $('figsBox'), $('actBox'), $('thinkBox')].filter(n => n && (n.children.length || n.id === 'introCard' || n.classList.contains('blk')));
-  let cur = 0;
-  const go = k => {
-    cur = Math.max(0, Math.min(steps.length - 1, k));
-    steps.forEach((n, j) => n.classList.toggle('hidden', j !== cur));
-    rvT.forEach(clearTimeout); rvT = [];
-    $('app').querySelectorAll('.rv').forEach(e => e.classList.remove('rv', 'in'));
-    const n = steps[cur]; n.classList.add('rv'); void n.offsetWidth;
-    requestAnimationFrame(() => n.classList.add('in'));
-    const last = cur === steps.length - 1;
-    $('sNext').classList.toggle('hidden', last); $('sPrev').classList.toggle('hidden', cur === 0);
-    $('aDone').classList.toggle('hidden', !last);
-    $('sPos').textContent = (cur + 1) + ' / ' + steps.length;
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  };
-  $('sNext').onclick = () => go(cur + 1); $('sPrev').onclick = () => go(cur - 1);
-  go(0);
+  goStep(0);
 }
-const FIGCAP_UNUSED = {
-  fig1:'العلاقة بين الكروموسوم وDNA', fig2:'النيوكليوسوم', fig3:'تركيب الحموض النووية', fig4:'نيوكليوتيدات DNA وRNA',
-  fig5:'جزيء DNA', fig6:'مراحل دورة الخلية (S)', fig7:'آلية تضاعف DNA', fig8:'أشكال مختلفة لطفرات في كائنات حية'
-};
+function goStep(k){
+  if (k < 0 || k >= steps.length) return;
+  stepIdx = k;
+  steps.forEach((x, j) => x.classList.toggle('hidden', j !== k));
+  const last = k === steps.length - 1;
+  $('nextStep').classList.toggle('hidden', last);
+  $('aDone').classList.toggle('hidden', !last);
+  $('sPrev').classList.toggle('hidden', k === 0);
+  { const n = steps[k]; n.classList.remove('rv','in'); void n.offsetWidth; n.classList.add('rv'); requestAnimationFrame(() => n.classList.add('in')); }
+  $('stepCount').textContent = (k + 1) + ' / ' + steps.length;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+const SCENE_NAMES = {sc_dna:'نموذج DNA', sc_mut:'نموذج الطفرة في DNA', sc_nuc:'نموذج النيوكليوسوم', sc_nucl:'نموذج النيوكليوتيد', sc_fork:'نموذج شوكة التضاعف', sc_chrom:'نموذج الكروموسوم', sc_rna:'نموذج RNA'};
+function buildFigStep(F){
+  const card = el('div', 'card fig-step');
+  card.appendChild(el('h3', '', F.cap));
+  if (F.img){ const im = el('img', 'figimg'); im.src = D.fig[F.img]; im.alt = F.cap; card.appendChild(im); }
+  const scs = Array.isArray(F.sc) ? F.sc : (F.sc ? [F.sc] : []);
+  scs.forEach(key => {
+    card.appendChild(el('p', 'hint', '🧊 ' + SCENE_NAMES[key] + ': اسحب لتدويره'));
+    const cv = el('canvas', 'scene'); cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', SCENE_NAMES[key]); card.appendChild(cv);
+    let tb = null;
+    if (SCENE_DEF[key].toggle){ tb = el('button', 'btn-main', '⇄ قبل الطفرة / بعد الطفرة'); tb.style.display = 'block'; tb.style.margin = '10px auto 0'; card.appendChild(tb); }
+    makeScene(key, cv, tb);
+  });
+  if (F.leg && F.leg.length){
+    const box = el('div', 'legend'); box.appendChild(el('b', '', 'من هو؟'));
+    const ul = el('ul');
+    F.leg.forEach(x => { const li = el('li'); li.appendChild(el('span', 'dot')); li.lastChild.style.background = x.c; li.appendChild(document.createTextNode(x.t)); ul.appendChild(li); });
+    box.appendChild(ul); card.appendChild(box);
+  }
+  return card;
+}
 
 /* ---------- activities ---------- */
 function buildActivity(s){
@@ -424,46 +470,279 @@ function startQuiz(s){
   show('quiz');
 }
 
-/* ---------- start ---------- */
-function buildHelix(){
-  const cv = $('hxc'); if (!cv) return;
-  const ctx = cv.getContext('2d'); const box = $('hx');
-  const N = 22, seq = 'AGTCCATGGCTAATCGGATCCG', comp = {A:'T',T:'A',G:'C',C:'G'};
-  const col = {A:'#E53935',T:'#1E88E5',G:'#43A047',C:'#FB8C00'};
-  let W = 0, H = 0, dpr = 1, ang = 0.6, tilt = -0.12, drag = null, last = 0;
-  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
-  const fit = () => { dpr = Math.min(2, window.devicePixelRatio || 1); W = box.clientWidth || 300; H = box.clientHeight || 250; cv.width = W * dpr; cv.height = H * dpr; };
-  const shade = (hex, k) => { const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255; const f = v => Math.max(0, Math.min(255, Math.round(v * k))); return 'rgb(' + f(r) + ',' + f(g) + ',' + f(b) + ')'; };
-  const sphere = (x, y, r, c) => { const g = ctx.createRadialGradient(x - r*.35, y - r*.4, r*.1, x, y, r); g.addColorStop(0, '#fff'); g.addColorStop(.25, c); g.addColorStop(1, shade(c, .45)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill(); };
-  const dark = () => { const d = document.documentElement.getAttribute('data-theme'); return d === 'dark' || (d !== 'light' && matchMedia('(prefers-color-scheme:dark)').matches); };
-  const draw = () => {
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-    const cx = W / 2, cy = H / 2, R = Math.min(W * .22, 56), dy = (H - 44) / N, f = 320, ct = Math.cos(tilt), st = Math.sin(tilt);
-    const P = (a, i, side) => { const th = a + i * 0.62 + (side ? Math.PI : 0), x = R * Math.cos(th), z = R * Math.sin(th), y = (i - N / 2) * dy; const y2 = y * ct - z * st, z2 = y * st + z * ct, sc = f / (f - z2); return {x: cx + x * sc, y: cy + y2 * sc, z: z2, s: sc}; };
-    const ops = [];
-    for (let i = 0; i < N; i++) {
-      const a = P(ang, i, 0), b = P(ang, i, 1), base = seq[i], pair = comp[base];
-      ops.push({z: (a.z + b.z) / 2 - 1, f: () => { const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2; ctx.lineCap = 'round'; ctx.lineWidth = 3.2 * (a.s + b.s) / 2; ctx.strokeStyle = col[base]; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mx, my); ctx.stroke(); ctx.strokeStyle = col[pair]; ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(b.x, b.y); ctx.stroke(); }});
-      [[a, base], [b, pair]].forEach(([q, bs]) => ops.push({z: q.z, f: () => sphere(q.x, q.y, 6.3 * q.s, col[bs])}));
-      if (i < N - 1) { const a2 = P(ang, i + 1, 0), b2 = P(ang, i + 1, 1); [[a, a2, '#90a4ae'], [b, b2, '#b0bec5']].forEach(([p1, p2, c]) => ops.push({z: (p1.z + p2.z) / 2, f: () => { ctx.lineCap = 'round'; ctx.lineWidth = 4.4 * (p1.s + p2.s) / 2; ctx.strokeStyle = dark() ? shade(c, .8 + .25 * ((p1.z + 70) / 140)) : shade(c, .55 + .45 * ((p1.z + 70) / 140)); ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke(); }})); }
+function revealSeq(items){
+  items.filter(Boolean).forEach((x, k) => { x.classList.add('blk'); setTimeout(() => x.classList.add('show'), 150 + k * 320); });
+}
+
+/* ---------- labelled 3D scenes (canvas, depth-sorted, drag to rotate) ---------- */
+const COL = {A:'#3fae5a', T:'#e25a5a', G:'#8a5cc7', C:'#e0962e'};
+const COMP = {A:'T', T:'A', G:'C', C:'G'};
+const SEQ = 'ATGCCGTAGCTAGGCATC';
+function hexRgb(h){ h=h.replace('#',''); return [0,2,4].map(i=>parseInt(h.substr(i,2),16)); }
+function mixc(c, to, k){ const a=hexRgb(c); const b = to==='w' ? [255,255,255] : [0,0,0];
+  return 'rgb('+a.map((v,i)=>Math.round(v+(b[i]-v)*k)).join(',')+')'; }
+function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+function proj(p, yaw, pitch, cx, cy, S){
+  const cyw=Math.cos(yaw), syw=Math.sin(yaw);
+  const x1 = p[0]*cyw + p[2]*syw, z1 = -p[0]*syw + p[2]*cyw;
+  const cp=Math.cos(pitch), sp=Math.sin(pitch);
+  const y1 = p[1]*cp - z1*sp, z2 = p[1]*sp + z1*cp;
+  const f = 6/(6 - z2);
+  return {x: cx + x1*S*f, y: cy - y1*S*f, z: z2, f};
+}
+const L = (a,b,w,c) => ({t:'l',a,b,w,c});
+const SP = (p,r,c) => ({t:'s',p,r,c});
+const DS = (a,b,c) => ({t:'d',a,b,c});
+
+/* DNA helix; withMut adds the G->A substitution toggle */
+function buildDNA(withMut){
+  return function(st){
+    const items=[], labels=[]; const N=12, SUB=4, turn=2*Math.PI/10, rise=0.42, R=1.0;
+    const A=[], B=[];
+    for(let k=0;k<=N*SUB;k++){ const t=k/SUB, th=t*turn, y=(t-N/2)*rise;
+      A.push([R*Math.cos(th), y, R*Math.sin(th)]); B.push([R*Math.cos(th+Math.PI), y, R*Math.sin(th+Math.PI)]); }
+    for(let k=0;k<A.length-1;k++){ items.push(L(A[k],A[k+1],0.13,'#5b8fd6')); items.push(L(B[k],B[k+1],0.13,'#7aa7e8')); }
+    for(let k=0;k<=N;k++){ items.push(SP(A[k*SUB],0.1,'#f2a33c')); items.push(SP(B[k*SUB],0.1,'#f2a33c')); }
+    const mutOn = withMut && st.mut;
+    for(let k=0;k<N;k++){
+      let b1 = SEQ[k % SEQ.length];
+      if (k===7 && withMut) b1 = mutOn ? 'A' : 'G';
+      const b2 = COMP[b1]; const i=k*SUB, th=k*turn;
+      const mid=[0, A[i][1], 0];
+      items.push(L(A[i], mid, 0.09, COL[b1]));
+      items.push(L(mid, B[i], 0.09, COL[b2]));
+      const n = (b1==='A'||b1==='T') ? 2 : 3;
+      for(let j=0;j<n;j++){ const dy=(j-(n-1)/2)*0.07;
+        items.push(DS([0.2*Math.cos(th), A[i][1]+dy, 0.2*Math.sin(th)], [-0.2*Math.cos(th), A[i][1]+dy, -0.2*Math.sin(th)], '#444')); }
+      if (k===7 && withMut && mutOn) items.push(SP(mid, 0.2, '#ff4d4d'));
     }
-    ops.sort((u, v) => u.z - v.z).forEach(o => o.f());
+    const mk = (k)=>{ const th=k*turn; return [0.5*Math.cos(th), A[k*SUB][1], 0.5*Math.sin(th)]; };
+    labels.push({p:A[6*SUB], t:'الهيكل: الفوسفات والسكر', c:'#2f6fb0'});
+    labels.push({p:mk(9), t:'القواعد النيتروجينية', c:'#8a5cc7'});
+    const th5=5*turn; labels.push({p:[0.2*Math.cos(th5), A[5*SUB][1], 0.2*Math.sin(th5)], t:'روابط هيدروجينية', c:'#444'});
+    labels.push({p:A[0], t:'الطرف 5′', c:'#2f6fb0'});
+    labels.push({p:A[N*SUB], t:'الطرف 3′', c:'#2f6fb0'});
+    if (withMut) { const p7=[0,A[7*SUB][1],0];
+      labels.push({p:p7, t: mutOn ? 'بعد الطفرة: استبدال G بـ A' : 'قبل الطفرة: الزوج G–C', c:'#ff4d4d'}); }
+    return {items, labels};
   };
-  fit(); draw(); window.addEventListener('resize', () => { fit(); draw(); });
-  box.addEventListener('pointerdown', e => { drag = {x: e.clientX, y: e.clientY, a: ang, t: tilt}; try { box.setPointerCapture(e.pointerId); } catch (_) {} });
-  box.addEventListener('pointermove', e => { if (!drag) return; ang = drag.a + (e.clientX - drag.x) * 0.012; tilt = Math.max(-1.1, Math.min(.5, drag.t - (e.clientY - drag.y) * 0.006)); draw(); });
-  const end = () => { drag = null; }; box.addEventListener('pointerup', end); box.addEventListener('pointercancel', end);
-  const loop = t => { if (!document.hidden && !$('home').classList.contains('hidden') && !drag && !reduce) { ang += (last ? (t - last) : 0) * 0.0009; draw(); } last = t; requestAnimationFrame(loop); };
-  requestAnimationFrame(loop);
 }
-function initTilt(){
-  const sky = $('sky');
-  sky.addEventListener('pointermove', e => { const c = e.target.closest('.cloud'); if (!c) return; const r = c.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; c.style.setProperty('--ry', (x * 22) + 'deg'); c.style.setProperty('--rx', (-y * 18) + 'deg'); });
-  sky.addEventListener('pointerout', e => { const c = e.target.closest('.cloud'); if (c) { c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg'); } });
+
+/* nucleosome: histone octamer + DNA wrapped 1.65 turns */
+function buildNuc(st){
+  const items=[], labels=[];
+  for(let q=0;q<2;q++) for(let j=0;j<4;j++){
+    const a=j*Math.PI/2 + q*Math.PI/4, y=q?-0.22:0.22;
+    items.push(SP([0.55*Math.cos(a), y, 0.55*Math.sin(a)], 0.33, q?'#7a6fd0':'#8c7fd9'));
+  }
+  const S=220, turns=1.65, dna=[];
+  for(let s=0;s<=S;s++){ const ph=s/S*turns*2*Math.PI; dna.push([1.25*Math.cos(ph), (s/S-0.5)*0.9, 1.25*Math.sin(ph)]); }
+  for(let s=0;s<S;s++) items.push(L(dna[s], dna[s+1], 0.09, '#3b82c4'));
+  const end=dna[S]; items.push(L(end, [1.9, end[1]+0.3, 0.6], 0.09, '#3b82c4'));
+  const H1=[1.6,0.5,0.0]; items.push(SP(H1, 0.2, '#d4a84b'));
+  labels.push({p:dna[60], t:'DNA ملتف حول الهستون', c:'#3b82c4'});
+  labels.push({p:[0.55,0.55,0], t:'بروتين الهستون (ثمانية)', c:'#7a6fd0'});
+  labels.push({p:H1, t:'بروتين رابط H1', c:'#b07d1f'});
+  labels.push({p:end, t:'DNA رابط بين النيوكليوسومات', c:'#3b82c4'});
+  labels.push({p:[0.55,-0.55,0], t:'النيوكليوسوم: وحدة التكدّس', c:'#5b4fb8'});
+  return {items, labels};
 }
-function init(){ buildHome(); show('home'); buildHelix(); initTilt(); }
+
+/* nucleotide with labelled phosphate, sugar, base */
+function buildNucl(st){
+  const items=[], labels=[];
+  const P=[-2.0,0.6,0], O5=[-1.45,0.45,0], C5=[-1.05,0.3,0];
+  const ring=[]; const angs=[90,18,-54,-126,162]; const zs=[0.0,0.15,-0.1,0.2,-0.15];
+  angs.forEach((a,i)=>ring.push([0.75*Math.cos(a*Math.PI/180), 0.75*Math.sin(a*Math.PI/180), zs[i]]));
+  // ring order: O4' (0), C1' (1), C2' (2), C3' (3), C4' (4)
+  for(let i=0;i<5;i++) items.push(L(ring[i], ring[(i+1)%5], 0.1, '#8a8f99'));
+  items.push(L(ring[4], C5, 0.1, '#8a8f99'));
+  items.push(L(C5, O5, 0.1, '#8a8f99'));
+  items.push(L(O5, P, 0.1, '#8a8f99'));
+  // phosphate group
+  [[0.35,0.35,0.25],[0.35,-0.35,0.25],[-0.35,0.35,-0.25],[-0.35,-0.35,-0.25]].forEach(d=>{
+    const q=[P[0]+d[0], P[1]+d[1], P[2]+d[2]]; items.push(L(P,q,0.08,'#999')); items.push(SP(q,0.2,'#e25a5a')); });
+  items.push(SP(P,0.3,'#f2a33c'));
+  items.push(SP(O5,0.16,'#e25a5a')); items.push(SP(C5,0.15,'#8a8f99'));
+  ring.forEach((r,i)=>items.push(SP(r, i===0?0.2:0.16, i===0?'#e25a5a':'#8a8f99')));
+  // H on C2' (DNA: no hydroxyl)
+  const c2=ring[2], H=[c2[0]+0.3, c2[1]-0.35, c2[2]+0.3];
+  items.push(L(c2,H,0.07,'#999')); items.push(SP(H,0.1,'#f4f4f4'));
+  // base attached to C1'
+  const c1=ring[1], N1=[c1[0]+0.6, c1[1], c1[2]];
+  items.push(L(c1,N1,0.1,'#8a8f99')); items.push(SP(N1,0.15,'#3a6fd8'));
+  const hc=[N1[0]+0.6, N1[1], 0]; const hv=[];
+  for(let k=0;k<6;k++){ const a=(180+60*k)*Math.PI/180; hv.push([hc[0]+0.55*Math.cos(a), hc[1]+0.55*Math.sin(a), 0]); }
+  for(let k=0;k<6;k++){ items.push(L(hv[k],hv[(k+1)%6],0.1,'#8a8f99')); items.push(SP(hv[k],0.14,k%2?'#8a8f99':'#3a6fd8')); }
+  items.push(L(N1,hv[0],0.1,'#8a8f99'));
+  labels.push({p:P, t:'مجموعة الفوسفات', c:'#b8651a'});
+  labels.push({p:ring[0], t:'السكر الخماسي', c:'#555'});
+  labels.push({p:H, t:'H: منقوص الأكسجين (DNA)', c:'#444'});
+  labels.push({p:hc, t:'القاعدة النيتروجينية', c:'#3a6fd8'});
+  labels.push({p:N1, t:'الرابطة عند الكربون 1′', c:'#2f6fb0'});
+  return {items, labels};
+}
+
+/* replication fork: helicase, polymerase, ligase, parental and new strands */
+function buildFork(st){
+  const items=[], labels=[];
+  const xs=[]; for(let x=-3;x<=3.001;x+=0.12) xs.push(+x.toFixed(2));
+  const sm=(t)=>t<=0?0:t>=1?1:t*t*(3-2*t);
+  const helix = (x,off)=>{ const th = x*(2*Math.PI/1.4)+off; return [x, 0.8*Math.cos(th), 0.8*Math.sin(th)]; };
+  const pathP1=[], pathP2=[], pathN1=[], pathN2=[];
+  xs.forEach(x=>{
+    const t = sm((x+0.8)/1.6);
+    const h1=helix(x,0), h2=helix(x,Math.PI);
+    const tg1=[x,1.5,0], tg2=[x,-1.5,0];
+    pathP1.push([x, h1[1]+(tg1[1]-h1[1])*t, h1[2]+(tg1[2]-h1[2])*t]);
+    pathP2.push([x, h2[1]+(tg2[1]-h2[1])*t, h2[2]+(tg2[2]-h2[2])*t]);
+    if (x>=0){ pathN1.push([x,1.5,0.9]); pathN2.push([x,-1.5,-0.9]); }
+  });
+  for(let i=0;i<xs.length-1;i++){
+    items.push(L(pathP1[i],pathP1[i+1],0.12,'#5b8fd6'));
+    items.push(L(pathP2[i],pathP2[i+1],0.12,'#5b8fd6'));
+    if (xs[i] < 0){ const a=helix(xs[i],0), b=helix(xs[i],Math.PI); if (i%3===0) items.push(L(a,b,0.05,'#c2b07a')); }
+  }
+  for(let i=0;i<pathN1.length-1;i++){
+    items.push(L(pathN1[i],pathN1[i+1],0.12,'#3fae5a'));
+    items.push(L(pathN2[i],pathN2[i+1],0.12,'#3fae5a'));
+  }
+  for(let i=0;i<pathN1.length;i+=3){
+    items.push(L(pathP1[xs.length-pathN1.length+i], pathN1[i], 0.05, '#c2b07a'));
+    items.push(L(pathP2[xs.length-pathN2.length+i], pathN2[i], 0.05, '#c2b07a'));
+  }
+  // helicase ring at the fork
+  for(let k=0;k<6;k++){ const a=k*Math.PI/3; items.push(SP([0.05, 0.45*Math.cos(a), 0.45*Math.sin(a)], 0.2, '#f2a33c')); }
+  // DNA polymerase on upper duplex
+  [[1.6,1.9,0.4],[1.2,1.85,0.9],[2.0,1.8,0.85],[1.6,2.1,0.7]].forEach(p=>items.push(SP(p,0.2,'#2e9e62')));
+  // DNA ligase on lower duplex
+  [[2.5,-1.9,-0.6],[2.9,-1.9,-0.9],[2.7,-2.1,-0.3]].forEach(p=>items.push(SP(p,0.2,'#e3c341')));
+  labels.push({p:[0.05,0,0], t:'إنزيم الهيليكيز', c:'#c76b12'});
+  labels.push({p:[1.6,1.9,0.4], t:'إنزيم بلمرة DNA', c:'#2e7d4f'});
+  labels.push({p:[2.7,-2.1,-0.3], t:'إنزيم الليغيز', c:'#a58a10'});
+  labels.push({p:[-1.2,0.8,0], t:'السلسلة الأصلية', c:'#2f6fb0'});
+  labels.push({p:[2.0,1.5,0.9], t:'السلسلة الجديدة', c:'#2e7d4f'});
+  return {items, labels};
+}
+
+function buildChrom(st){
+  const items=[], labels=[]; const Hh=1.6, turns=6, n=160;
+  [-0.42, 0.42].forEach((cx,ci)=>{
+    const P1=[], P2=[];
+    for(let s=0;s<=n;s++){ const y=-Hh+2*Hh*s/n, th=s/n*turns*2*Math.PI;
+      P1.push([cx+0.2*Math.cos(th), y, 0.2*Math.sin(th)]); P2.push([cx+0.2*Math.cos(th+Math.PI), y, 0.2*Math.sin(th+Math.PI)]); }
+    for(let s=0;s<n;s++){ items.push(L(P1[s],P1[s+1],0.12,'#6f7fd0')); items.push(L(P2[s],P2[s+1],0.12,'#3b82c4')); }
+    for(let s=0;s<=n;s+=12) items.push(SP(P1[s],0.13,'#c9a64a'));
+    if (ci===0){ labels.push({p:P1[40], t:'الكروماتيد', c:'#6f7fd0'}); labels.push({p:P2[60], t:'DNA', c:'#3b82c4'}); labels.push({p:P1[84], t:'بروتين الهستون', c:'#c9a64a'}); }
+  });
+  items.push(SP([0,0,0],0.26,'#e0b050'));
+  labels.push({p:[0,0,0], t:'السنترومير', c:'#b07d1f'});
+  return {items, labels};
+}
+
+function buildRNA(st){
+  const items=[], labels=[]; const N=12, SUB=4, turn=0.9, rise=0.42, RB=0.55, RR=1.05;
+  const seq='AUGCUAGGCAUC', bcol={A:'#3fae5a', U:'#c46ae0', G:'#8a5cc7', C:'#e0962e'};
+  const P=[], Bp=[];
+  for(let k=0;k<=N*SUB;k++){ const t2=k/SUB, th=t2*turn, y=(t2-N/2)*rise;
+    P.push([RB*Math.cos(th), y, RB*Math.sin(th)]); }
+  for(let k=0;k<P.length-1;k++) items.push(L(P[k],P[k+1],0.14,'#2e8b6a'));
+  for(let k=0;k<=N;k++){ const i=k*SUB, th=k*turn; const b=seq[k%seq.length];
+    items.push(SP(P[i],0.1,'#f2a33c'));
+    const bp=[RR*Math.cos(th), P[i][1], RR*Math.sin(th)];
+    items.push(L(P[i],bp,0.07,'#8a8f99'));
+    items.push(SP(bp,0.17,bcol[b]));
+  }
+  labels.push({p:P[4*SUB], t:'الهيكل السكري الفوسفاتي (ريبوز)', c:'#2e8b6a'});
+  labels.push({p:[RR*Math.cos(3*turn), P[3*SUB][1], RR*Math.sin(3*turn)], t:'U يوراسيل بدل T', c:'#c46ae0'});
+  labels.push({p:[RR*Math.cos(7*turn), P[7*SUB][1], RR*Math.sin(7*turn)], t:'G / C / A', c:'#3fae5a'});
+  labels.push({p:P[0], t:'شريط مفرد', c:'#2e8b6a'});
+  return {items, labels};
+}
+
+const SCENE_DEF = {
+  sc_rna:{build:buildRNA, yaw:0.5, pitch:0.2, fit:(W,H)=>Math.min(W*0.2, H*0.85/5.04)},
+  sc_chrom:{build:buildChrom, yaw:0.3, pitch:0.2, fit:(W,H)=>Math.min(W/3.2, H/3.8)},
+  sc_dna:{build:buildDNA(false), yaw:0.5, pitch:0.25, fit:(W,H)=>Math.min(W*0.2, H*0.85/5.04)},
+  sc_mut:{build:buildDNA(true), yaw:0.5, pitch:0.25, toggle:true, fit:(W,H)=>Math.min(W*0.2, H*0.85/5.04)},
+  sc_nuc:{build:buildNuc, yaw:0.3, pitch:0.35, fit:(W,H)=>Math.min(W*0.16, H*0.3)},
+  sc_nucl:{build:buildNucl, yaw:0.1, pitch:0.1, fit:(W,H)=>Math.min(W/5.4, H/2.4)},
+  sc_fork:{build:buildFork, yaw:0.9, pitch:0.4, fit:(W,H)=>Math.min(W/7.4, H/4.8)}
+};
+const SCENES = [];
+function renderScene(sc){
+  const cv=sc.cv, W=cv.clientWidth, H=cv.clientHeight; if(!W||!H) return;
+  const dpr=Math.min(2, window.devicePixelRatio||1);
+  if (cv.width!==Math.round(W*dpr) || cv.height!==Math.round(H*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
+  const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+  const st=sc.st; const scene=sc.def.build(st);
+  const S=sc.def.fit(W,H), cx=W/2, cy=H/2;
+  const pr=p=>proj(p, st.yaw, st.pitch, cx, cy, S);
+  scene.items.forEach(it=>{
+    if (it.t==='s'){ it.P=pr(it.p); it.z=it.P.z; }
+    else { it.A=pr(it.a); it.B=pr(it.b); it.z=(it.A.z+it.B.z)/2; }
+  });
+  scene.items.sort((u,v)=>u.z-v.z);
+  const seg=(a,b,dx,dy)=>{ ctx.beginPath(); ctx.moveTo(a.x+dx,a.y+dy); ctx.lineTo(b.x+dx,b.y+dy); ctx.stroke(); };
+  for (const it of scene.items){
+    if (it.t==='s'){
+      const r=it.r*S*it.P.f;
+      const g=ctx.createRadialGradient(it.P.x-r*0.35,it.P.y-r*0.35,r*0.1,it.P.x,it.P.y,r);
+      g.addColorStop(0,mixc(it.c,'w',0.6)); g.addColorStop(0.55,it.c); g.addColorStop(1,mixc(it.c,'b',0.45));
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(it.P.x,it.P.y,Math.max(1,r),0,Math.PI*2); ctx.fill();
+    } else if (it.t==='l'){
+      const w=it.w*S*((it.A.f+it.B.f)/2); ctx.lineCap='round';
+      ctx.strokeStyle=mixc(it.c,'b',0.35); ctx.lineWidth=w*1.2; seg(it.A,it.B,0,0);
+      ctx.strokeStyle=it.c; ctx.lineWidth=w; seg(it.A,it.B,0,0);
+      ctx.strokeStyle=mixc(it.c,'w',0.55); ctx.lineWidth=Math.max(1,w*0.3); ctx.globalAlpha=0.7; seg(it.A,it.B,-w*0.2,-w*0.2); ctx.globalAlpha=1;
+    } else {
+      ctx.strokeStyle=it.c; ctx.lineWidth=1.4; ctx.setLineDash([3,3]); seg(pr(it.a),pr(it.b),0,0); ctx.setLineDash([]);
+    }
+  }
+  // labels with leader lines, alternating sides
+  ctx.font='bold 12px Tajawal, Tahoma, Arial, sans-serif'; ctx.textAlign='right'; ctx.textBaseline='middle';
+  const n=scene.labels.length; const sideCount={L:0,R:0};
+  scene.labels.forEach((lb,i)=>{
+    const side = i%2 ? 'R':'L';
+    const idx = sideCount[side]++;
+    const perSide = Math.ceil(n/2);
+    const y = 26 + idx*Math.min(56, (H-52)/Math.max(1,perSide-1||1));
+    const ax = pr(lb.p);
+    const w = ctx.measureText(lb.t).width + 16, h = 24;
+    const x = side==='L' ? 6 : W-6-w;
+    const ex = side==='L' ? x+w : x;
+    ctx.strokeStyle='rgba(20,30,40,0.45)'; ctx.lineWidth=1.1; ctx.beginPath(); ctx.moveTo(ax.x,ax.y); ctx.lineTo(ex,y); ctx.stroke();
+    ctx.fillStyle=lb.c; ctx.beginPath(); ctx.arc(ax.x,ax.y,3.2,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,0.94)'; ctx.strokeStyle=lb.c; ctx.lineWidth=1.4;
+    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x,y-h/2,w,h,8); else ctx.rect(x,y-h/2,w,h); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#1d2630'; ctx.fillText(lb.t, x+w-8, y+0.5);
+  });
+}
+let sceneLoopOn=false;
+function sceneLoop(){
+  SCENES.forEach(sc=>{ if(!sc.visible) return; if(!sc.drag) sc.st.yaw += 0.004; renderScene(sc); });
+  requestAnimationFrame(sceneLoop);
+}
+const sceneIO = ('IntersectionObserver' in window) ? new IntersectionObserver(es=>es.forEach(e=>{ if(e.target._sc) e.target._sc.visible=e.isIntersecting; })) : null;
+function makeScene(key, canvas, toggleBtn){
+  const def=SCENE_DEF[key];
+  const sc={cv:canvas, def, st:{yaw:def.yaw, pitch:def.pitch, mut:false}, visible:true, drag:false};
+  canvas._sc=sc; SCENES.push(sc);
+  if (sceneIO) sceneIO.observe(canvas);
+  let lx=0, ly=0;
+  canvas.addEventListener('pointerdown', e=>{ sc.drag=true; lx=e.clientX; ly=e.clientY; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener('pointermove', e=>{ if(!sc.drag) return; sc.st.yaw += (e.clientX-lx)*0.01; sc.st.pitch=clamp(sc.st.pitch+(e.clientY-ly)*0.008,-1.2,1.2); lx=e.clientX; ly=e.clientY; });
+  const up=()=>{ sc.drag=false; }; canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
+  if (toggleBtn) toggleBtn.onclick = () => { sc.st.mut = !sc.st.mut; };
+  if (!sceneLoopOn){ sceneLoopOn=true; requestAnimationFrame(sceneLoop); }
+}
+
+/* ---------- start ---------- */
+function init(){ buildHome(); show('home'); }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 </script>
+<script type="application/json" id="cmapdata">{"center": {"ar": "المادة الوراثية", "en": "The Genetic Material"}, "branches": [{"t": {"ar": "اكتشاف المادة الوراثية", "en": "Discovering It"}, "icon": "microscope", "pts": [{"ar": "بدأ علم الوراثة مع مندل", "en": "Genetics began with Mendel"}, {"ar": "الكروموسوم يتكون من DNA وبروتين فأيهما يحمل المعلومات؟", "en": "The chromosome has DNA and protein; which carries the information?"}, {"ar": "تجارب هيرشي وتشيس وغريفث وآفري حسمت الجواب", "en": "Hershey-Chase, Griffith and Avery experiments settled it"}, {"ar": "العامل الوراثي يتركز في جزيء DNA", "en": "The genetic factor is concentrated in the DNA molecule"}]}, {"t": {"ar": "تركيب الكروموسوم", "en": "Chromosome Structure"}, "icon": "cell", "pts": [{"ar": "يتركب من DNA وبروتينات أهمها الهستون", "en": "Made of DNA and proteins, mainly histones"}, {"ar": "يلتف DNA مرتين حول خرزات الهستون", "en": "DNA winds twice around histone beads"}, {"ar": "الهستون مع DNA يكوّن النيوكليوسوم", "en": "Histones with DNA form the nucleosome"}, {"ar": "النيوكليوسوم يساعد في تكدس الكروموسوم أثناء الانقسام", "en": "The nucleosome helps the chromosome coil up during division"}]}, {"t": {"ar": "الحموض النووية", "en": "Nucleic Acids"}, "icon": "dna", "pts": [{"ar": "تتكون من نيوكليوتيدات: سكر خماسي وفوسفات وقاعدة نيتروجينية", "en": "Built of nucleotides: five-carbon sugar, phosphate, nitrogenous base"}, {"ar": "DNA فيه الريبوز منقوص الأكسجين والثايمين، وRNA فيه الريبوز واليوراسيل", "en": "DNA has deoxyribose and thymine; RNA has ribose and uracil"}, {"ar": "DNA سلسلتان لولبيتان متعاكستان ترتبطان بروابط هيدروجينية", "en": "DNA: two antiparallel helical strands joined by hydrogen bonds"}]}, {"t": {"ar": "تضاعف DNA", "en": "DNA Replication"}, "icon": "flask", "pts": [{"ar": "يحدث في المرحلة S من دورة الخلية", "en": "Occurs in the S phase of the cell cycle"}, {"ar": "الهيليكيز يفك الالتواء ويفصل السلسلتين", "en": "Helicase unwinds the molecule and separates the strands"}, {"ar": "إنزيمات البلمرة تضيف نيوكليوتيدات متممة والليغيز يربط", "en": "Polymerases add complementary nucleotides; ligase joins"}, {"ar": "شبه محافظ: كل جزيء فيه سلسلة قديمة وأخرى جديدة", "en": "Semi-conservative: each molecule has one old and one new strand"}]}, {"t": {"ar": "الطفرات", "en": "Mutations"}, "icon": "wave", "pts": [{"ar": "تغير مفاجئ في المادة الوراثية، وتؤثر إذا ورثت", "en": "A sudden change in genetic material; significant if inherited"}, {"ar": "تلقائية أو محفزة بالمواد الكيميائية والإشعاعات", "en": "Spontaneous, or induced by chemicals and radiation"}, {"ar": "الجينية: حذف أو إضافة أو استبدال قواعد في الجين", "en": "Gene mutation: deletion, addition or substitution of bases"}, {"ar": "الكروموسومية: تغير في عدد الكروموسومات أو تركيبها", "en": "Chromosomal: change in chromosome number or structure"}]}], "formula": {"ar": "DNA: سلسلتان لولبيتان، التضاعف شبه محافظ", "en": "DNA: two helical strands, replicated semi-conservatively"}}</script>
+<script src="lib/cmap.js"></script>
 <script type="application/json" id="narr">{"title": {"ar": "المادة الوراثية", "en": "The Genetic Material"}, "intro": {"ar": ["أهلاً بك في درس المادة الوراثية.", "هنا نكتشف كيف عرف العلماء أن المعلومات الوراثية مخزنة في جزيء دي إن إيه.", "ثم نرى كيف يُحزم هذا الجزيء داخل الكروموسوم، وما الحموض النووية، وكيف يضاعف نفسه.", "وفي النهاية نتعرف على الطفرات ونختبر معلوماتنا."], "en": ["Welcome to the lesson on the genetic material.", "Here we discover how scientists found out that genetic information is stored in the DNA molecule.", "Then we see how this molecule is packed inside the chromosome, what nucleic acids are, and how DNA copies itself.", "Finally, we learn about mutations and test what we have learned."]}, "tabs": {"home": {"ar": ["مرحباً بك في الشاشة الرئيسية لدرس المادة الوراثية.", "في الوسط نموذج ثلاثي الأبعاد لجزيء دي إن إيه يدور ببطء، فاسحبه بإصبعك لتديره بنفسك.", "وحوله ست غيوم، كل غيمة منها مقطع من الدرس.", "المقطع الأول عن اكتشاف المادة الوراثية، والثاني عن تركيب الكروموسوم.", "والثالث عن الحموض النووية، والرابع عن تضاعف دي إن إيه.", "والخامس عن الطفرات، والسادس أسئلة الفصل.", "اضغط على أي غيمة لتبدأ المقطع.", "في كل مقطع سؤال توقع، ثم شرح مع صور، ثم نشاط صغير وسؤال فكر.", "أجب بتركيز، فلكل سؤال محاولة واحدة فقط.", "ابدأ بالغيمة الأولى إن أردت أن تسير مع الدرس بالترتيب."], "en": ["Welcome to the home screen of the genetic material lesson.", "In the center is a three dimensional model of the DNA molecule turning slowly, so drag it with your finger to rotate it yourself.", "Around it are six clouds, and each cloud is a section of the lesson.", "The first section is about the discovery of the genetic material, and the second is about the structure of the chromosome.", "The third is about nucleic acids, and the fourth is about DNA replication.", "The fifth is about mutations, and the sixth is the chapter questions.", "Tap any cloud to begin that section.", "Each section has a prediction question, then an explanation with pictures, then a small activity and a thinking question.", "Answer with focus, because you have only one attempt for each question.", "Start with the first cloud if you want to follow the lesson in order."]}, "s1": {"ar": ["في هذا المقطع نتعلم كيف اكتشف العلماء المادة الوراثية.", "ابدأ بسؤال التوقع، وفكر في المكون الذي يحمل المعلومات الوراثية داخل الكروموسوم.", "بدأ علم الوراثة مع العالم مندل الذي وضع أسسه، ويذكر الكتاب أن ذلك كان في عام ألف وثمانمئة وخمسين.", "بعد ذلك توصل العلماء إلى أن مكونات الكروموسوم الرئيسة هما دي إن إيه والبروتين.", "فنشأ سؤال كبير: أيهما يحمل المعلومات الوراثية؟", "احتاج الجواب إلى عشرات السنين من البحث، وإلى سلسلة من التجارب المتتالية.", "من أبرز هذه التجارب تجارب هيرشي وتشيس، وتجارب غريفث، وتجارب آفري ومساعديه.", "لاحظ الصورة التي تبين العلاقة بين الكروموسوم ودي إن إيه.", "وقد خلص العلماء إلى أن العامل الوراثي يتركز في جزيء دي إن إيه.", "وهناك علاقة تركيبية بين الكروموسومات ودي إن إيه، وتنتقل الكروموسومات من خلية إلى أخرى ومن جيل إلى آخر.", "بعد القراءة جرب نشاط الترتيب، وحاول أن ترتب التجارب حسب زمنها من الأقدم إلى الأحدث.", "ثم فكر في سؤال لماذا استغرق الاكتشاف وقتاً طويلاً، وكتب إجابتك بكلماتك."], "en": ["In this section we learn how scientists discovered the genetic material.", "Start with the prediction question, and think about which component inside the chromosome carries the genetic information.", "The science of genetics began with the scientist Mendel, who laid its foundations, and the book mentions that this was in the year eighteen fifty.", "Later, scientists found that the main components of the chromosome are DNA and protein.", "This raised a big question: which one carries the genetic information?", "The answer took decades of research and a series of successive experiments.", "The most notable are the experiments of Hershey and Chase, the experiments of Griffith, and the experiments of Avery and his colleagues.", "Look at the picture that shows the relationship between the chromosome and DNA.", "Scientists concluded that the genetic factor is concentrated in the DNA molecule.", "There is also a structural relationship between chromosomes and DNA, and chromosomes pass from one cell to another and from one generation to the next.", "After reading, try the ordering activity, and try to arrange the experiments by time from the oldest to the newest.", "Then think about why the discovery took so long, and write your answer in your own words."]}, "s2": {"ar": ["في هذا المقطع نرى كيف يُحزم جزيء دي إن إيه الطويل داخل الكروموسوم.", "ابدأ بسؤال التوقع، ثم اقرأ الشرح وتأمل الصور.", "يتركب الكروموسوم في الكائنات الحية حقيقية النواة من دي إن إيه وبروتينات.", "ومن أهم هذه البروتينات بروتين الهستون.", "يرتبط الهستون في مجموعات من ثماني جزيئات على شكل خرزات.", "ويلتف حول هذه الخرزات جزيء دي إن إيه مرتين.", "ثم يتجمع الهستون، بثمانية جزيئات وجزيء تاسع، مع جزيء دي إن إيه، ليكوّنوا وحدة تسمى النيوكليوسوم.", "لاحظ في الصور كيف يلتف الخيط حول الخرزات، وكيف يظهر الكروموسوم في النهاية.", "وللنيوكليوسوم دور مهم في تكدس الكروموسوم أثناء الانقسامات الخلوية.", "وله كذلك دور في تنظيم عملية الترجمة.", "بعد ذلك جرب نشاط الترتيب، وحاول أن ترتب مستويات التكدس من الأبسط إلى الأعقد.", "وأخيراً فكر في سؤال التسمية، واكتب إجابتك."], "en": ["In this section we see how the long DNA molecule is packed inside the chromosome.", "Start with the prediction question, then read the explanation and study the pictures.", "In living things with a true nucleus, the chromosome is made of DNA and proteins.", "One of the most important of these proteins is histone.", "Histones join in groups of eight molecules shaped like beads.", "The DNA molecule winds around these beads twice.", "Then the histones, eight molecules plus a ninth one, gather with the DNA molecule to form a unit called the nucleosome.", "Notice in the pictures how the thread winds around the beads, and how the chromosome appears in the end.", "The nucleosome plays an important role in the coiling of the chromosome during cell division.", "It also has a role in regulating translation.", "After that, try the ordering activity, and try to arrange the levels of packing from the simplest to the most complex.", "Finally, think about the naming question, and write your answer."]}, "s3": {"ar": ["في هذا المقطع نتعرف على الحموض النووية، وهما دي إن إيه وآر إن إيه.", "أجب أولاً عن سؤال التوقع، ثم تابع الشرح والصور.", "الحموض النووية جزيئات حيوية كبيرة، تتكون من وحدات بنائية تسمى النيوكليوتيدات.", "يتكون كل نيوكليوتيد من ثلاثة أجزاء: سكر خماسي، ومجموعة فوسفات، وقاعدة نيتروجينية.", "ترتبط مجموعة الفوسفات بذرة الكربون رقم خمسة، وترتبط القاعدة بذرة الكربون رقم واحد.", "السكر في آر إن إيه هو الريبوز، وفي دي إن إيه هو الريبوز منقوص الأكسجين.", "والقواعد في دي إن إيه هي الثايمين والجوانين والأدينين والسايتوسين.", "أما في آر إن إيه فيوجد اليوراسيل بدلاً من الثايمين.", "ويتكون جزيء دي إن إيه من سلسلتين ملتفتين بشكل لولبي، ترتبط قواعدهما ببعضها بروابط هيدروجينية.", "والسلسلتان متعاكستان في الاتجاه، وتسمى نهايتاهما خمسة شرطة وثلاثة شرطة.", "لاحظ الصور التي تقارن بين النيوكليوتيدين، وجرب نشاط استخلاص دي إن إيه من الفراولة إن أتيح لك.", "ثم جرب نشاط التصنيف، وحاول أن تضع كل عنصر في مكانه، وفكر في سؤال التسمية."], "en": ["In this section we get to know nucleic acids, which are DNA and RNA.", "First answer the prediction question, then follow the explanation and the pictures.", "Nucleic acids are large biological molecules made of building units called nucleotides.", "Each nucleotide consists of three parts: a five carbon sugar, a phosphate group, and a nitrogenous base.", "The phosphate group attaches to carbon number five, and the base attaches to carbon number one.", "The sugar in RNA is ribose, and the sugar in DNA is deoxyribose.", "The bases in DNA are thymine, guanine, adenine, and cytosine.", "In RNA, uracil is found instead of thymine.", "The DNA molecule consists of two strands twisted in a spiral shape, and their bases are linked to each other by hydrogen bonds.", "The two strands run in opposite directions, and their ends are called five prime and three prime.", "Look at the pictures that compare the two nucleotides, and try the strawberry DNA extraction activity if it is available to you.", "Then try the classification activity, and try to place each item where it belongs, and think about the naming question."]}, "s4": {"ar": ["في هذا المقطع نتعلم كيف يصنع الكائن الحي نسخة مطابقة من جزيء دي إن إيه.", "ابدأ بسؤال التوقع، ثم اقرأ الشرح وشاهد الصور.", "يتضاعف دي إن إيه في مرحلة إس من دورة الخلية، وهي مرحلة بناء دي إن إيه.", "في المرحلة الأولى يتحرك إنزيم الهيليكيز على طول الجزيء، ويفك الالتواء ويفصل السلسلتين.", "وترتبط بالسلسلتين بروتينات خاصة تحافظ على انفصالهما.", "في المرحلة التالية تعمل إنزيمات بلمرة دي إن إيه على ربط نيوكليوتيدات جديدة بالسلاسل القديمة بشكل متمم.", "وفي المرحلة الأخيرة يربط إنزيم الليغيز السلسلتين، فتكون الجزيئات الناتجة مطابقة للأصلية.", "ويسمى هذا التضاعف شبه المحافظ، لأن كل جزيء جديد يحتوي على سلسلة قديمة وسلسلة جديدة.", "وقد تحدث أخطاء في ترتيب القواعد لضخامة المادة الوراثية وسرعة التضاعف، لكن نظاماً من الإنزيمات يصحح هذه الأخطاء.", "وأهمية التضاعف أنه يحافظ على كمية المادة الوراثية ونوعيتها، فتنتقل في الانقسام المتساوي ومن جيل إلى آخر.", "جرب نشاط الترتيب، وحاول أن ترتب مراحل الآلية بنفسك.", "ثم فكر في سؤال الأخطاء، واكتب ما تتوقعه."], "en": ["In this section we learn how a living thing makes an identical copy of the DNA molecule.", "Start with the prediction question, then read the explanation and watch the pictures.", "DNA replicates in the S phase of the cell cycle, which is the phase of building DNA.", "In one stage, the enzyme helicase moves along the molecule, unwinds it, and separates the two strands.", "Special proteins attach to the strands to keep them apart.", "In another stage, DNA polymerase enzymes join new nucleotides to the old strands in a complementary way.", "In the final stage, the enzyme DNA ligase joins the strands, so the resulting molecules are identical to the original.", "This replication is called semi conservative, because each new molecule contains one old strand and one new strand.", "Mistakes may occur in the order of the bases because the genetic material is huge and replication is fast, but a system of enzymes corrects these errors.", "Replication is important because it preserves the amount and the quality of the genetic material, which is passed on in mitosis and from one generation to the next.", "Try the ordering activity, and try to arrange the stages of the mechanism yourself.", "Then think about the question on errors, and write what you expect."]}, "s5": {"ar": ["في هذا المقطع نتعرف على الطفرات.", "أجب أولاً عن سؤال التوقع، ثم تابع الشرح.", "الطفرة تغير مفاجئ في المادة الوراثية المتحكمة في صفة معينة.", "وتعد الطفرة مؤثرة إذا تم توارثها.", "قد ينتج عنها صفات غير مرغوبة، كالتشوهات في الإنسان أو نقص المحصول في النبات.", "وقد ينتج عنها صفات مرغوبة يحاول الإنسان استحداثها بطرق علمية.", "وللطفرات سببان: تلقائية تحدث أثناء الانقسامات الخلوية لأسباب غير محددة، ومحفزة بسبب عوامل خارجية كالمواد الكيميائية والإشعاعات.", "النوع الأول هو الطفرة الجينية، وهي تغير في التركيب الكيميائي للجين بحذف أو إضافة أو استبدال قاعدة نيتروجينية أو أكثر.", "فينتج بروتين مختلف يسبب ظهور صفة جديدة.", "والنوع الثاني هو الطفرة الكروموسومية، وهي تغير في عدد الكروموسومات أو في تركيبها بسبب خلل أثناء الانقسام.", "تأمل الصورة التي تعرض أشكالاً مختلفة للطفرات في نبات وحيوان وإنسان.", "ثم جرب نشاط التصنيف، وفرق بين الطفرة الجينية والكروموسومية، وفكر في سؤال التوريث."], "en": ["In this section we get to know mutations.", "First answer the prediction question, then follow the explanation.", "A mutation is a sudden change in the genetic material that controls a certain trait.", "A mutation is considered significant if it is inherited.", "It may produce unwanted traits, such as deformities in humans or reduced yield in plants.", "It may also produce desirable traits that humans try to produce through scientific methods.", "Mutations have two causes: spontaneous ones that occur during cell division for unknown reasons, and induced ones caused by external factors such as chemicals and radiation.", "The first type is the gene mutation, which is a change in the chemical structure of a gene by deleting, adding, or substituting one or more nitrogenous bases.", "This produces a different protein that causes a new trait to appear.", "The second type is the chromosomal mutation, which is a change in the number or structure of chromosomes caused by a fault during cell division.", "Look at the picture showing different forms of mutations in a plant, an animal, and a human.", "Then try the classification activity, distinguish between gene and chromosomal mutations, and think about the question on inheritance."]}, "s6": {"ar": ["وصلنا إلى أسئلة الفصل، وهي خمسة أسئلة تراجع بها ما تعلمته.", "اقرأ كل سؤال بهدوء، ثم اختر الإجابة التي تراها صحيحة.", "ولكل سؤال محاولة واحدة، فلا تتسرع.", "إن شككت في إجابة فتذكر ما درسناه عن مكونات الكروموسوم.", "وتذكر الفرق بين الحمضين النوويين دي إن إيه وآر إن إيه.", "وتذكر دور كل إنزيم في تضاعف دي إن إيه.", "وتذكر أيضاً معنى التضاعف شبه المحافظ.", "يمكنك الرجوع إلى المقاطع السابقة من الشاشة الرئيسية لتراجع ما تشاء.", "ثم عد وأجب بثقة.", "بالتوفيق يا بطل."], "en": ["We have reached the chapter questions, five questions to review what you have learned.", "Read each question calmly, then choose the answer you think is correct.", "You have one attempt for each question, so do not rush.", "If you are unsure about an answer, remember what we studied about the components of the chromosome.", "Remember the difference between the two nucleic acids, DNA and RNA.", "Remember the role of each enzyme in DNA replication.", "Remember also what semi conservative replication means.", "You can go back to the earlier sections from the home screen to review whatever you like.", "Then come back and answer with confidence.", "Good luck, champion."]}}}</script>
 <script>if(window.Voice){Voice.attach(JSON.parse(document.getElementById("narr").textContent));Voice.setKey("home")}</script>
 </body>
