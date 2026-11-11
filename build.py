@@ -84,8 +84,13 @@ def main() -> None:
     html = FONT_REF.sub(inline_font, html)
     html = VID_REF.sub(inline_vid, html)
 
-    ic = ROOT / "lib" / "icons.js"
-    html = html.replace('<script src="lib/icons.js"></script>', "<script>" + ic.read_text(encoding="utf-8") + "</script>", 1)
+    def inline_main_lib(m: re.Match) -> str:
+        jp = ROOT / m.group(1)
+        if not jp.is_file():
+            sys.exit(f"ملفٌّ مفقود: {jp.relative_to(ROOT)}")
+        return "<script>" + jp.read_text(encoding="utf-8").replace("</script", "<\\/script") + "</script>"
+
+    html = re.sub(r'<script src="(lib/(?:icons|voice)\.js)"></script>', inline_main_lib, html)
 
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_bytes(html.encode("utf-8"))

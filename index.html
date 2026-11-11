@@ -148,7 +148,7 @@ input[type=text]{width:100%;padding:14px;border-radius:12px;border:1.5px solid v
 #calc.cx .cxg{touch-action:manipulation}
 #calc.cx .cxk{ -webkit-tap-highlight-color:transparent; touch-action:manipulation}
 </style>
-<script src="lib/icons.js"></script></head>
+<script src="lib/icons.js"></script><script src="lib/voice.js"></script></head>
 <body>
 <div id="app"></div>
 <div class="veil" id="veil" onclick="mn(false)"></div>
@@ -164,12 +164,12 @@ var UIMG=[["images/img-001.png", "images/img-002.png", "images/img-003.png", nul
 var UIS=[["m", "→", "v", "a", "F", "ρ", "P", "∑", "ω"], ["Ca", "Si", "mol", "CO₂", "C", "Na", "∆H", "NH₃", "CH₄"], ["μm", "DNA", "◉", "⚥", "♀", "♂", "◍", "◎", "✦"]];
 var IC=["⚡","🧪","🧬"],UI=["📏","🏃","🔋","💡","🧲","⚛️"];
 var Q=[{q:"ما عدد البروتونات في ذرة الأكسجين (O)؟",o:["6","8","10","12"],a:1},{q:"ما نوع الرابطة في جزيء H₂O؟",o:["أيونية","تساهمية","فلزية","هيدروجينية فقط"],a:1},{q:"أين يحدث التمثيل الضوئي؟",o:["النواة","الميتوكوندريا","البلاستيدات الخضراء","الريبوسوم"],a:2}];
-var li=0,lang="ar",sel=-1,nm="",V="sp",H=[],si=0,ui=0,tb=0,qi=0,an=[],rv=false,notif=true,logo="";
+var li=0,lang=(function(){try{return localStorage.getItem("pcbLang")=="en"?"en":"ar"}catch(e){return"ar"}})(),sel=-1,nm="",V="sp",H=[],si=0,ui=0,tb=0,qi=0,an=[],rv=false,notif=true,logo="";
 function $(i){return document.getElementById(i)}
 function T(){return S[lang]}
 function rtl(){return lang=="ar"}
 function nav(v){H.push(V);V=v;draw()}
-function back(){V=H.pop()||"home";draw()}
+function back(){try{speechSynthesis.cancel()}catch(e){}V=H.pop()||"home";draw()}
 function bar(t,b){var a=rtl()?"→":"←";return '<div class="hd">'+(b?'<div class="ic" onclick="back()">'+a+'</div>':'<div class="ic g"></div>')+'<span>'+t+'</span><div class="ic g"></div></div>'}
 function nvb(a){var t=T();return '<div class="nv">'+[["home","🏠",t.home,"home"],["subs","📚",t.subs,"home"],["quiz","📝",t.quiz,"quiz"],["more","⋯",t.more,"more"]].map(function(x){return '<div class="'+(a==x[0]?'on':'')+'" onclick="tab(\''+x[0]+'\')"><span>'+x[1]+'</span>'+x[2]+'</div>'}).join("")+'</div>'}
 function tab(x){if(x=="more"){mn(true);return}if(x=="quiz"){startQ();return}H=[];V="home";draw()}
@@ -215,7 +215,7 @@ function draw(){
 function mdraw(){var t=T(),d=document.documentElement.getAttribute("data-theme"),dk=d=="dark"||(d!="light"&&matchMedia("(prefers-color-scheme:dark)").matches);
   $("menu").innerHTML='<h2>'+t.menu+'</h2><div class="mi" onclick="tl()"><span>'+t.lang+'</span><span class="tg">'+t.L+'</span></div><div class="mi" onclick="td()"><span>🌙 '+t.dark+'</span><span class="sw'+(dk?' on':'')+'"></span></div><div class="mi" onclick="notif=!notif;draw()"><span>🔔 '+t.notif+'</span><span class="sw'+(notif?' on':'')+'"></span></div>'+(notif?'<div class="n">'+t.n1+'</div><div class="n">'+t.n2+'</div>':'')+'<div class="mi" style="flex-direction:column;align-items:flex-start;gap:6px"><span>📖 '+t.cont+'</span><small class="sub">'+t.contT+'</small></div><div class="mi" onclick="sh()"><span>📤 '+t.share+'</span></div><div class="mi" onclick="shareApp()"><span>📤 '+(rtl()?'مشاركة التطبيق':'Share app')+'</span></div><div class="mi" onclick="tourStart()"><span>🎓 جولة تعريفية بالتطبيق</span></div><div class="mi" onclick="lo()"><span>🚪 تسجيل الخروج / Log out</span></div><div class="cr2"><div class="k">تحت إشراف</div><div class="n">عبد الهادي كاظم الزميلي | حازم الخولي</div></div><p class="ft">'+ftx()+'</p>'}
 function mn(o){$("menu").classList.toggle("open",o);$("veil").classList.toggle("on",o)}
-function tl(){lang=lang=="ar"?"en":"ar";draw()}
+function tl(){lang=lang=="ar"?"en":"ar";try{localStorage.setItem("pcbLang",lang)}catch(e){}if(window.Voice)Voice.setLang(lang);if(typeof cxTheme=="function")cxTheme();draw()}
 function td(){var r=document.documentElement,d=r.getAttribute("data-theme"),dk=d=="dark"||(d!="light"&&matchMedia("(prefers-color-scheme:dark)").matches);r.setAttribute("data-theme",dk?"light":"dark");mdraw()}
 function pk(i){nm=$("nm").value;sel=i;draw()}
 function ent(){nm=$("nm").value.trim();var t=T();if(nm.split(/\s+/).filter(Boolean).length<3){$("err").textContent=t.e1;return}if(sel<0){$("err").textContent=t.e2;return}try{localStorage.setItem("pcb",JSON.stringify({n:nm,s:sel}))}catch(e){}H=[];V="home";draw()}
@@ -1507,7 +1507,7 @@ var LX={"0-0":["lessons/phys_sys.html","lessons/phys_base.html","lessons/phys_pr
 (function(){
 var sy=document.createElement("style");sy.textContent=".cxr{display:flex;gap:8px;margin:0 0 8px}.cxr button{flex:1;border:1.5px solid var(--pri);background:var(--card);color:var(--text);border-radius:12px;padding:8px 6px;font:inherit;font-weight:800;font-size:13px;line-height:1.5;cursor:pointer}.cxs{display:flex;gap:6px;margin:0 0 8px;overflow-x:auto}.cxs button{flex:1;white-space:nowrap;border:1.5px solid var(--bd);background:var(--card);color:var(--text);border-radius:12px;padding:6px 8px;font:inherit;font-weight:700;font-size:13px;cursor:pointer}.cxs button.on{background:var(--pri);color:#fff;border-color:var(--pri)}.cxy{flex:1;display:block;text-align:center;text-decoration:none;border-radius:12px;padding:8px 6px;font-weight:800;font-size:13px;line-height:1.5;background:#0d9488;color:#fff}.cxy small,.cxr button small{font-weight:600;opacity:.9}.cxf{display:block;width:calc(100% + 32px);margin:0 -16px;height:calc(100vh - 232px);height:calc(100dvh - 232px);border:0;background:var(--bg)}";document.head.appendChild(sy);
 function curTheme(){var d=document.documentElement.getAttribute("data-theme");return(d=="dark"||(d!="light"&&matchMedia("(prefers-color-scheme:dark)").matches))?"dark":"light"}
-window.cxTheme=function(){var f=document.getElementById("cxf");try{if(f&&f.contentWindow)f.contentWindow.postMessage({pcb:"theme",t:curTheme()},"*")}catch(e){}};
+window.cxTheme=function(){var f=document.getElementById("cxf");try{if(f&&f.contentWindow){f.contentWindow.postMessage({pcb:"theme",t:curTheme()},"*");f.contentWindow.postMessage({pcb:"lang",l:lang},"*")}}catch(e){}};
 function cxAns(){try{return JSON.parse(localStorage.getItem("pcbC"))||{}}catch(e){return{}}}
 window.addEventListener("message",function(e){var d=e.data;if(!d||!d.pcb)return;if(d.pcb=="ready"){cxTheme();try{e.source.postMessage({pcb:"answers",m:cxAns()},"*")}catch(x){}}
 else if(d.pcb=="ans"&&typeof d.k=="string"){var o=cxAns();if(!o[d.k]){o[d.k]=d.v;try{localStorage.setItem("pcbC",JSON.stringify(o))}catch(x){}}}});
