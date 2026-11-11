@@ -26,12 +26,14 @@
     <p class="hint" style="margin:0">العلامات التي تدل على أن المواد المتفاعلة تحولت إلى مواد جديدة ذات خواص مختلفة. ليس شرطاً أن تظهر كلها معاً.</p>
     <div class="steps"><div>تغير اللون.</div><div>تكون غاز.</div><div>تكون راسب.</div><div>تغير درجة الحرارة.</div><div>انبعاث ضوء.</div><div>ظهور رائحة جديدة.</div></div></div>
 </section>
+<section id="lab" class="pane hidden"><div class="card"><h2>🧪 مختبر التفاعلات</h2><p class="hint">جرّب التفاعلات بنفسك وراقب دلائل التفاعل: غاز، راسب، تغيّر لون، حرارة، ضوء.</p></div><div class="labroot"></div></section>
 <section id="qz" class="pane hidden">
   <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
 </section>
 </main>
 <script src="lib/three.min.js"></script><script type="application/json" id="cmapdata">{"center": {"ar": "قوانين الاتحاد الكيميائي", "en": "Laws of Chemical Combination"}, "branches": [{"t": {"ar": "حفظ الكتلة", "en": "Conservation of Mass"}, "icon": "ramp", "pts": [{"ar": "كتلة المتفاعلات تساوي كتلة النواتج في نظام مغلق", "en": "Reactant mass equals product mass in a closed system"}, {"ar": "12 غ C + 32 غ O₂ ينتج 44 غ CO₂", "en": "12 g C + 32 g O₂ gives 44 g CO₂"}, {"ar": "المادة لا تفنى ولا تُستحدث من العدم", "en": "Matter is never destroyed nor created from nothing"}]}, {"t": {"ar": "النسب الثابتة", "en": "Constant Proportions"}, "icon": "beaker", "pts": [{"ar": "النسب الكتلية للعناصر في المركّب ثابتة", "en": "Mass proportions of elements in a compound are constant"}, {"ar": "لا تتغير بطريقة التحضير أو مصدر المركّب", "en": "Unchanged by preparation method or source"}, {"ar": "الماء: الهيدروجين نحو 11.1% من الكتلة", "en": "Water: hydrogen is about 11.1% by mass"}]}, {"t": {"ar": "لماذا تتحقق القوانين؟", "en": "Why the Laws Hold"}, "icon": "atom", "pts": [{"ar": "الذرات تنفصل ثم تتّحد بطريقة جديدة", "en": "Atoms separate then join in a new way"}, {"ar": "المركّب نفسه ينتج في كل مرة بخواص ثابتة", "en": "The same compound forms each time with fixed properties"}, {"ar": "مجموع النسب المئوية في المركّب 100%", "en": "Percentages in a compound add up to 100%"}]}, {"t": {"ar": "دلائل حدوث التفاعل", "en": "Signs of Reaction"}, "icon": "flask", "pts": [{"ar": "تغيّر اللون وتكوّن غاز أو راسب", "en": "Color change, gas formation, or a precipitate"}, {"ar": "تغيّر الحرارة أو انبعاث ضوء أو رائحة جديدة", "en": "Temperature change, light emitted, or a new smell"}, {"ar": "المعيار الحاسم هو تكوّن مواد جديدة", "en": "The real test is formation of new substances"}]}], "formula": {"ar": "كتلة المتفاعلات = كتلة النواتج", "en": "Mass of reactants = mass of products"}}</script>
 <script src="lib/cmap.js"></script>
+<script src="lib/lab.js"></script>
 <script src="lib/c3d.js"></script>
 <script>
 C3D.init({ns:'lw',accent:'#D32F2F',accentDark:'#EF5350'});
@@ -105,5 +107,6 @@ C3D.quiz('qbox','qscore','q',[
  {q:'ينص قانون النسب الثابتة على أن نسب كتل العناصر في المركب:',o:['تتغير حسب مصدره','تبقى ثابتة مهما اختلفت طريقة تحضيره أو مصدره','تتغير بالحرارة','تساوي 50% لكل عنصر'],a:1,e:'مهما اختلف تحضير المركب أو مصدره، فإن نسب كتل عناصره ثابتة.'},
  {q:'في 2KI + Pb(NO₃)₂ → PbI₂ + 2KNO₃ ما دلائل حدوث التفاعل؟',o:['تغير اللون وتكون راسب','لا دلائل','انبعاث ضوء فقط','تكون غاز فقط'],a:0,e:'تغير اللون وتكون راسب، وكتل المواد قبل التفاعل وبعده ثابتة.'}
 ]);
-C3D.tabs([{id:'mass',l:'⚖️ حفظ الكتلة'},{id:'prop',l:'📊 النسب الثابتة'},{id:'sig',l:'🔎 دلالات التفاعل'},{id:'qz',l:'✍️ أسئلة'}],id=>{if(id==='prop'&&pv)pv.dirty=true});
+Lab.lazy('lab',{subs:['Mg','Zn','Fe','CaCO3','HCl','CuSO4','KI','PbNO32','NaOH_aq','Na2CO3','H2O','UI'],vessels:['tube','beaker','crucible'],hint:"جرّب التفاعلات بنفسك وراقب دلائل التفاعل: غاز، راسب، تغيّر لون، حرارة، ضوء.",missions:[{t:"شاهد تصاعد غاز عند تفاعل حمض مع فلز أو كربونات",ok:function(S){return !!(S.signs.gas)}},{t:"اصنع راسباً أصفر بخلط KI مع Pb(NO₃)₂",ok:function(S){return !!(S.eqs.ki_pb)}},{t:"لاحظ تغيّر لون محلول CuSO₄ عند إضافة الحديد",ok:function(S){return !!(S.eqs.fe_cu)}},{t:"احرق المغنيسيوم بالتسخين (فوق 620°م) في بوتقة وراقب الضوء",ok:function(S){return !!(S.eqs.mg_o2)}}]});
+C3D.tabs([{id:'mass',l:'⚖️ حفظ الكتلة'},{id:'prop',l:'📊 النسب الثابتة'},{id:'sig',l:'🔎 دلالات التفاعل'},{id:'lab',l:'🧪 مختبر'},{id:'qz',l:'✍️ أسئلة'}],id=>{if(id==='prop'&&pv)pv.dirty=true});
 </script></body></html>

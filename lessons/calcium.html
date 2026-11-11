@@ -9,6 +9,7 @@
   <div class="stage3" id="bst" style="height:340px"></div>
   <div class="card info" id="binfo"></div>
 </section>
+<section id="lab" class="pane hidden"><div class="card"><h2>🧪 مختبر الجير</h2><p class="hint">نفّذ دورة الجير بيدك: حلّل الحجر الجيري بالحرارة العالية، ثم أطفئ الجير الحيّ بالماء، ثم اكشف CO₂ بماء الجير.</p></div><div id="labroot"></div></section>
 <section id="cyc" class="pane hidden">
   <div class="card">
     <h2>🔥 دورة الجير</h2>
@@ -31,6 +32,7 @@
 <script src="lib/three.min.js"></script>
 <script type="application/json" id="cmapdata">{"center": {"ar": "الكالسيوم", "en": "Calcium"}, "branches": [{"t": {"ar": "الكالسيوم في الجسم", "en": "Calcium in the Body"}, "icon": "cell", "pts": [{"ar": "أملاح الكالسيوم تشكّل 2% من كتلة الجسم", "en": "Calcium salts make up 2% of body mass"}, {"ar": "99% منه في العظام والأسنان", "en": "99% of it is in bones and teeth"}, {"ar": "نحتاج مصادر غذائية لتقوية العظام والأسنان", "en": "We need dietary sources to keep bones and teeth strong"}]}, {"t": {"ar": "دورة الجير", "en": "The Lime Cycle"}, "icon": "flask", "pts": [{"ar": "كربونات الكالسيوم (الحجر الجيري) صلبة بيضاء", "en": "Calcium carbonate (limestone) is a hard white solid"}, {"ar": "تتفكك بالتسخين عند 900°م إلى CaO وغاز CO₂", "en": "Heated at 900 °C it gives CaO and CO₂ gas"}, {"ar": "أكسيد الكالسيوم مع الماء يعطي هيدروكسيد الكالسيوم", "en": "Calcium oxide with water gives calcium hydroxide"}]}, {"t": {"ar": "خامات ومركّبات", "en": "Ores and Compounds"}, "icon": "globe", "pts": [{"ar": "كربونات الكالسيوم في الحجر الجيري والرخام", "en": "Calcium carbonate is in limestone and marble"}, {"ar": "كبريتات الكالسيوم المائية والدولوميت من خامات القشرة", "en": "Hydrated calcium sulfate and dolomite are crustal ores"}, {"ar": "كلوريد الكالسيوم موجود في البحار والمحيطات", "en": "Calcium chloride is found in seas and oceans"}]}, {"t": {"ar": "استخدامات المركّبات", "en": "Uses of Compounds"}, "icon": "bulb", "pts": [{"ar": "كربونات الكالسيوم تعالج آثار المطر الحمضي", "en": "Calcium carbonate treats acid rain effects"}, {"ar": "كلوريد الكالسيوم مادة مجفّفة ويسرّع تصلّب الخرسانة", "en": "Calcium chloride dries and speeds concrete hardening"}, {"ar": "الجير الحي يُستخدم مع الحيوانات المصابة بالجمرة الخبيثة", "en": "Quicklime is used with animals infected with anthrax"}, {"ar": "يُطلى جذع الشجر بالجير المطفأ لحمايته", "en": "Slaked lime is painted on tree trunks to protect them"}]}], "formula": {"ar": "CaCO₃ ⟶ CaO + CO₂ (بالتسخين)", "en": "CaCO₃ → CaO + CO₂ (heat)"}}</script>
 <script src="lib/cmap.js"></script>
+<script src="lib/lab.js"></script>
 <script src="lib/c3d.js"></script>
 <script>
 C3D.init({ns:'ca',accent:'#D32F2F',accentDark:'#EF5350'});
@@ -144,5 +146,6 @@ C3D.quiz('qbox','qscore','q',[
  {q:'لماذا يُستخدم كلوريد الكالسيوم مجففاً؟',o:['لأنه يذوب في الزيت','لقدرته العالية على امتصاص الرطوبة','لأنه يحرق الماء','لأنه عازل للكهرباء'],a:1,e:'يُستخدم كمجفف لقدرته العالية على امتصاص الرطوبة، ويسرّع تصلب الخرسانة في الإسمنت.'},
  {q:'لماذا تُعالج آثار المطر الحمضي في البحيرات بكربونات الكالسيوم؟',o:['لأنها مركب قاعدي يتفاعل مع الحمض ويقلل تركيزه','لأنها تزيد حموضة الماء','لأنها تبخّر الماء','لأنها تحلل الأحماض إلى معادن'],a:0,e:'كربونات الكالسيوم مركب قاعدي يتفاعل مع الحمض فيقلل تركيزه.'}
 ]);
-C3D.tabs([{id:'bone',l:'🦴 جسمك'},{id:'cyc',l:'🔥 دورة الجير'},{id:'ore',l:'🪨 الخامات'},{id:'qz',l:'✍️ أسئلة'}]);
+var labDone=0;
+C3D.tabs([{id:'bone',l:'🦴 جسمك'},{id:'lab',l:'🧪 مختبر الجير'},{id:'cyc',l:'🔥 دورة الجير'},{id:'ore',l:'🪨 الخامات'},{id:'qz',l:'✍️ أسئلة'}],function(id){if(id==='lab'&&!labDone){labDone=1;Lab.mount($('labroot'),{subs:['CaCO3','CaO','H2O','CaOH2_aq','CO2','HCl','UI'],vessels:['tube','crucible','beaker'],hint:'ابدأ بوضع قطعة من الحجر الجيري في أنبوب الاختبار أو البوتقة، ثم أشعل الموقد وارفع الحرارة.',missions:[{t:'حلّل الحجر الجيري بالحرارة (فوق 850°م) إلى جير حيّ CaO',ok:function(S){return !!S.eqs.decomp}},{t:'أطفئ الجير الحيّ بالماء ولاحظ الحرارة والبخار',ok:function(S){return !!S.eqs.slake}},{t:'اكشف غاز CO₂ بماء الجير أو بمرور CO₂ فيه',ok:function(S){return !!S.eqs.tube2||!!S.eqs.carb1||!!S.eqs.carb2}}]})}});
 </script></body></html>

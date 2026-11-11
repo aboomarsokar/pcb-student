@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>دورة الخلية والانقسام المتساوي</title><base href="../"><script src="lib/bg.js"></script><script src="lib/icons.js"></script><style>.row button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}</style></head>
+<body><main>
+<h1>🧬 دورة الخلية والانقسام المتساوي</h1>
+<div class="tabs" id="tabs"></div>
+
+<section id="cy" class="pane">
+  <div class="card">
+    <h2>🔄 دورة الخلية</h2>
+    <p class="hint" style="margin:0">اضغط على أي جزء من الحلقة (أو اختر الطور من الأزرار) وحرّك الشريط لترى ما يحدث للخلية في وسطها. اسحب النموذج لتديره.</p>
+    <div class="chips" id="cchips"></div>
+    <div class="stage3" id="cst" style="height:340px"></div>
+    <div class="leg"><span><b style="color:#42A5F5">●</b> G1</span><span><b style="color:#FFA726">●</b> S</span><span><b style="color:#AB47BC">●</b> G2</span><span><b style="color:#EF5350">●</b> M</span><span><b style="color:#78909C">●</b> G0</span><span><b style="color:#FFD54F">◆</b> نقطة تحكم</span></div>
+    <div class="row"><label for="cp">تقدّم الدورة:</label><input type="range" id="cp" min="0" max="1000" value="80"><button id="cplay">▶ تشغيل</button></div>
+    <div class="fb" id="cinfo"></div>
+  </div>
+</section>
+
+<section id="mt" class="pane hidden">
+  <div class="card">
+    <h2>🧬 مراحل الانقسام المتساوي</h2>
+    <p class="hint" style="margin:0">خلية حيوانية مثالها 2n = 4 (زوجان من الكروموسومات المتماثلة: طويل وقصير، لون كل منهما يدل على الأب والأم). حرّك الشريط أو شغّل العرض، واسحب لتدير الخلية.</p>
+    <div class="chips" id="mchips"></div>
+    <div class="stage3" id="mst" style="height:380px"></div>
+    <div class="row"><label for="ms">المرحلة:</label><input type="range" id="ms" min="0" max="500" value="0"><button id="mplay">▶ تشغيل</button><button id="mlab" class="on">🏷️ التسميات</button></div>
+    <div class="fb" id="minfo"></div>
+    <div class="leg" id="mleg"></div>
+  </div>
+</section>
+
+<section id="fn" class="pane hidden">
+  <div class="card">
+    <h2>🩹 فائدة الانقسام والأورام</h2>
+    <p class="hint" style="margin:0">اختر الحالة وحرّك شريط الزمن لترى كيف تتصرف الخلايا. اسحب لتدير النسيج.</p>
+    <div class="chips" id="fchips"></div>
+    <div class="stage3" id="fst" style="height:340px"></div>
+    <div class="row"><label for="fs">الزمن:</label><input type="range" id="fs" min="0" max="1000" value="0"><button id="fplay">▶ تشغيل</button></div>
+    <div class="fb" id="finfo"></div>
+  </div>
+</section>
+
+<section id="qz" class="pane hidden">
+  <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
+</section>
+</main>
+<script src="lib/three.min.js"></script>
+<script type="application/json" id="cmapdata">{"center":{"ar":"دورة الخلية والانقسام المتساوي","en":"Cell Cycle and Mitosis"},"branches":[{"t":{"ar":"دورة الخلية","en":"The Cell Cycle"},"icon":"cell","pts":[{"ar":"أطوار متتابعة منظمة من النمو والانقسام بين انقسامين متتاليين","en":"Ordered phases of growth and division between two divisions"},{"ar":"الطور البيني نحو 90% من الدورة","en":"Interphase is about 90% of the cycle"},{"ar":"طور الانقسام M: انقسام متساوٍ ثم انقسام السيتوبلازم","en":"M phase: mitosis then cytokinesis"}]},{"t":{"ar":"الطور البيني","en":"Interphase"},"icon":"dna","pts":[{"ar":"G1: نمو الخلية","en":"G1: cell growth"},{"ar":"S: تضاعف DNA","en":"S: DNA replication"},{"ar":"G2: تجهيز الخلية للانقسام","en":"G2: preparation for division"}]},{"t":{"ar":"مراحل الانقسام المتساوي","en":"Stages of Mitosis"},"icon":"microscope","pts":[{"ar":"التمهيدي: تتكثف الكروموسومات ويتحلل الغلاف النووي","en":"Prophase: chromosomes condense, nuclear envelope breaks down"},{"ar":"الاستوائي: تصطف الكروموسومات في وسط الخلية","en":"Metaphase: chromosomes line up at the cell center"},{"ar":"الانفصالي: تنفصل الكروماتيدات الشقيقة إلى القطبين","en":"Anaphase: sister chromatids move to the poles"},{"ar":"النهائي: تتكون خليتان","en":"Telophase: two cells form"}]},{"t":{"ar":"G0 والتحكم","en":"G0 and Control"},"icon":"stopwatch","pts":[{"ar":"G0: سكون دائم لا تنقسم فيه الخلية","en":"G0: permanent resting state, no division"},{"ar":"كريات الدم الحمراء الناضجة والعضلات الهيكلية والعصبونات","en":"Mature red blood cells, skeletal muscle, neurons"},{"ar":"السايكلين ونقاط التحكم تنظم تقدم الخلية بين الأطوار","en":"Cyclins and checkpoints regulate progression"}]},{"t":{"ar":"أهمية الانقسام المتساوي","en":"Importance of Mitosis"},"icon":"globe","pts":[{"ar":"يحدث في الخلايا الجسمية","en":"Occurs in somatic cells"},{"ar":"النمو وإصلاح الخلايا وتجديدها","en":"Growth, repair and renewal of cells"},{"ar":"ينتج خليتين متطابقتين وراثياً مع الأم","en":"Gives two cells genetically identical to the mother"}]},{"t":{"ar":"الأورام","en":"Tumors"},"icon":"flask","pts":[{"ar":"انقسام غير منظم وغير متحكم به","en":"Disorganized, uncontrolled division"},{"ar":"ورم خبيث (سرطان)","en":"Malignant tumor (cancer)"},{"ar":"ورم غير خبيث","en":"Benign tumor"}]}],"formula":{"ar":"خلية أم (2n) ← خليتان بنتيتان متطابقتان (2n)","en":"Mother cell (2n) → two identical daughter cells (2n)"}}</script>
+<script src="lib/cmap.js"></script>
+<script src="lib/c3d.js"></script>
+<script>
+C3D.init({ns:'bm',accent:'#2E7D32',accentDark:'#66BB6A'});
+const T=C3D.T,$=C3D.$,mk=C3D.mk;
+const sm=x=>{x=x<0?0:x>1?1:x;return x*x*(3-2*x)};
+const lerp=(a,b,t)=>a+(b-a)*t;
+const cl=(x,a,b)=>x<a?a:x>b?b:x;
+let sd=11;const rnd=()=>{sd=(sd*16807)%2147483647;return (sd-1)/2147483646};
+const lblCache={};
+function lblTex(txt,bg){const k=txt+'|'+bg;return lblCache[k]||(lblCache[k]=C3D.label(txt,{w:256,h:88,size:34,color:'#fff',bg:bg||'rgba(20,30,28,.82)'}))}
+function mkLabel(w,h){const m=C3D.plane(' ',w,h,{pw:256,ph:88});m.material.depthTest=false;m.renderOrder=20;m.visible=false;return m}
+function coilGeo(R){const pts=[];for(let i=0;i<14;i++){const u=rnd()*2-1,a=rnd()*6.283,s=Math.sqrt(1-u*u),r=R*(.7+.5*rnd());pts.push(new T.Vector3(s*Math.cos(a)*r,u*r,s*Math.sin(a)*r))}
+  return new T.TubeGeometry(new T.CatmullRomCurve3(pts,true),110,R*.12,6,true)}
+function info(el,title,en,txt,tags){el.innerHTML='<b style="color:var(--accent)">'+title+'</b> <span class="ltr" style="color:var(--muted);font-size:.85rem">'+en+'</span><br>'+txt+(tags?'<div style="margin-top:6px">'+tags.map(t=>'<span class="tag">'+t+'</span>').join('')+'</div>':'')}
+function chips(box,list,cb){list.forEach((t,i)=>{const b=mk('button','',t);b.onclick=()=>cb(i);box.appendChild(b)})}
+function mark(box,i){[...box.children].forEach((b,j)=>b.classList.toggle('on',j===i))}
+/* هندسة مشتركة */
+const capGeo=new T.CapsuleGeometry(.17,.8,4,10);
+const GC=[coilGeo(.42),coilGeo(.42),coilGeo(.3),coilGeo(.3)];
+const COLS=[0x2f6fe0,0xe5473f];
+
+/* =============== 1) دورة الخلية =============== */
+const PH=[{id:'G1',ar:'G1',p0:0,p1:.44,c:0x42a5f5},{id:'S',ar:'S',p0:.44,p1:.70,c:0xffa726},{id:'G2',ar:'G2',p0:.70,p1:.90,c:0xab47bc},{id:'M',ar:'M',p0:.90,p1:1,c:0xef5350}];
+const CYI={
+ G1:['الطور G1 (النمو الأول)','Gap 1','تنمو الخلية وتزداد في الحجم، وتصنع البروتينات والعضيات، وتؤدي وظائفها. كل كروموسوم فيها من كروماتيد واحد.',['من الطور البيني','أطول الأطوار']],
+ S:['الطور S (التضاعف)','Synthesis','يتضاعف DNA، فيصبح كل كروموسوم مكوّناً من كروماتيدين شقيقين متصلين بالسنترومير، ويتضاعف الجسيم المركزي أيضاً.',['تضاعف DNA','من الطور البيني']],
+ G2:['الطور G2 (التجهيز)','Gap 2','تنمو الخلية أكثر وتجهّز نفسها للانقسام فتصنع ما يلزم له، وتفحص DNA المضاعَف قبل الدخول إلى M.',['تجهيز الانقسام','من الطور البيني']],
+ M:['طور الانقسام M','Mitotic phase','انقسام النواة (الانقسام المتساوي) ثم انقسام السيتوبلازم فتنتج خليتان بنتيتان. يشغل نحو 10% من الدورة.',['الانقسام المتساوي','ثم انقسام السيتوبلازم']],
+ G0:['الطور G0 (السكون)','Gap 0','سكون دائم لا تنقسم فيه الخلية، كما في كريات الدم الحمراء الناضجة والعضلات الهيكلية والعصبونات.',['لا انقسام','خروج من الدورة']],
+ CP:['نقاط التحكم والسايكلين','Checkpoints','تنظّم السايكلينات ونقاط التحكم تقدّم الخلية بين أطوار الدورة، فلا تنتقل إلى الطور التالي إلا إذا اكتمل السابق سليماً.',['تنظيم التقدم','منع الانقسام الخاطئ']]
+};
+const cv=C3D.viewer($('cst'),{yaw:0,pitch:16,r:30,tx:1.0,floor:false,rmin:16,rmax:46,maxYaw:70});
+let cp=.08,cplay=false,csel='G1',cdirty=true;
+const cinfo=$('cinfo'),cchips=$('cchips');
+function setSel(id){csel=id;const d=CYI[id];info(cinfo,d[0],d[1],d[2],d[3]);mark(cchips,['G1','S','G2','M','G0','CP'].indexOf(id));cdirty=true}
+chips(cchips,['G1','S','G2','M','G0','◆ نقاط التحكم'],i=>{const id=['G1','S','G2','M','G0','CP'][i];if(i<4){const p=PH[i];setP((p.p0+p.p1)/2)}setSel(id)});
+function setP(p){cp=p;cplay=false;$('cplay').textContent='▶ تشغيل';$('cp').value=Math.round(p*1000);cdirty=true;if(cp<1)syncSel()}
+function phaseAt(p){for(const q of PH)if(p<q.p1)return q;return PH[3]}
+function syncSel(){if(csel==='G0'||csel==='CP')return;const id=phaseAt(cp).id;if(id!==csel)setSel(id)}
+const ctl={};
+if(cv){
+  const S=cv.scene,R=3.9,ring=new T.Group();S.add(ring);cv.pick=[ring];
+  ctl.arcs=[];
+  const ang=p=>Math.PI/2-2*Math.PI*p;
+  PH.forEach(q=>{const arc=2*Math.PI*(q.p1-q.p0)-.07;const m=new T.Mesh(new T.TorusGeometry(R,.55,18,Math.max(8,Math.round(arc*14)),arc),new T.MeshStandardMaterial({color:q.c,roughness:.4,metalness:.1,emissive:q.c,emissiveIntensity:.08}));
+    m.rotation.z=ang(q.p1)+.035;m.userData.part=q.id;m.castShadow=false;ring.add(m);q.m=m;ctl.arcs.push(m)});
+  /* قوس الطور البيني */
+  const br=new T.Mesh(new T.TorusGeometry(R+1.05,.07,8,60,2*Math.PI*.9-.12),new T.MeshStandardMaterial({color:0x90a4ae,roughness:.5}));br.rotation.z=ang(.9)+.06;br.userData.noPick=1;S.add(br);
+  /* ملصقات على الحلقة */
+  ctl.lbs=[];
+  const lp=(p,r)=>[Math.cos(ang(p))*r,Math.sin(ang(p))*r,.9];
+  [['G1',.22,0x42a5f5],['S',.57,0xffa726],['G2',.80,0xab47bc],['M',.95,0xef5350]].forEach(a=>{const m=C3D.plane(a[0],1.7,1.1,{pw:128,ph:84,size:56,color:'#fff',bg:'#'+a[2].toString(16).padStart(6,'0')});const q=lp(a[1],R+2.0);m.position.set(q[0],q[1],q[2]);m.material.depthTest=false;m.renderOrder=20;S.add(m);ctl.lbs.push(m)});
+  {const m=C3D.plane('الطور البيني',4.4,1.3,{pw:230,ph:70,size:36,color:'#fff',bg:'rgba(84,110,122,.9)'});const q=lp(.5,R+2.9);m.position.set(q[0],q[1]-.4,1);m.material.depthTest=false;m.renderOrder=20;S.add(m);ctl.lbs.push(m)}
+  /* G0 */
+  const gl=C3D.glass(0x90a4ae,.45),pod=new T.Group();pod.position.set(7.3,-1.5,0);pod.userData.part='G0';
+  const pm=new T.Mesh(new T.SphereGeometry(1.15,28,20),gl);pod.add(pm);const pn=new T.Mesh(new T.SphereGeometry(.5,20,14),C3D.std(0x78909c,.5));pod.add(pn);ctl.pod=pn;S.add(pod);cv.pick.push(pod);
+  S.add(C3D.bond(new T.Vector3(Math.cos(ang(.33))*R,Math.sin(ang(.33))*R,0),new T.Vector3(6.2,-1.35,0),.16,C3D.std(0x90a4ae,.5)));
+  {const m=C3D.plane('G0',1.7,1.1,{pw:128,ph:84,size:56,color:'#fff',bg:'#78909c'});m.position.set(7.3,-3.3,.9);m.material.depthTest=false;m.renderOrder=20;S.add(m);ctl.lbs.push(m)}
+  /* نقاط التحكم */
+  ctl.cps=[];[.44,.90,.95].forEach(p=>{const m=new T.Mesh(new T.OctahedronGeometry(.62),new T.MeshStandardMaterial({color:0xffd54f,roughness:.3,metalness:.3,emissive:0xffb300,emissiveIntensity:.25}));m.position.set(Math.cos(ang(p))*(R+.0),Math.sin(ang(p))*R,.85);m.userData.part='CP';ring.add(m);ctl.cps.push(m)});
+  ctl.cps[2].position.z=-.85;
+  /* المؤشر */
+  const mk0=new T.Mesh(new T.SphereGeometry(.42,20,14),new T.MeshStandardMaterial({color:0xffffff,emissive:0xffffff,emissiveIntensity:.5}));mk0.userData.noPick=1;S.add(mk0);ctl.mark=mk0;
+  /* الخلية المركزية */
+  const cell=new T.Group();S.add(cell);ctl.cell=cell;
+  const mem=new T.MeshPhysicalMaterial({color:0x7fd1c0,roughness:.2,transparent:true,opacity:.28,side:T.DoubleSide,depthWrite:false,clearcoat:1});
+  const memG=new T.SphereGeometry(1,36,24);
+  ctl.mA=new T.Mesh(memG,mem);ctl.mB=new T.Mesh(memG,mem);ctl.mA.userData.noPick=1;ctl.mB.userData.noPick=1;cell.add(ctl.mA,ctl.mB);
+  const nucM=new T.MeshPhysicalMaterial({color:0xb39ddb,roughness:.3,transparent:true,opacity:.35,depthWrite:false});
+  ctl.nuc=new T.Mesh(new T.SphereGeometry(1,28,20),nucM);ctl.nuc.userData.noPick=1;cell.add(ctl.nuc);
+  const cmat=[new T.MeshStandardMaterial({color:COLS[0],roughness:.4}),new T.MeshStandardMaterial({color:COLS[1],roughness:.4})];
+  ctl.coil=[];ctl.dup=[];ctl.x=[];
+  const NPc=[[-.35,.35,.1],[.3,.4,-.2],[-.25,-.35,-.2],[.3,-.3,.2]];
+  for(let k=0;k<4;k++){const c=new T.Mesh(GC[k],cmat[k%2]);c.userData.noPick=1;c.position.set(NPc[k][0],NPc[k][1],NPc[k][2]);cell.add(c);ctl.coil.push(c);
+    const d=new T.Mesh(GC[k],cmat[k%2]);d.userData.noPick=1;d.position.set(NPc[k][0]+.12,NPc[k][1]-.1,NPc[k][2]+.1);d.rotation.set(1,2,0);cell.add(d);ctl.dup.push(d);
+    const xg=new T.Group();const sc=k<2?1:.75;xg.userData.noPick=1;
+    const a=new T.Mesh(capGeo,cmat[k%2]),b=new T.Mesh(capGeo,cmat[k%2]);a.scale.setScalar(sc*.55);b.scale.setScalar(sc*.55);a.rotation.z=.3;b.rotation.z=-.3;xg.add(a,b);xg.userData.a=a;xg.userData.b=b;
+    xg.position.set(0,[.75,.25,-.25,-.75][k],[.1,-.15,.15,-.1][k]);cell.add(xg);ctl.x.push(xg)}
+  ctl.nA=new T.Mesh(new T.SphereGeometry(1,20,14),nucM);ctl.nB=new T.Mesh(new T.SphereGeometry(1,20,14),nucM);ctl.nA.userData.noPick=1;ctl.nB.userData.noPick=1;cell.add(ctl.nA,ctl.nB);
+  cell.scale.setScalar(1.35);
+  const bb=[];
+  cv.onframe=t=>{let ch=cdirty;
+    if(cplay){const dt=Math.min(.05,(t-(ctl.t0||t))/1000);ctl.t0=t;cp+=dt*.075;if(cp>=1)cp-=1;$('cp').value=Math.round(cp*1000);syncSel();ch=true}else ctl.t0=0;
+    if(ch){cdirty=false;placeCell(cp);
+      const a=ang(cp);ctl.mark.position.set(Math.cos(a)*R,Math.sin(a)*R,1.0);
+      PH.forEach(q=>{q.m.material.emissiveIntensity=csel===q.id?.75:.08});ctl.pod.material.emissive.setHex(csel==='G0'?0xffffff:0);ctl.pod.material.emissiveIntensity=csel==='G0'?.5:0;
+      ctl.cps.forEach(m=>{m.material.emissiveIntensity=csel==='CP'?.9:.25;m.rotation.y+=.0});
+    }
+    ctl.cps.forEach(m=>{m.rotation.y+=.02});
+    ctl.lbs.forEach(m=>m.quaternion.copy(cv.cam.quaternion));
+    return true};
+  function placeCell(p){
+    const e=p<.44?0:p<.70?1:p<.90?2:3;
+    let R0;if(p<.44)R0=lerp(1.0,1.35,p/.44);else if(p<.70)R0=lerp(1.35,1.45,(p-.44)/.26);else if(p<.90)R0=lerp(1.45,1.6,(p-.7)/.2);else R0=1.6;
+    const u=p<.9?0:(p-.9)/.1,dup=sm((p-.44)/.26);
+    const cond=u<.1?0:sm((u-.1)/.25),split=sm((u-.62)/.38),sepc=sm((u-.45)/.3);
+    const d=split*1.3,Rd=R0*(1-.32*split);
+    ctl.mA.scale.setScalar(Rd);ctl.mB.scale.setScalar(Rd);ctl.mA.position.set(-d,0,0);ctl.mB.position.set(d,0,0);ctl.mB.visible=split>.02;
+    if(split<=.02){ctl.mA.position.x=0}
+    const nscale=R0*.52*(1-sm((u-.1)/.2));ctl.nuc.scale.setScalar(Math.max(.001,nscale));ctl.nuc.visible=nscale>.02;
+    for(let k=0;k<4;k++){const cs=1-cond;ctl.coil[k].scale.setScalar(Math.max(.001,cs));ctl.coil[k].visible=cs>.03&&p<.9+.0||(p>=.9&&cs>.03);
+      ctl.dup[k].scale.setScalar(Math.max(.001,dup*cs));ctl.dup[k].visible=dup*cs>.03;
+      const xg=ctl.x[k],xs=Math.max(.001,cond*(1-sm((u-.88)/.12)));xg.scale.setScalar(xs);xg.visible=xs>.03;
+      xg.userData.a.position.x=-sepc*d*.9;xg.userData.b.position.x=sepc*d*.9;
+      xg.userData.a.rotation.z=lerp(.3,-1.45,sepc);xg.userData.b.rotation.z=lerp(-.3,1.45,sepc);
+      xg.position.x=0}
+    const nn=sm((u-.82)/.18)*R0*.36;ctl.nA.scale.setScalar(Math.max(.001,nn));ctl.nB.scale.setScalar(Math.max(.001,nn));ctl.nA.position.set(-d,0,0);ctl.nB.position.set(d,0,0);ctl.nA.visible=ctl.nB.visible=nn>.02;
+    ctl.pod.parent.visible=true}
+  cv.onpick=(part)=>{if(!part)return;if(['G1','S','G2','M'].indexOf(part)>=0){const q=PH.find(x=>x.id===part);setP((q.p0+q.p1)/2)}setSel(part)};
+}
+$('cp').oninput=e=>{cp=e.target.value/1000;cplay=false;$('cplay').textContent='▶ تشغيل';cdirty=true;syncSel()};
+$('cplay').onclick=()=>{cplay=!cplay;$('cplay').textContent=cplay?'⏸ إيقاف':'▶ تشغيل';if(csel==='G0'||csel==='CP')syncSel()};
+setSel('G1');
+
+/* =============== 2) مراحل الانقسام =============== */
+const STG=[
+ ['الطور البيني','Interphase','تكون الكروموسومات خيوطاً دقيقة من الكروماتين داخل النواة. تضاعف DNA في المرحلة S، فكل كروموسوم الآن من كروماتيدين شقيقين، وتضاعف الجسيم المركزي.',['4 كروموسومات (2n = 4)','8 كروماتيدات']],
+ ['التمهيدي','Prophase','تتكثف الكروموسومات فتظهر كلٌّ منها من كروماتيدين شقيقين متصلين بالسنترومير، ويتحلل الغلاف النووي، ويتجه الجسيمان المركزيان إلى القطبين ويتكوّن المغزل.',['4 كروموسومات','تحلل الغلاف النووي']],
+ ['الاستوائي','Metaphase','تصطف الكروموسومات في وسط الخلية (المستوى الاستوائي) وترتبط بألياف المغزل المتصلة بالقطبين.',['4 كروموسومات','اصطفاف وسط الخلية']],
+ ['الانفصالي','Anaphase','ينقسم السنترومير وتنفصل الكروماتيدات الشقيقة إلى القطبين، فيصبح كل كروماتيد كروموسوماً مستقلاً وتستطيل الخلية.',['8 كروموسومات مؤقتاً','4 عند كل قطب']],
+ ['النهائي','Telophase','تصل المجموعتان إلى القطبين، فتتفكك الكروموسومات ويتكوّن غلاف نووي حول كل مجموعة ويختفي المغزل، وتبدأ الخلية بالاستدقاق.',['نواتان جديدتان','4 كروموسومات في كل منهما']],
+ ['انقسام السيتوبلازم','Cytokinesis','ينقسم السيتوبلازم بأخدود انقسام فتنتج خليتان بنتيتان، كل منهما 2n = 4 ومتطابقة وراثياً مع الخلية الأم.',['خليتان بنتيتان','متطابقتان وراثياً مع الأم']]
+];
+const KF=[ // cond env env2 plate sep spin cen stretch pinch split
+ [0,1,0,0,0,0,0,1,0,0],
+ [.85,.45,0,0,0,.55,1,1,0,0],
+ [1,0,0,1,0,1,1,1,0,0],
+ [1,0,0,1,1,1,1,1.25,.1,0],
+ [.35,0,1,1,1,.25,1,1.35,.65,0],
+ [.1,0,1,1,1,0,1,1.3,.97,1]];
+const LBS=[ // نصوص ومواضع لكل مرحلة
+ [['غشاء الخلية',-2.9,-4.3,1],['النواة',3.4,-2.6,1.5],['كروماتين',-2.2,1.9,1.8],['جسيمان مركزيان',1.9,4.4,1]],
+ [['غشاء الخلية',-2.9,-4.4,1],['جسيم مركزي',-3.5,3.4,1.5],['تحلل الغلاف النووي',2.6,-2.9,1.6],['كروموسوم متكثف',1.2,3.2,2]],
+ [['غشاء الخلية',-2.9,-4.4,1],['ألياف المغزل',-3.5,1.8,1.5],['المستوى الاستوائي',3.2,-2.9,1.8],['جسيم مركزي',3.6,1.4,1]],
+ [['غشاء الخلية',0,-5.5,1],['كروماتيدات منفصلة',-3.4,2.9,1.5],['استطالة الخلية',3.6,-3.1,1],['ألياف المغزل',0,1.0,2]],
+ [['نواة جديدة',-3.4,-2.6,1.8],['نواة جديدة',3.4,-2.6,1.8],['أخدود الانقسام',0,3.6,1.5]],
+ [['خلية بنتية',-3.4,-3.9,1.5],['خلية بنتية',3.4,-3.9,1.5],['أخدود الانقسام',0,3.2,1.2]]];
+const mv=C3D.viewer($('mst'),{yaw:0,pitch:8,r:22.5,floor:false,rmin:12,rmax:44});
+let mt=0,mgoal=0,mplay=false,mshow=true,mlast=-1,mdirty=true,mst=-1;
+const minfo=$('minfo'),mchips=$('mchips');
+chips(mchips,STG.map(s=>s[0]),i=>{mgoal=i;mplay=false;$('mplay').textContent='▶ تشغيل'});
+$('ms').oninput=e=>{mt=mgoal=e.target.value/100;mplay=false;$('mplay').textContent='▶ تشغيل';mdirty=true};
+$('mplay').onclick=()=>{mplay=!mplay;$('mplay').textContent=mplay?'⏸ إيقاف':'▶ تشغيل';if(mplay){if(mt>=4.99)mt=0;mgoal=5}};
+$('mlab').onclick=()=>{mshow=!mshow;$('mlab').classList.toggle('on',mshow);mdirty=true};
+$('mleg').innerHTML='<span><b style="color:#2f6fe0">●</b> كروموسوم من أحد الأبوين</span><span><b style="color:#e5473f">●</b> مماثله من الأبوين الآخر</span><span><b style="color:#ff8f00">●</b> جسيم مركزي</span><span><b style="color:#e0a800">—</b> ألياف المغزل</span>';
+function showStage(i){if(i===mst)return;mst=i;const s=STG[i];info(minfo,s[0],s[1],s[2],s[3]);mark(mchips,i)}
+showStage(0);
+if(mv){
+  const S=mv.scene,CR=4.3,P=new Array(10).fill(0);
+  S.add(new T.HemisphereLight(0xffffff,0x8899aa,.5));
+  const memM=new T.MeshPhysicalMaterial({color:0x4fb3a5,roughness:.2,transparent:true,opacity:.3,side:T.DoubleSide,depthWrite:false,clearcoat:1});
+  const memG=new T.SphereGeometry(1,56,36),orig=memG.attributes.position.array.slice(),mp=memG.attributes.position;
+  const mem=new T.Mesh(memG,memM);mem.userData.noPick=1;S.add(mem);
+  let last=[-1,-1,-1];
+  function memUpd(s,pin,spl){if(last[0]===s&&last[1]===pin&&last[2]===spl)return;last=[s,pin,spl];const a=mp.array;
+    for(let i=0;i<a.length;i+=3){const ox=orig[i],x=ox*CR*s,f=Math.exp(-(x*x)/1.5),k=1-pin*f;a[i]=x+(ox>0?1:ox<0?-1:0)*spl*.7;a[i+1]=orig[i+1]*CR*k;a[i+2]=orig[i+2]*CR*k}
+    mp.needsUpdate=true;memG.computeVertexNormals()}
+  const nucM=new T.MeshPhysicalMaterial({color:0xb39ddb,roughness:.3,transparent:true,opacity:.3,side:T.DoubleSide,depthWrite:false});
+  const nuc=new T.Mesh(new T.SphereGeometry(2.15,36,24),nucM);nuc.userData.noPick=1;S.add(nuc);
+  const nlM=new T.MeshStandardMaterial({color:0x7e57c2,roughness:.5});const nlo=new T.Mesh(new T.SphereGeometry(.38,16,12),nlM);nlo.position.set(.6,-.1,-1.2);nlo.userData.noPick=1;S.add(nlo);
+  const dn=[0,1].map(()=>{const m=new T.Mesh(new T.SphereGeometry(1.5,28,20),nucM.clone());m.userData.noPick=1;S.add(m);return m});
+  const cm=COLS.map(c=>new T.MeshStandardMaterial({color:c,roughness:.38,metalness:.05}));
+  const cenM=new T.MeshStandardMaterial({color:0xff8f00,roughness:.4,emissive:0xff6f00,emissiveIntensity:.25});
+  const kcM=new T.MeshStandardMaterial({color:0x263238,roughness:.5});
+  const NP=[[-.8,.7,.3],[.7,.9,-.4],[-.5,-.9,-.6],[.9,-.6,.5]],PPy=[[1.7,.5],[.6,-.55],[-.6,.55],[-1.7,-.4]],NR=[[.5,1.2],[2.4,.3],[1.1,2.0],[2.8,.8]];
+  const CH=[];const pickL=[];
+  for(let k=0;k<4;k++){CH[k]=[];const sc=k<2?1:.7;
+    for(let s=0;s<2;s++){const g=new T.Group(),rod=new T.Group();
+      const a=new T.Mesh(capGeo,cm[k%2]);a.scale.setScalar(sc);a.position.set(0,.62*sc,0);a.rotation.z=-.08;
+      const b=new T.Mesh(capGeo,cm[k%2]);b.scale.set(sc,sc*.7,sc);b.position.set(0,-.42*sc,0);b.rotation.z=.1;
+      rod.add(a,b);g.add(rod);
+      const coil=new T.Mesh(GC[k],cm[k%2]);g.add(coil);g.userData.part='chr';g.userData.k=k;g.userData.rod=rod;g.userData.coil=coil;
+      g.scale.setScalar(1.3);S.add(g);CH[k][s]=g;pickL.push(g)}}
+  const CM=[];for(let k=0;k<4;k++){const m=new T.Mesh(new T.SphereGeometry(.2,14,10),kcM);m.userData.noPick=1;S.add(m);CM[k]=m}
+  const CEN=[0,1].map(()=>{const g=new T.Group();const c1=new T.Mesh(new T.CylinderGeometry(.13,.13,.6,12),cenM),c2=new T.Mesh(new T.CylinderGeometry(.13,.13,.6,12),cenM);c2.rotation.z=Math.PI/2;c2.position.set(.0,-.22,0);c1.position.y=.12;g.add(c1,c2);g.userData.part='cen';S.add(g);pickL.push(g);return g});
+  mv.pick=pickL;
+  /* المغزل */
+  const NK=8,NPOL=7,SEG=10;
+  const kg=new T.BufferGeometry();kg.setAttribute('position',new T.BufferAttribute(new Float32Array(NK*6),3));
+  const pg=new T.BufferGeometry();pg.setAttribute('position',new T.BufferAttribute(new Float32Array(NPOL*SEG*6),3));
+  const kM=new T.LineBasicMaterial({color:0xe0a800,transparent:true,opacity:0}),pM=new T.LineBasicMaterial({color:0xe0a800,transparent:true,opacity:0});
+  const kl=new T.LineSegments(kg,kM),pl=new T.LineSegments(pg,pM);kl.frustumCulled=pl.frustumCulled=false;kl.userData.noPick=pl.userData.noPick=1;S.add(kl,pl);
+  const PD=[[1,0],[-1,0],[0,1],[0,-1],[.7,.7],[-.7,-.7],[.7,-.7]];
+  const lb=[0,1,2,3].map(()=>{const m=mkLabel(3.5,1.2);S.add(m);return m});
+  function apply(t){
+    const i=Math.min(4,Math.floor(t)),f=sm(t-i),A=KF[i],B=KF[i+1];for(let j=0;j<10;j++)P[j]=lerp(A[j],B[j],f);
+    const cond=P[0],env=P[1],env2=P[2],plate=P[3],sep=P[4],spin=P[5],cen=P[6],str=P[7],pin=P[8],spl=P[9];
+    memUpd(str,pin,spl);
+    nucM.opacity=.3*env;nuc.visible=env>.03;nlo.visible=env>.4;nlo.scale.setScalar(env);
+    const px=3.0+spl*.7+(str-1)*.5;
+    dn.forEach((d,s)=>{d.visible=env2>.03;d.scale.setScalar(Math.max(.001,env2));d.material.opacity=.3*env2;d.position.set((s?1:-1)*px,0,0)});
+    const rs=sm((cond-.25)/.5),cs=1-sm((cond-.05)/.5),sE=sep,angE=sm(sep*1.2);
+    for(let k=0;k<4;k++){let ax=0,ay=0,az=0;
+      for(let s=0;s<2;s++){const c=CH[k][s],dir=s?1:-1,N=NP[k];
+        let x=lerp(N[0]+dir*.2,0,plate),y=lerp(N[1],PPy[k][0],plate),z=lerp(N[2]+dir*.15,PPy[k][1],plate);
+        const sh=lerp(1,.55,sE);x+=dir*px*sE;y*=sh;z*=sh;c.position.set(x,y,z);
+        const tilt=s?-.28:.28;c.rotation.set(lerp(NR[k][0],0,plate),0,lerp(lerp(NR[k][1],tilt,plate),dir*Math.PI/2,angE));
+        c.userData.rod.scale.setScalar(Math.max(.001,rs));c.userData.rod.visible=rs>.03;
+        c.userData.coil.scale.setScalar(Math.max(.001,cs));c.userData.coil.visible=cs>.03;ax+=x;ay+=y;az+=z}
+      CM[k].position.set(ax/2,ay/2,az/2);const cmS=rs*(1-sm(sep*4));CM[k].scale.setScalar(Math.max(.001,cmS));CM[k].visible=cmS>.05}
+    const cx=3.4+(str-1)*3+spl*.4;
+    CEN.forEach((g,s)=>{const d=s?1:-1;g.position.set(lerp(d*.35,d*cx,cen),lerp(2.95,0,cen),lerp(.2,0,cen));g.rotation.z=cen*d*1.57});
+    /* المغزل */
+    const ka=kg.attributes.position.array;let n=0;
+    for(let k=0;k<4;k++)for(let s=0;s<2;s++){const p=CEN[s].position,c=CH[k][s].position;ka[n++]=p.x;ka[n++]=p.y;ka[n++]=p.z;ka[n++]=c.x;ka[n++]=c.y;ka[n++]=c.z}
+    kg.attributes.position.needsUpdate=true;kM.opacity=spin*sm(plate*1.6)*.85;kl.visible=kM.opacity>.02;
+    const pa=pg.attributes.position.array;n=0;const x0=CEN[0].position,x1=CEN[1].position;
+    for(let j=0;j<NPOL;j++){const r=2.1*(1-pin*.6);for(let q=0;q<SEG;q++){for(let e=0;e<2;e++){const u=(q+e)/SEG,w=Math.sin(Math.PI*u)*r*(1-.35*sep);pa[n++]=lerp(x0.x,x1.x,u);pa[n++]=lerp(x0.y,x1.y,u)+PD[j][0]*w;pa[n++]=lerp(x0.z,x1.z,u)+PD[j][1]*w}}}
+    pg.attributes.position.needsUpdate=true;pM.opacity=spin*.55;pl.visible=pM.opacity>.02;
+    mv.r=22.5+(str-1)*8+spl*1.5;const si=Math.min(5,Math.round(t));showStage(si);
+    lb.forEach((m,q)=>{const L=LBS[si][q];if(!L||!mshow){m.visible=false;return}m.visible=true;m.material.map=lblTex(L[0]);m.position.set(L[1],L[2],L[3])});
+  }
+  let tl=0;
+  mv.onframe=tm=>{let ch=mdirty;const dt=tl?Math.min(.05,(tm-tl)/1000):0;tl=tm;
+    if(mt!==mgoal){const sp=mplay?.5:1.4,d=mgoal-mt;mt=Math.abs(d)<=sp*dt?mgoal:mt+Math.sign(d)*sp*dt;if(mplay&&mt>=5){mplay=false;$('mplay').textContent='▶ تشغيل'}$('ms').value=Math.round(mt*100);ch=true}
+    if(ch||mlast!==mt){mdirty=false;mlast=mt;apply(mt);ch=true}
+    lb.forEach(m=>m.quaternion.copy(mv.cam.quaternion));return ch};
+  mv.onpick=(part,obj)=>{if(!part)return;const k=obj.userData.k;
+    if(part==='cen')info(minfo,'الجسيم المركزي','Centrosome','يتضاعف في الطور البيني، ويتجه الجسيمان في التمهيدي إلى قطبي الخلية وتنشأ منهما ألياف المغزل.');
+    else info(minfo,k<2?'كروموسوم طويل':'كروموسوم قصير','Chromosome','كل كروموسوم بعد التضاعف من كروماتيدين شقيقين متطابقين يتصلان بالسنترومير. اللونان الأزرق والأحمر يمثلان كروموسومين متماثلين: أحدهما من الأب والآخر من الأم.');
+    mst=-1}
+}
+
+/* =============== 3) النمو والأورام =============== */
+const FM=['📈 النمو','🩹 إصلاح وتجديد','🟠 ورم غير خبيث','🔴 ورم خبيث (سرطان)'];
+const FT=[
+ ['النمو','Growth','يزداد عدد الخلايا بالانقسام المتساوي فينمو الكائن: تنقسم كل خلية إلى خليتين متطابقتين، فيتضاعف العدد في كل دورة.'],
+ ['الإصلاح والتجديد','Repair','عند تلف جزء من النسيج تنقسم الخلايا المجاورة بالانقسام المتساوي وتعوّض الخلايا المفقودة، فيلتئم الجرح ويتجدد النسيج.'],
+ ['ورم غير خبيث','Benign tumor','الورم ناتج عن انقسام خلايا غير منظم وغير متحكم به. في الورم غير الخبيث تتراكم الخلايا في مكانها (محاطة بغلاف) ولا تغزو الأنسجة المجاورة ولا تنتقل.'],
+ ['ورم خبيث (سرطان)','Malignant tumor','انقسام غير منظم وغير متحكم به تغزو فيه الخلايا الأنسجة المجاورة، وقد تنتقل عبر الدم إلى أماكن أخرى وتكوّن أوراماً جديدة.']];
+const fchips=$('fchips');let fm=0,ft=0,fplay=false,fdirty=true;
+chips(fchips,FM,i=>{fm=i;ft=0;fplay=false;$('fplay').textContent='▶ تشغيل';$('fs').value=0;fdirty=true;mark(fchips,i)});mark(fchips,0);
+$('fs').oninput=e=>{ft=e.target.value/1000;fplay=false;$('fplay').textContent='▶ تشغيل';fdirty=true};
+$('fplay').onclick=()=>{fplay=!fplay;$('fplay').textContent=fplay?'⏸ إيقاف':'▶ تشغيل';if(fplay&&ft>=.999)ft=0};
+const fv=C3D.viewer($('fst'),{yaw:-8,pitch:34,r:27,floor:false,rmin:12,rmax:42});
+const fcnt=[0,0];
+function finfo(extra){const d=FT[fm];info($('finfo'),d[0],d[1],d[2]+(extra?'<br><b>'+extra+'</b>':''))}
+if(fv){
+  const S=fv.scene,NI=176,D=new T.Object3D(),CC=new T.Color();
+  S.add(new T.HemisphereLight(0xffffff,0x998877,.5));
+  const inst=new T.InstancedMesh(new T.SphereGeometry(1,18,12),new T.MeshStandardMaterial({roughness:.42,metalness:0}),NI);
+  inst.instanceMatrix.setUsage(T.DynamicDrawUsage);inst.frustumCulled=false;inst.setColorAt(0,CC.setHex(0xffffff));S.add(inst);inst.userData.noPick=1;
+  /* نسيج */
+  const SH=[];for(let r=0;r<9;r++)for(let c=0;c<12;c++)SH.push([(c-5.5+(r%2?.5:0))*1.02,(r-4)*.88]);
+  const base=new T.Mesh(new T.BoxGeometry(13,.5,8.4),new T.MeshStandardMaterial({color:0xb08968,roughness:.7}));base.position.y=-.55;S.add(base);
+  const wound=new T.Mesh(new T.CircleGeometry(2.45,32),new T.MeshBasicMaterial({color:0x8b1a1a,transparent:true,opacity:.8}));wound.rotation.x=-Math.PI/2;wound.position.y=-.27;S.add(wound);
+  const cap=new T.Mesh(new T.SphereGeometry(1,32,22),new T.MeshPhysicalMaterial({color:0x64b5f6,roughness:.1,transparent:true,opacity:.32,depthWrite:false,clearcoat:1}));S.add(cap);
+  const ves=new T.Mesh(new T.CylinderGeometry(.62,.62,13,20,1,true),new T.MeshPhysicalMaterial({color:0xd32f2f,roughness:.25,transparent:true,opacity:.35,side:T.DoubleSide,depthWrite:false}));ves.rotation.z=Math.PI/2;ves.position.set(0,.2,5.0);S.add(ves);
+  /* مواضع الكتلة */
+  const MS=[];sd=5;for(let i=0;i<60;i++){const u=Math.pow(rnd(),.6)*2.5,a=rnd()*6.283,h=rnd();const r=Math.sqrt(Math.max(0,1-h*h))*u;MS.push([Math.cos(a)*r*.95,.55+h*u*.95,Math.sin(a)*r*.95,.4+rnd()*.25,rnd()])}
+  MS.sort((a,b)=>a[1]-b[1]);
+  /* عنقود النمو */
+  const GR=[];for(let i=-3;i<=3;i++)for(let j=-3;j<=3;j++)for(let k=-3;k<=3;k++)GR.push([i+((j+k)&1)*.5,j*.82,k*.87+0]);
+  GR.forEach(p=>p[3]=p[0]*p[0]+p[1]*p[1]+p[2]*p[2]);GR.sort((a,b)=>a[3]-b[3]);GR.length=64;
+  const PATH=[[0,0,0],[0,0,0],[1.2,.9,2.5],[1.2,.4,4.95],[5.3,.4,4.95],[5.4,.8,2.4],[5.0,.7,1.6]];
+  const tmp=[0,0,0];
+  function put(i,x,y,z,sx,sy,sz,c){D.position.set(x,y,z);D.scale.set(sx,sy,sz);D.updateMatrix();inst.setMatrixAt(i,D.matrix);inst.setColorAt(i,CC.setHex(c))}
+  function hide(i){put(i,0,-50,0,.001,.001,.001,0)}
+  function mixc(a,b,t){const A=new T.Color(a),B=new T.Color(b);return A.lerp(B,t).getHex()}
+  const NORM=0xd98a73,NEWC=0x9ccc65;
+  function update(){
+    let n=0,extra='';
+    cap.visible=fm===2;ves.visible=fm===3;wound.visible=fm===1;base.visible=fm>0;
+    if(fm===0){const k=Math.min(6,Math.floor(ft*7)),cnt=1<<k,fr=ft>=.999?1:ft*7-k;
+      for(let i=0;i<64;i++){const g=GR[i];if(i>=cnt){hide(i);continue}
+        if(i<cnt/2||cnt===1){put(i,g[0],g[1],g[2],.5,.5,.5,0x4db6ac)}
+        else{const q=GR[i-cnt/2],e=sm(fr);put(i,lerp(q[0],g[0],e),lerp(q[1],g[1],e),lerp(q[2],g[2],e),.18+.32*e,.18+.32*e,.18+.32*e,mixc(0xc5e1a5,0x4db6ac,e))}}
+      n=64;extra='عدد الخلايا: '+(fr>=.999||cnt===1?cnt:cnt/2+' ← '+cnt)+(fr>=.999&&cnt>1?' (تضاعف '+Math.log2(cnt)+' مرات)':'')
+    }else{
+      /* خلايا النسيج */
+      SH.forEach((s,i)=>{const d=Math.hypot(s[0],s[1]);
+        if(fm===1&&d<2.3){
+          const rank=1-d/2.3,b=.08+.62*(1-rank),e=sm((ft-b)/.3);
+          if(e<=.01){hide(i);return}
+          const dd=Math.max(.001,d),ex=s[0]/dd,ez=s[1]/dd,o=(1-e)*(2.5-d+.5);
+          put(i,s[0]+ex*o,0,s[1]+ez*o,.47*e,.34*e,.47*e,mixc(NEWC,NORM,sm((ft-.8)/.2)));
+        }else put(i,s[0],0,s[1],.47,.34,.47,NORM)});
+      n=SH.length;
+      if(fm===1){wound.material.opacity=.8*(1-sm((ft-.15)/.75));extra='ينتهي الالتئام عندما تعوّض الخلايا المفقودة'}
+      for(let i=n;i<NI;i++)hide(i);
+      if(fm>=2){
+        const mal=fm===3,tot=mal?60:48;
+        for(let i=0;i<tot;i++){const m=MS[i],b=.04+i/tot*.82,e=sm((ft-b)/.12);let rr=m[3]*(mal?1.0+m[4]*.35:.9);
+          if(e<=.01){hide(n+i);continue}
+          let x=m[0]*(mal?1.35:1),y=m[1],z=m[2]*(mal?1.35:1);
+          const col=mal?(m[4]>.5?0x8e1b3a:0x5e2a84):0xffa726;
+          if(mal&&i>=tot-10){const k=i-(tot-10),u=cl((ft-(.55+.03*k))/.38,0,1);
+            if(u>0){const seg=u*(PATH.length-2),s0=Math.min(PATH.length-3,Math.floor(seg)),f=sm(seg-s0);
+              const A=s0===0?[x,y,z]:PATH[s0+1],B=PATH[s0+2];
+              x=lerp(A[0],B[0],f)+(s0===PATH.length-3?(k%5-2)*.35:(k%3-1)*.08*s0);y=lerp(A[1],B[1],f);z=lerp(A[2],B[2],f)+(s0===PATH.length-3?(k%2)*.7:0)}}
+          put(n+i,x,y,z,rr*e,rr*e*(mal?.9:1),rr*e,col)}
+        const sz=sm(ft*1.2);if(fm===2){cap.scale.set(3.3*(.25+.75*sz),3.0*(.25+.75*sz),3.3*(.25+.75*sz));cap.position.set(0,.5,0);cap.visible=ft>.04}
+        extra=mal?(ft>.6?'بعض الخلايا غادرت الورم عبر الأوعية الدموية':'الخلايا تغزو ما حولها وتنقسم بلا ضابط'):'الخلايا تتكاثر بلا ضابط لكنها تبقى في مكانها'}
+    }
+    inst.instanceMatrix.needsUpdate=true;inst.instanceColor.needsUpdate=true;finfo(extra)}
+  let tl=0;
+  fv.onframe=tm=>{let ch=fdirty;const dt=tl?Math.min(.05,(tm-tl)/1000):0;tl=tm;
+    if(fplay){ft=Math.min(1,ft+dt/(fm===0?9:7));$('fs').value=Math.round(ft*1000);if(ft>=1){fplay=false;$('fplay').textContent='▶ تشغيل'}ch=true}
+    if(ch){fdirty=false;update()}return ch};
+}else finfo();
+finfo();
+
+/* =============== الأسئلة =============== */
+C3D.quiz('qbox','qscore','q',[
+ {q:'أطول أطوار دورة الخلية هو:',o:['الانفصالي','الطور البيني (حوالي 90%)','النهائي','التمهيدي'],a:1,e:'الطور البيني (G1 وS وG2) يشغل نحو 90% من الدورة، أما الانقسام M فنحو 10%.'},
+ {q:'يتضاعف DNA في الخلية خلال المرحلة:',o:['G1','G2','M','S'],a:3,e:'في المرحلة S يتضاعف DNA، فيصبح كل كروموسوم من كروماتيدين شقيقين.'},
+ {q:'من الخلايا التي تدخل طور السكون الدائم G0:',o:['خلايا نخاع العظم','خلايا بطانة الأمعاء','كريات الدم الحمراء الناضجة والعصبونات','خلايا الجلد'],a:2,e:'تدخل كريات الدم الحمراء الناضجة والعضلات الهيكلية والعصبونات في G0 فلا تنقسم.'},
+ {q:'تصطف الكروموسومات في وسط الخلية في الطور:',o:['الاستوائي','التمهيدي','الانفصالي','النهائي'],a:0,e:'في الطور الاستوائي تصطف الكروموسومات في وسط الخلية متصلة بألياف المغزل.'},
+ {q:'تنفصل الكروماتيدات الشقيقة نحو القطبين في الطور:',o:['الاستوائي','الانفصالي','البيني','التمهيدي'],a:1,e:'في الطور الانفصالي تنفصل الكروماتيدات الشقيقة وتتجه إلى قطبي الخلية.'},
+ {q:'ناتج الانقسام المتساوي لخلية أم:',o:['خلية واحدة','خليتان بنصف كروموسومات الأم','خليتان متطابقتان وراثياً مع الأم','أربع خلايا نصف الكروموسومات'],a:2,e:'ينتج الانقسام المتساوي خليتين متطابقتين وراثياً مع الخلية الأم وبعدد الكروموسومات نفسه.'},
+ {q:'الأورام تنتج عن انقسام خلايا:',o:['منصف فقط','متوقف في G0 دائماً','منظم تماماً','غير منظم وغير متحكم به'],a:3,e:'الورم ناتج عن انقسام غير منظم وغير متحكم به، وقد يكون خبيثاً (سرطان) أو غير خبيث.'}
+]);
+C3D.tabs([{id:'cy',l:'🔄 دورة الخلية'},{id:'mt',l:'🧬 مراحل الانقسام'},{id:'fn',l:'🩹 النمو والأورام'},{id:'qz',l:'✍️ أسئلة'}]);
+</script></body></html>

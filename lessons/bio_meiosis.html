@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>الانقسام المنصف وتكوين الغاميتات</title><base href="../"><script src="lib/bg.js"></script><script src="lib/icons.js"></script>
+<style>
+.tg{position:absolute;left:0;top:0;opacity:0;pointer-events:none;direction:rtl;white-space:nowrap;font-size:.74rem;line-height:1.35;padding:1px 8px;border-radius:9px;color:#fff;background:#37474f;font-weight:800;box-shadow:0 2px 0 rgba(0,0,0,.28);text-align:center;will-change:transform}
+.tg small{font-weight:700;opacity:.9;font-size:.9em}
+.tg.r{background:#c62828}.tg.b{background:#1565c0}.tg.g{background:#2e7d32}.tg.y{background:#f9a825;color:#2a2016}.tg.p{background:#6a1b9a}.tg.t{background:#00796b}
+.tg.fr{left:auto;right:6px;white-space:normal;width:34%;background:color-mix(in srgb,var(--card) 90%,transparent);color:var(--ink);border:1.5px solid var(--line);box-shadow:none;font-size:.78rem}
+.tg.fr.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 22%,var(--card))}
+.tg.fl{background:transparent;color:var(--muted);box-shadow:none;font-size:.72rem;border:1px dashed var(--line)}
+.stage3.tall{height:440px}.stage3.mid{height:360px}
+.sttag{display:inline-block;padding:1px 12px;border-radius:999px;font-size:.85rem;font-weight:800;color:#fff;margin-inline-end:6px}
+.sttag.m1{background:#1565c0}.sttag.m2{background:#2e7d32}.sttag.m0{background:#6a1b9a}
+.sw{display:flex;gap:6px;align-items:center;margin:2px 0}.sw i{display:inline-block;width:14px;height:14px;border-radius:50%}
+.nb{text-align:center}.sd{width:100%}
+.cmp{width:100%;border-collapse:collapse;margin-top:8px;font-size:.92rem}.cmp th,.cmp td{border:1px solid var(--line);padding:5px 8px;text-align:center}.cmp th{background:var(--soft)}
+</style></head>
+<body><main>
+<h1>🧬 الانقسام المنصف وتكوين الغاميتات</h1>
+<div class="tabs" id="tabs"></div>
+
+<section id="st" class="pane">
+  <div class="card">
+    <h2>🔄 مراحل الانقسام المنصف</h2>
+    <p class="hint" style="margin:0">حرّك المؤشر أو اضغط «التالي» لترى الخلية تنقسم مرحلة بعد مرحلة. اسحب المجسّم لتديره، وبإصبعين للتقريب.</p>
+    <div class="row" style="margin:6px 0"><span class="sw"><i style="background:#d8353d"></i>كروموسوم من الأب</span><span class="sw"><i style="background:#2f6fd8"></i>كروموسوم من الأم</span><span class="sw"><i style="background:#e8c14a"></i>خيوط المغزل</span></div>
+    <div class="stage3 mid" id="s1"></div>
+    <div class="row" style="justify-content:center;margin-bottom:0"><button id="s1p">▶ السابق</button><button class="main" id="s1n">التالي ◀</button><button id="s1a">🔁 تشغيل تلقائي</button></div>
+    <div class="row"><label>المرحلة:</label><input type="range" id="s1r" min="0" max="9" step="1" value="0"><span class="val" id="s1v"></span></div>
+    <div class="fb" id="s1i"></div>
+    <div class="leg" id="s1l"></div>
+    <div class="warn">النموذج مبسّط: الخلية الأم فيها زوجان من الكروموسومات (2ن = 4) بدل 46 كروموسوماً في الإنسان.</div>
+  </div>
+</section>
+
+<section id="co" class="pane hidden">
+  <div class="card">
+    <h2>🧬 ظاهرة العبور</h2>
+    <p class="hint" style="margin:0">تحدث في الطور التمهيدي الأول وتهدف إلى زيادة التنوع الوراثي. اختر الخطوة أو حرّك المؤشر، واضغط على أي كروماتيد لتعرف أصله.</p>
+    <div class="chips" id="cos"></div>
+    <div class="stage3 mid" id="s2"></div>
+    <div class="row"><label>التقدّم:</label><input type="range" id="s2r" min="0" max="2" step="0.01" value="0"></div>
+    <div class="fb" id="s2i"></div>
+    <div class="steps" style="margin-top:10px">
+      <div>إعادة التركيب الجيني: تكوين تركيب جيني جديد مختلف عن الأبوين.</div>
+      <div>زيادة التنوع الوراثي بين الأمشاج الناتجة، وهو أساس اختلاف الأفراد في النوع الواحد.</div>
+      <div>العبور يحدث بين الكروماتيدات غير الشقيقة فقط، وفي الطور التمهيدي الأول من الانقسام المنصف.</div>
+    </div>
+  </div>
+</section>
+
+<section id="gm" class="pane hidden">
+  <div class="card">
+    <h2>⚥ تكوين الغاميتات</h2>
+    <p class="hint" style="margin:0">قارن بين تكوين الحيوانات المنوية (4 خلايا ناضجة) وتكوين البويضة (خلية واحدة). اضغط على أي خلية لتعرف اسمها وعدد كروموسوماتها.</p>
+    <div class="chips" id="gsex"><button class="on" data-s="m">♂ تكوين الحيوانات المنوية</button><button data-s="f">♀ تكوين البويضة</button></div>
+    <div class="stage3 tall" id="s3"></div>
+    <div class="row" style="justify-content:center;margin-bottom:0"><button id="s3p">▶ السابق</button><button class="main" id="s3n">التالي ◀</button></div>
+    <div class="fb" id="s3i"></div>
+    <table class="cmp"><tr><th></th><th>الذكر</th><th>الأنثى</th></tr>
+      <tr><th>الناتج من الخلية الأم</th><td>4 حيوانات منوية</td><td>بويضة واحدة فقط</td></tr>
+      <tr><th>انقسام السيتوبلازم</th><td>متساوٍ</td><td>غير متساوٍ (جسم قطبي صغير)</td></tr>
+      <tr><th>المنصف الثاني</th><td>يكتمل</td><td>لا يكتمل إلا بعد دخول الحيوان المنوي</td></tr></table>
+  </div>
+</section>
+
+<section id="sp" class="pane hidden">
+  <div class="card">
+    <h2>🔬 تركيب الحيوان المنوي</h2>
+    <p class="hint" style="margin:0">اختر جزءاً للتقريب منه وقراءة وظيفته، أو فصّل الأجزاء بالمؤشر. المجسّم غير مرسوم بمقياس (الذيل أطول بكثير).</p>
+    <div class="chips" id="sps"></div>
+    <div class="stage3 mid" id="s4"></div>
+    <div class="row"><label>فصل الأجزاء:</label><input type="range" id="s4r" min="0" max="1" step="0.01" value="0"><button id="s4w">⏸ إيقاف الحركة</button></div>
+    <div class="fb" id="s4i"></div>
+    <div class="warn">الانقسام المنصف يقلّل عدد الكروموسومات إلى النصف لضمان ثبات العدد بعد الإخصاب (23 + 23 = 46).</div>
+  </div>
+</section>
+
+<section id="qz" class="pane hidden">
+  <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
+</section>
+</main>
+<script src="lib/three.min.js"></script><script type="application/json" id="cmapdata">{"center":{"ar":"الانقسام المنصف وتكوين الغاميتات","en":"Meiosis and Gamete Formation"},"branches":[{"t":{"ar":"مفهومه وأهميته","en":"Concept and Importance"},"icon":"cell","pts":[{"ar":"يحدث في الخلايا الجنسية وينتج 4 خلايا أحادية (ن)","en":"Occurs in sex cells and gives 4 haploid (n) cells"},{"ar":"يحافظ على ثبات العدد الكروموسومي للنوع مع الإخصاب","en":"Keeps the species chromosome number constant at fertilization"},{"ar":"يزيد التنوع الوراثي","en":"Increases genetic variation"}]},{"t":{"ar":"المرحلة الأولى","en":"Meiosis I"},"icon":"dna","pts":[{"ar":"تقترن الكروموسومات المتناظرة مكوّنة رباعيات","en":"Homologous chromosomes pair to form tetrads"},{"ar":"يحدث العبور في التمهيدي الأول","en":"Crossing over occurs in prophase I"},{"ar":"تنفصل الكروموسومات المتناظرة فيتنصّف العدد (2ن إلى ن)","en":"Homologs separate, halving the number (2n to n)"}]},{"t":{"ar":"المرحلة الثانية","en":"Meiosis II"},"icon":"microscope","pts":[{"ar":"تشبه الانقسام المتساوي","en":"Resembles mitosis"},{"ar":"تنفصل الكروماتيدات الشقيقة","en":"Sister chromatids separate"},{"ar":"تنتج 4 خلايا أحادية المجموعة","en":"Produces 4 haploid cells"}]},{"t":{"ar":"العبور","en":"Crossing Over"},"icon":"wave","pts":[{"ar":"يحدث في التمهيدي الأول","en":"Happens in prophase I"},{"ar":"يتبادل كروماتيدان غير شقيقين أجزاء بينهما","en":"Two non-sister chromatids exchange segments"},{"ar":"ينتج تركيباً جينياً جديداً وتنوعاً وراثياً","en":"Gives new gene combinations and variation"}]},{"t":{"ar":"الحيوانات المنوية","en":"Sperm Formation"},"icon":"tube","pts":[{"ar":"خلية جذعية، ثم تناسلية أولية، ثم منوية أولية (2ن)","en":"Stem cell, primordial germ cell, primary spermatocyte (2n)"},{"ar":"ثم خليتان ثانويتان، ثم 4 طلائع، ثم 4 حيوانات منوية","en":"Then 2 secondary cells, 4 spermatids, 4 sperm"},{"ar":"الرأس والعنق والقطعة الوسطى والذيل","en":"Head, neck, midpiece and tail"}]},{"t":{"ar":"البويضات","en":"Ovum Formation"},"icon":"globe","pts":[{"ar":"المنصف الأول: خلية بيضية ثانوية وجسم قطبي أول","en":"Meiosis I: secondary oocyte and first polar body"},{"ar":"المنصف الثاني لا يكتمل إلا بعد دخول الحيوان المنوي","en":"Meiosis II completes only after sperm entry"},{"ar":"الخلية الأم تعطي بويضة واحدة فقط","en":"One mother cell gives only one ovum"}]}],"formula":{"ar":"2ن ← (المنصف الأول) ← ن ← (المنصف الثاني) ← 4 خلايا (ن)","en":"2n → (Meiosis I) → n → (Meiosis II) → 4 cells (n)"}}</script>
+<script src="lib/cmap.js"></script>
+<script src="lib/c3d.js"></script>
+<script>
+C3D.init({ns:'bi',accent:'#2E7D32',accentDark:'#66BB6A'});
+const T=C3D.T,$=C3D.$,mk=C3D.mk;
+const RED=C3D.phys(0xd8353d,.35),BLUE=C3D.phys(0x2f6fd8,.35),CEN=C3D.std(0x3b2f4a,.5);
+const SPH=T.SphereGeometry?new T.SphereGeometry(1,24,16):null;
+const capC={};function capG(len,r){const k=len.toFixed(2)+'_'+r;return capC[k]||(capC[k]=new T.CapsuleGeometry(r,Math.max(.01,len),4,14))}
+function arm(y0,y1,mat,r){const m=new T.Mesh(capG(Math.abs(y1-y0)-2*r,r),mat);m.position.y=(y0+y1)/2;return m}
+/* كروماتيد: ذراع علوي + ذراع سفلي (جزء أوسط + طرف قابل للتبديل) + سنترومير */
+function chromatid(sz,mat,r){const g=new T.Group(),low=new T.Group();g.add(arm(0,sz.u,mat,r));
+  low.add(arm(0,-sz.m-.1,mat,r));const tip=arm(-sz.m,-sz.m-sz.t,mat,r);low.add(tip);g.add(low);
+  const c=new T.Mesh(SPH,CEN);c.scale.setScalar(r*1.3);g.add(c);g.userData.low=low;g.userData.tip=tip;return g}
+const NOGL='<div style="padding:30px 12px;text-align:center">يحتاج عرض المجسّم إلى متصفح يدعم WebGL.</div>';
+const fitList=[];
+/* ملاءمة الكاميرا لحجم الإطار: H ارتفاع المشهد، xr عرض المشهد، xc مركزه، f نسبة عرض مخصصة للتسميات */
+function fit(v,H,xr,xc,f){f=f||0;const k=2*Math.tan(15*Math.PI/180);
+  function go(){const w=v.box.clientWidth,h=v.box.clientHeight;if(!w||!h)return;const asp=w/h;v.r0=Math.max(H/k,xr/((1-f)*k*asp))*1.03;v.r=v.r0;const Wv=k*v.r0*asp;v.tx=f?xc-xr/2+Wv/2:xc;v.tx0=v.tx;v.dirty=true}
+  let lw=0;new ResizeObserver(function(){const w=v.box.clientWidth;if(w&&w!==lw){lw=w;go()}}).observe(v.box);go()}
+/* عناصر HTML مثبّتة على نقاط في المشهد */
+function OV(v,box){const it=[],P=new T.Vector3();
+  const o={add:function(html,cls,x,y,z){const d=mk('div','tg '+(cls||''),html);box.appendChild(d);const r={d:d,x:x||0,y:y||0,z:z||0,on:true,fr:/\bfr\b/.test(cls||''),rdy:false};it.push(r);return r},
+    set:function(r,on){if(r.on!==on){r.on=on;r.d.style.display=on?'':'none'}},
+    upd:function(){const w=box.clientWidth,h=box.clientHeight;for(let i=0;i<it.length;i++){const r=it[i];if(!r.on)continue;P.set(r.x,r.y,r.z).project(v.cam);const px=(P.x*.5+.5)*w,py=(-P.y*.5+.5)*h;
+      r.d.style.transform=r.fr?'translate(0,'+py.toFixed(1)+'px) translateY(-50%)':'translate('+px.toFixed(1)+'px,'+py.toFixed(1)+'px) translate(-50%,-50%)';if(!r.rdy){r.rdy=true;r.d.style.opacity='1'}}}};
+  const r0=v.render;v.render=function(){r0();o.upd()};return o}
+const UP=new T.Vector3(0,1,0),VA=new T.Vector3(),VB=new T.Vector3();
+let cylG=null;
+function cyl(mat,r){cylG=cylG||new T.CylinderGeometry(1,1,1,8);const m=new T.Mesh(cylG,mat);m.userData.r=r;return m}
+function seg(m,ax,ay,az,bx,by,bz){VA.set(bx-ax,by-ay,bz-az);const L=VA.length();if(L<.02){m.visible=false;return}m.visible=true;m.position.set((ax+bx)/2,(ay+by)/2,(az+bz)/2);m.scale.set(m.userData.r,L,m.userData.r);m.quaternion.setFromUnitVectors(UP,VA.multiplyScalar(1/L))}
+function burstTex(){const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');g.translate(64,64);const gr=g.createRadialGradient(0,0,0,0,0,60);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.25,'rgba(255,214,64,.95)');gr.addColorStop(1,'rgba(255,170,0,0)');g.fillStyle=gr;g.beginPath();for(let i=0;i<24;i++){const a=i*Math.PI/12,r=i%2?26:60;g.lineTo(Math.cos(a)*r,Math.sin(a)*r)}g.closePath();g.fill();const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;return t}
+const BURST=burstTex();
+function spark(){const m=new T.Mesh(new T.PlaneGeometry(1,1),new T.MeshBasicMaterial({map:BURST,transparent:true,depthWrite:false,depthTest:false}));m.renderOrder=9;m.userData.noPick=1;return m}
+const sm=x=>x*x*(3-2*x);
+
+/* ============ 1) مراحل الانقسام المنصف ============ */
+(function(){
+const box=$('s1'),v=C3D.viewer(box,{yaw:0,pitch:7,r:30,ty:0,floor:false,maxYaw:50,rmin:12,rmax:60});
+if(!v){box.innerHTML=NOGL;return}
+const ov=OV(v,box);fit(v,14.2,16.4,0);
+const LG={u:1.0,m:1.3,t:.7},SH={u:.7,m:.8,t:.5},R=.28;
+/* الخلايا والنواة */
+const cmat=new T.MeshPhysicalMaterial({color:0x8fd3e6,roughness:.12,transparent:true,opacity:.2,clearcoat:1,clearcoatRoughness:.1,side:T.DoubleSide,depthWrite:false});
+const cg=new T.SphereGeometry(1,40,28),cells=[];
+for(let i=0;i<4;i++){const m=new T.Mesh(cg,cmat);m.renderOrder=2;m.userData.noPick=1;v.scene.add(m);cells.push(m)}
+const nmat=new T.MeshPhysicalMaterial({color:0xb39ddb,roughness:.3,transparent:true,opacity:.3,depthWrite:false});
+const nuc=new T.Mesh(cg,nmat);nuc.renderOrder=1;v.scene.add(nuc);
+/* الكروموسومات */
+const chr=[];const defs=[[LG,RED],[LG,BLUE],[SH,RED],[SH,BLUE]];
+for(let i=0;i<4;i++){const a=[];for(let k=0;k<2;k++){const g=chromatid(defs[i][0],defs[i][1],R);v.scene.add(g);a.push(g)}chr.push(a)}
+const FIB=new T.MeshBasicMaterial({color:0xe8c14a,transparent:true,opacity:.9}),fib=[];
+for(let i=0;i<8;i++){const m=cyl(FIB,.045);m.userData.noPick=1;v.scene.add(m);fib.push(m)}
+const sk=spark();v.scene.add(sk);
+/* الوسوم (2ن / ن) */
+const tg=[];for(let i=0;i<4;i++)tg.push(ov.add('2ن','p',0,0,0));
+/* بيانات المراحل */
+function H(x,y,r,sx,sy,sp,th,fl,fa,p1x,p1y,p2x,p2y){if(!fa){p1x=x;p1y=y;p2x=x;p2y=y}return[x,y,r,sx,sy,sp,th,fl,fa,p1x,p1y,p2x,p2y]}
+function S(cells,nu,chs,sk){return{c:Float64Array.from([].concat.apply([],cells)),n:Float64Array.from(nu),h:Float64Array.from([].concat.apply([],chs)),k:Float64Array.from(sk)}}
+const C0=[0,0,5.4,5.4,1],h0=[0,0,5.4,5.4,0];
+function one(a){return[a,[a[0],a[1],a[2],a[3],0],[a[0],a[1],a[2],a[3],0],[a[0],a[1],a[2],a[3],0]]}
+const c1=function(rx,ry){return[[0,0,rx,ry,1],[0,0,rx,ry,0],[0,0,rx,ry,0],[0,0,rx,ry,0]]};
+const c2=function(){return[[-4,0,3.3,4.8,1],[4,0,3.3,4.8,1],[-4,0,3.3,4.8,0],[4,0,3.3,4.8,0]]};
+const K=[
+ S(c1(5.4,5.4),[1,.3],[H(-1.6,1.3,.5,0,0,.1,.5,0,0),H(1.5,.9,-.6,0,0,.1,.5,0,0),H(1.3,-1.8,1.1,0,0,.1,.5,0,0),H(-1.5,-1.9,-.4,0,0,.1,.5,0,0)],[0,0,0]),
+ S(c1(5.4,5.4),[1,.3],[H(-.95,1.6,0,0,0,.2,1,0,0),H(.95,1.6,0,0,0,.2,1,0,0),H(-.95,-2.2,0,0,0,.2,1,0,0),H(.95,-2.2,0,0,0,.2,1,0,0)],[0,0,0]),
+ S(c1(5.4,5.4),[1,.22],[H(-.6,1.6,0,0,0,.28,1,0,0),H(.6,1.6,0,0,0,.28,1,0,0),H(-.95,-2.2,0,0,0,.2,1,0,0),H(.95,-2.2,0,0,0,.2,1,0,0)],[0,.05,1]),
+ S(c1(6,5),[.85,0],[H(-.7,1.7,0,0,0,.2,1,0,1,-5.6,0,-5.6,0),H(.7,1.7,0,0,0,.2,1,0,1,5.6,0,5.6,0),H(.6,-2.2,0,0,0,.2,1,0,1,5.6,0,5.6,0),H(-.6,-2.2,0,0,0,.2,1,0,1,-5.6,0,-5.6,0)],[0,.05,0]),
+ S(c1(7.4,4.8),[0,0],[H(-3,1.7,0,0,0,.2,1,0,1,-7,0,-7,0),H(3,1.7,0,0,0,.2,1,0,1,7,0,7,0),H(3,-2.2,0,0,0,.2,1,0,1,7,0,7,0),H(-3,-2.2,0,0,0,.2,1,0,1,-7,0,-7,0)],[0,.05,0]),
+ S(c2(),[0,0],[H(-4,1.5,0,0,0,.2,1,0,0),H(4,1.5,0,0,0,.2,1,0,0),H(4,-2.2,0,0,0,.2,1,0,0),H(-4,-2.2,0,0,0,.2,1,0,0)],[0,.05,0]),
+ S(c2(),[0,0],[H(-4.7,.9,.35,0,0,.22,1,0,0),H(3.3,1.1,-.35,0,0,.22,1,0,0),H(4.7,-1.3,.4,0,0,.22,1,0,0),H(-3.2,-1.3,-.45,0,0,.22,1,0,0)],[0,.05,0]),
+ S(c2(),[0,0],[H(-4.8,0,0,0,0,.2,1,0,1,-4,-4.7,-4,4.7),H(3,0,0,0,0,.2,1,0,1,4,-4.7,4,4.7),H(4.8,0,0,0,0,.2,1,0,1,4,-4.7,4,4.7),H(-3,0,0,0,0,.2,1,0,1,-4,-4.7,-4,4.7)],[0,.05,0]),
+ S([[-4,0,3.2,5.2,1],[4,0,3.2,5.2,1],[-4,0,3.2,5.2,0],[4,0,3.2,5.2,0]],[0,0],[H(-4.8,0,0,0,1.9,.06,1,1,1,-4,-5,-4,5),H(3,0,0,0,1.9,.06,1,1,1,4,-5,4,5),H(4.8,0,0,0,1.9,.06,1,1,1,4,-5,4,5),H(-3,0,0,0,1.9,.06,1,1,1,-4,-5,-4,5)],[0,.05,0]),
+ S([[-4,2.6,3,2.4,1],[4,2.6,3,2.4,1],[-4,-2.6,3,2.4,1],[4,-2.6,3,2.4,1]],[0,0],[H(-4.8,0,0,0,2.55,.06,1,1,0),H(3,0,0,0,2.55,.06,1,1,0),H(4.8,0,0,0,2.55,.06,1,1,0),H(-3,0,0,0,2.55,.06,1,1,0)],[0,.05,0])
+];
+const cur={c:new Float64Array(20),n:new Float64Array(2),h:new Float64Array(52),k:new Float64Array(3)};
+function mix(o,a,b,e){for(let i=0;i<o.length;i++)o[i]=a[i]+(b[i]-a[i])*e}
+let pos=0,tgt=0,co=false,shown=-1,timer=0;
+const NAMES=[
+ ['الطور البيني: تضاعف المادة الوراثية','m0','الخلية الأم (2ن). قبل الانقسام تتضاعف المادة الوراثية فيصبح كل كروموسوم مكوّناً من كروماتيدين شقيقين، والنواة ما زالت ظاهرة.','1','2ن = 4 (كل كروموسوم كروماتيدان)'],
+ ['الميوزي الأول: التمهيدي الأول (الاقتران)','m1','تقترن الكروموسومات المتناظرة جنباً إلى جنب مكوّنة الرباعيات (Tetrad): كروموسوم من الأب (أحمر) وآخر من الأم (أزرق).','1','2ن = 4 (رباعيتان)'],
+ ['الميوزي الأول: التمهيدي الأول (العبور)','m1','يحدث العبور: يتبادل كروماتيدان غير شقيقين أجزاء بينهما عند نقطة العبور، فينتج تنوع وراثي. يختفي الغلاف النووي بعد ذلك.','1','2ن = 4 (رباعيتان)'],
+ ['الميوزي الأول: الاستوائي الأول','m1','تصطف الأزواج المتناظرة (الرباعيات) على خط استواء الخلية، ويتصل كل كروموسوم بخيوط المغزل من قطب واحد. لاحظ أن اتجاه كل زوج عشوائي.','1','2ن = 4'],
+ ['الميوزي الأول: الانفصالي الأول','m1','تنفصل الكروموسومات المتناظرة وتتجه إلى القطبين، ويبقى كل كروموسوم مكوّناً من كروماتيدين شقيقين (لا تنفصل الكروماتيدات الشقيقة هنا).','1','2ن = 4 ثم تتنصّف'],
+ ['الميوزي الأول: النهائي الأول وانقسام السيتوبلازم','m1','تتكوّن خليتان، كل منهما أحادية العدد (ن) لكن كروموسوماتها ما زالت مضاعفة. انخفض العدد من 46 إلى 23 كروموسوماً في الإنسان.','2','ن = 2 (مضاعفة)'],
+ ['الميوزي الثاني: التمهيدي الثاني','m2','الميوزي الثاني يشبه الانقسام المتساوي، ولا يسبقه تضاعف للمادة الوراثية. تتكثف الكروموسومات في كلتا الخليتين.','2','ن = 2 (مضاعفة)'],
+ ['الميوزي الثاني: الاستوائي الثاني','m2','تصطف الكروموسومات فردياً على خط استواء كل خلية، وتتصل بخيوط المغزل من القطبين.','2','ن = 2'],
+ ['الميوزي الثاني: الانفصالي الثاني','m2','تنفصل الكروماتيدات الشقيقة وتتجه إلى القطبين لتصبح كل منها كروموسوماً منفرداً.','2','ن = 2 (كروموسومات منفردة)'],
+ ['الميوزي الثاني: النهائي الثاني وتكوّن 4 خلايا','m2','تنتج 4 خلايا أحادية المجموعة (ن)، كل منها مشابهة للخلية الجنسية (الغاميت): الحيوان المنوي أو البويضة. وبسبب العبور تختلف وراثياً.','4','ن = 2 (كروماتيد واحد)']];
+function describe(){const n=Math.round(pos);if(n===shown)return;shown=n;const d=NAMES[n];
+  $('s1i').innerHTML='<span class="sttag '+d[1]+'">'+(d[1]==='m1'?'الميوزي الأول':d[1]==='m2'?'الميوزي الثاني':'قبل الانقسام')+'</span><b>'+d[0]+'</b><p style="margin:4px 0 0">'+d[2]+'</p>';
+  $('s1l').innerHTML='<span>عدد الخلايا: <b>'+d[3]+'</b></span><span>الصيغة في النموذج: <b>'+d[4]+'</b></span>';
+  $('s1v').textContent=(n+1)+' / 10';const t=n<=4?'2ن':'ن';for(let i=0;i<4;i++)tg[i].d.textContent=t;
+  tg[0].d.className=tg[1].d.className=tg[2].d.className=tg[3].d.className='tg '+(n<=4?'p':'t')}
+const RO=[[0,1],[2,3]];
+v.onframe=function(){let ch=false;const d=tgt-pos;if(Math.abs(d)>.0005){pos+=Math.sign(d)*Math.min(Math.abs(d),Math.max(.014,Math.abs(d)*.07));ch=true}else if(pos!==tgt)pos=tgt;
+  const i=Math.min(K.length-2,Math.floor(pos)),f=sm(pos-i);const a=K[i],b=K[i+1];mix(cur.c,a.c,b.c,f);mix(cur.n,a.n,b.n,f);mix(cur.h,a.h,b.h,f);mix(cur.k,a.k,b.k,f);
+  if(!ch&&!v.dirty&&!v.drag&&cur.k[2]<.02)return false;
+  describe();
+  for(let c=0;c<4;c++){const o=c*5,m=cells[c],s=cur.c[o+4];if(s<.03){m.visible=false;continue}m.visible=true;m.position.set(cur.c[o],cur.c[o+1],0);const rx=cur.c[o+2]*s,ry=cur.c[o+3]*s;m.scale.set(rx,ry,Math.min(rx,ry)*.85)}
+  for(let c=0;c<4;c++){const o=c*5,s=cur.c[o+4],t=tg[c];if(s<.5){ov.set(t,false)}else{ov.set(t,true);t.x=cur.c[o];const ry=cur.c[o+3]*s;t.y=cur.c[o+1]+((c>=2&&cur.c[o+1]<-.5)?-ry-.9:ry+.9)}}
+  nuc.visible=cur.n[1]>.01;if(nuc.visible){nuc.scale.set(3.7*cur.n[0],3.7*cur.n[0],3.7*cur.n[0]);nmat.opacity=cur.n[1]}
+  const sw=pos>=2.55;if(sw!==co){co=sw;chr[0][1].userData.tip.material=sw?BLUE:RED;chr[1][0].userData.tip.material=sw?RED:BLUE}
+  const sg=cur.k[2];sk.visible=sg>.02;if(sk.visible){const p=1+.12*Math.sin(performance.now()*.012);sk.position.set(cur.k[0],cur.k[1],1);sk.scale.setScalar(3.2*sg*p);sk.quaternion.copy(v.cam.quaternion)}
+  for(let c=0;c<4;c++){const o=c*13,x=cur.h[o],y=cur.h[o+1],r=cur.h[o+2],sx=cur.h[o+3],sy=cur.h[o+4],sp=cur.h[o+5],th=cur.h[o+6],fl=cur.h[o+7],fa=cur.h[o+8];
+    for(let k=0;k<2;k++){const g=chr[c][k],sg2=k?1:-1;g.position.set(x+sg2*sx,y+sg2*sy,k?.07:-.07);g.rotation.z=r+(k?sp:-sp+fl*Math.PI);g.scale.set(th,1,th)}
+    const vis=fa>.04;
+    for(let k=0;k<2;k++){const m=fib[c*2+k];if(!vis){m.visible=false;continue}const sg2=k?1:-1;seg(m,x+sg2*sx,y+sg2*sy,0,cur.h[o+9+k*2],cur.h[o+10+k*2],0)}}
+  FIB.opacity=.9*cur.h[8];
+  return true};
+function go(n){tgt=Math.max(0,Math.min(9,n));$('s1r').value=tgt;v.dirty=true}
+$('s1r').oninput=function(){go(+this.value)};
+$('s1n').onclick=function(){go(Math.round(tgt)+1)};$('s1p').onclick=function(){go(Math.round(tgt)-1)};
+$('s1a').onclick=function(){if(timer){clearInterval(timer);timer=0;this.textContent='🔁 تشغيل تلقائي';return}const b=this;b.textContent='⏸ إيقاف';if(tgt>=9)go(0);timer=setInterval(function(){if(tgt>=9){clearInterval(timer);timer=0;b.textContent='🔁 تشغيل تلقائي';return}go(Math.round(tgt)+1)},2600)};
+describe();
+})();
+
+/* ============ 2) العبور ============ */
+(function(){
+const box=$('s2'),v=C3D.viewer(box,{yaw:0,pitch:6,r:30,ty:-1.35,floor:false,maxYaw:55,rmin:12,rmax:60});
+if(!v){box.innerHTML=NOGL;return}
+const ov=OV(v,box);fit(v,11.6,10.6,0);v.ty=-1.35;
+const SZ={u:2.2,m:3.0,t:1.8},R=.31,XS=[-1.94,-1.26,1.26,1.94],MT=[RED,RED,BLUE,BLUE];
+const ch=[];for(let i=0;i<4;i++){const g=chromatid(SZ,MT[i],R);g.position.set(XS[i],0,i===1?.32:i===2?-.32:0);g.userData.part='c'+i;v.scene.add(g);ch.push(g);v.pick.push(g)}
+const sk=spark();v.scene.add(sk);
+const TH=Math.asin(1.26/3.0),CY=-Math.sqrt(9-1.26*1.26);
+const L=[
+ ov.add('الكروموسوم<br>من الأب','r',-1.6,3.7),ov.add('الكروموسوم<br>من الأم','b',1.6,3.7),
+ ov.add('السنترومير','k',-4.0,0),ov.add('السنترومير','k',4.0,0),ov.add('الرباعية (Tetrad)','g',0,-6.2),
+ ov.add('نقطة العبور<br>(Chiasma)','y',3.6,CY),ov.add('كروماتيدات<br>غير شقيقة','k',-3.7,CY),
+ ov.add('كروماتيد<br>معاد التركيب','g',-3.9,-4.1),ov.add('كروماتيد<br>معاد التركيب','g',3.9,-4.1),
+ ov.add('جزء من الأم<br><small>(جينات جديدة)</small>','b',-2.6,-6.3),ov.add('جزء من الأب<br><small>(جينات جديدة)</small>','r',2.6,-6.3)];
+const INFO=['<b>1. التشابك (Synapsis):</b> في الطور التمهيدي الأول تترتب الكروموسومات المتناظرة جنباً إلى جنب مكوّنة الرباعية (Tetrad). الأحمر من الأب والأزرق من الأم.',
+ '<b>2. حدوث العبور:</b> تتشابك الكروماتيدات غير الشقيقة ويحدث انكسار عند نقطة العبور (Chiasma) ثم إعادة اتصال.',
+ '<b>3. تبادل القطع الجينية:</b> تبادل كروماتيدان غير شقيقين أجزاء بينهما، فأصبحت الكروماتيدات ذات تركيب جيني جديد (معاد التركيب).'];
+let u=0,tgt=0,sw=false,step=-1,sel='';
+const PN={c0:['كروماتيد شقيق (من الأب)','كروماتيدان شقيقان متطابقان ملتصقان بالسنترومير نفسه'],c2:['كروماتيد شقيق (من الأم)','كروماتيدان شقيقان متطابقان ملتصقان بالسنترومير نفسه']};
+function txt(){let s=INFO[step];if(sel){const i=+sel[1];const inner=(i===1||i===2);let t=(i<2?'كروماتيد من الكروموسوم الأبوي (أحمر)':'كروماتيد من الكروموسوم الأمي (أزرق)');
+  const rec=sw&&inner;t+=inner?(rec?': <b>معاد التركيب</b>، اكتسب جزءاً من الكروماتيد غير الشقيق فصار له تركيب جيني جديد.':': كروماتيد داخلي، يشارك في العبور مع الكروماتيد غير الشقيق من الكروموسوم المتناظر.'):': كروماتيد خارجي لا يشارك في العبور هنا، ويبقى كما هو.';s+='<div style="margin-top:6px">👆 '+t+'</div>'}$('s2i').innerHTML=s}
+function labels(){const s=u<.5?0:u<1.45?1:2;if(s!==step){step=s;txt();
+  [[0,1,4,2,3],[5,6],[7,8,9,10]][s].forEach(function(i){});
+  const on=[[0,1,2,3,4],[5,6],[7,8,9,10]][s];for(let i=0;i<L.length;i++)ov.set(L[i],on.indexOf(i)>=0);
+  document.querySelectorAll('#cos button').forEach(function(b,i){b.classList.toggle('on',i===s)})}}
+v.onpick=function(p){sel=p||'';step=-1;labels();v.dirty=true};
+v.onframe=function(){let c=false;const d=tgt-u;if(Math.abs(d)>.001){u+=Math.sign(d)*Math.min(Math.abs(d),Math.max(.012,Math.abs(d)*.06));c=true;$('s2r').value=u}
+  const th=TH*(u<=1?u:Math.max(0,1-(u-1.4)/.6));
+  ch[1].userData.low.rotation.z=th;ch[2].userData.low.rotation.z=-th;
+  const w=u>=1.2;if(w!==sw){sw=w;ch[1].userData.tip.material=w?BLUE:RED;ch[2].userData.tip.material=w?RED:BLUE;step=-1}
+  labels();const s=Math.sin(Math.PI*Math.max(0,Math.min(1,(u-.75)/.7)));sk.visible=s>.02;if(sk.visible){sk.position.set(0,CY,1);sk.scale.setScalar(3.4*s*(1+.1*Math.sin(performance.now()*.014)));sk.quaternion.copy(v.cam.quaternion);c=true}
+  return c};
+$('cos').innerHTML='<button>1. التشابك</button><button>2. العبور</button><button>3. تبادل القطع</button>';
+document.querySelectorAll('#cos button').forEach(function(b,i){b.onclick=function(){tgt=i;sel='';step=-1;v.dirty=true}});
+$('s2r').oninput=function(){u=tgt=+this.value;sel='';v.dirty=true};
+labels();
+})();
+
+/* ============ 3) تكوين الغاميتات ============ */
+(function(){
+const box=$('s3'),v=C3D.viewer(box,{yaw:0,pitch:5,r:40,ty:0,floor:false,maxYaw:30,rmin:15,rmax:90});
+if(!v){box.innerHTML=NOGL;return}
+const ov=OV(v,box);
+const bodyM=new T.MeshPhysicalMaterial({color:0x8fd3e6,roughness:.12,transparent:true,opacity:.26,clearcoat:1,side:T.DoubleSide,depthWrite:false});
+const bodyF=new T.MeshPhysicalMaterial({color:0xffb3cf,roughness:.12,transparent:true,opacity:.3,clearcoat:1,side:T.DoubleSide,depthWrite:false});
+const nucM=new T.MeshPhysicalMaterial({color:0x9575cd,roughness:.3,transparent:true,opacity:.4,depthWrite:false});
+const sg=new T.SphereGeometry(1,28,20),CL=.8,CS=.5;
+function mini(c,len,rep,s){const g=new T.Group(),cg=capG(len,.1),mat=c==='R'?RED:BLUE;if(rep){const a=new T.Mesh(cg,mat),b=new T.Mesh(cg,mat);a.rotation.z=.25;b.rotation.z=-.25;g.add(a,b)}else g.add(new T.Mesh(cg,mat));g.scale.setScalar(s);return g}
+/* خلية: r نصف القطر، list = ['AR','AB','BR','BB'] ، rep = كروموسوماتها مضاعفة */
+function cell(r,list,rep,mat,key){const g=new T.Group();const b=new T.Mesh(sg,mat);b.scale.setScalar(r);b.renderOrder=2;g.add(b);
+  const n=new T.Mesh(sg,nucM);n.scale.setScalar(r*.62);n.renderOrder=1;g.add(n);
+  const s=Math.min(1.1,r/1.6);list.forEach(function(c,i){const long=c[0]==='A',m=mini(c[1],long?CL:CS,rep,s);const a=i*2*Math.PI/list.length+.6,rr=list.length>2?r*.25:r*.12;m.position.set(Math.cos(a)*rr*(list.length>1?1:0),Math.sin(a)*rr,0);m.rotation.z=a*1.3;g.add(m)});
+  g.userData.part=key;v.pick.push(g);return g}
+const spMat=C3D.std(0xb0bec5,.35,.1),mitoM=C3D.std(0xf57c00,.4);
+const tubeG=(function(){const pts=[];for(let i=0;i<=12;i++)pts.push(new T.Vector3(Math.sin(i*.9)*.14*(i/12+.3),-i*.27,0));return new T.TubeGeometry(new T.CatmullRomCurve3(pts),24,.05,6)})();
+function msperm(sc){const g=new T.Group();const h=new T.Mesh(sg,spMat);h.scale.set(.42,.6,.3);g.add(h);const m=new T.Mesh(new T.CylinderGeometry(.16,.16,.5,10),mitoM);m.position.y=-.62;g.add(m);g.add(new T.Mesh(tubeG,spMat));g.children[2].position.y=-.85;g.scale.setScalar(sc);return g}
+const sexes={m:{rows:[8.4,4.2,0,-4.2,-8.4],g:new T.Group(),rg:[],ed:[],lab:[],tr:[],s:[]},f:{rows:[7.2,2.4,-2.4,-7.2],g:new T.Group(),rg:[],ed:[],lab:[],tr:[],s:[]}};
+v.scene.add(sexes.m.g,sexes.f.g);
+const ARM=new T.MeshBasicMaterial({color:0x7a8b96});
+function row(S,i,items){const g=new T.Group();g.position.y=S.rows[i];S.g.add(g);S.rg[i]=g;items.forEach(function(it){it.position.y-=0;g.add(it)});return g}
+function edge(S,i,ax,ay,ar,bx,by,br){const g=S.rg[i];VA.set(bx-ax,by-ay,0);const L=VA.length();VA.multiplyScalar(1/L);const sx=ax+VA.x*ar,sy=ay+VA.y*ar,ex=bx-VA.x*(br+.28),ey=by-VA.y*(br+.28);
+  const m=cyl(ARM,.07);seg(m,sx,sy-S.rows[i],0,ex,ey-S.rows[i],0);g.add(m);const cone=new T.Mesh(new T.ConeGeometry(.2,.45,10),ARM);cone.position.set(ex+VA.x*.2,ey+VA.y*.2-S.rows[i],0);cone.quaternion.setFromUnitVectors(UP,VA);g.add(cone)}
+function place(c,x,y,rowY){c.position.set(x,y-rowY,0);return c}
+const M=sexes.m,F=sexes.f,MR=M.rows,FR=F.rows;
+/* ذكر */
+const mA=['AR','AB','BR','BB'];
+row(M,0,[place(cell(1.35,mA,false,bodyM,'m0'),0,MR[0],MR[0])]);
+row(M,1,[place(cell(1.9,mA,true,bodyM,'m1'),0,MR[1],MR[1])]);
+row(M,2,[place(cell(1.5,['AR','BB'],true,bodyM,'m2'),-2.6,MR[2],MR[2]),place(cell(1.5,['AB','BR'],true,bodyM,'m2'),2.6,MR[2],MR[2])]);
+const stx=[-3.9,-1.3,1.3,3.9],stl=[['AR','BB'],['AR','BB'],['AB','BR'],['AB','BR']];
+row(M,3,stx.map(function(x,i){return place(cell(1.1,stl[i],false,bodyM,'m3'),x,MR[3],MR[3])}));
+const sps=[];row(M,4,stx.map(function(x){const s=msperm(1.25);s.position.set(x,-.3,0);s.userData.part='m4';v.pick.push(s);sps.push(s);return s}));
+edge(M,1,0,MR[0],1.35,0,MR[1],1.9);edge(M,2,0,MR[1],1.9,-2.6,MR[2],1.5);edge(M,2,0,MR[1],1.9,2.6,MR[2],1.5);
+[[-2.6,-3.9],[-2.6,-1.3],[2.6,1.3],[2.6,3.9]].forEach(function(p){edge(M,3,p[0],MR[2],1.5,p[1],MR[3],1.1)});
+stx.forEach(function(x){edge(M,4,x,MR[3],1.1,x,MR[4]+.6,.9)});
+/* أنثى */
+row(F,0,[place(cell(2.2,mA,true,bodyF,'f0'),0,FR[0],FR[0])]);
+row(F,1,[place(cell(2,['AR','BB'],true,bodyF,'f1'),-.8,FR[1],FR[1]),place(cell(.78,['AB','BR'],true,bodyF,'fp1'),2.9,FR[1],FR[1])]);
+const sp3=msperm(1.5);sp3.position.set(-3.1,FR[2]-FR[2],0);sp3.rotation.z=Math.PI/2;sp3.userData.part='fs';v.pick.push(sp3);
+row(F,2,[place(cell(2,['AR','BB'],true,bodyF,'f2'),-.8,FR[2],FR[2]),place(cell(.78,['AB','BR'],true,bodyF,'fp1'),2.9,FR[2],FR[2]),sp3]);
+row(F,3,[place(cell(2.1,['AR','BB'],false,bodyF,'f3'),-.8,FR[3],FR[3]),place(cell(.72,['AB','BR'],false,bodyF,'fp2'),2.9,FR[3]+.9,FR[3]),place(cell(.66,['AB','BR'],true,bodyF,'fp1'),3.2,FR[3]-1.0,FR[3])]);
+edge(F,1,0,FR[0],2.2,-.8,FR[1],2);edge(F,1,0,FR[0],2.2,2.9,FR[1],.78);edge(F,2,-.8,FR[1],2,-.8,FR[2],2);edge(F,3,-.8,FR[2],2,-.8,FR[3],2.1);edge(F,3,-.8,FR[2],2,2.9,FR[3]+.9,.72);
+/* التسميات */
+const RL={m:[['خلية تناسلية أولية','2ن = 46'],['خلية منوية أولية','2ن = 46 (مضاعفة)'],['خليتان منويتان ثانويتان','ن = 23 (مضاعفة)'],['4 طلائع منوية','ن = 23'],['4 حيوانات منوية','ن = 23']],
+ f:[['خلية بيضية أولية','2ن = 46 (مضاعفة)'],['خلية بيضية ثانوية + جسم قطبي أول','ن = 23 (مضاعفة)'],['دخول الحيوان المنوي','يكتمل المنصف الثاني'],['بويضة + جسم قطبي ثانٍ','ن = 23']]};
+const TR={m:['نمو وتضاعف DNA','المنصف الأول','المنصف الثاني','التمايز (النضج)'],f:['المنصف الأول','دخول الحيوان المنوي','المنصف الثاني']};
+['m','f'].forEach(function(k){const S=sexes[k];RL[k].forEach(function(t,i){S.lab[i]=ov.add('<b>'+t[0]+'</b><br><small>'+t[1]+'</small>','fr',0,S.rows[i],0)});
+  TR[k].forEach(function(t,i){S.tr[i]=ov.add('↓ '+t,'fl',-6.8,(S.rows[i]+S.rows[i+1])/2,0)})});
+const STEP={m:['<b>1. الخلية التناسلية الأولية (2ن = 46):</b> تنشأ من خلية جذعية وتقع على الجدار القاعدي للأنبوب المنوي، وتنقسم انقساماً متساوياً لزيادة العدد.',
+  '<b>2. الخلية المنوية الأولية (2ن = 46):</b> تنمو وتتضاعف المادة الوراثية فيها، ثم تدخل في الانقسام المنصف الأول.',
+  '<b>3. بعد المنصف الأول:</b> خليتان منويتان ثانويتان، كل منهما أحادية العدد (ن = 23) أي نصف عدد كروموسومات الخلية الأم.',
+  '<b>4. بعد المنصف الثاني:</b> أربع طلائع منوية (ن = 23)، خلايا كروية صغيرة غير مكتملة النضج.',
+  '<b>5. الحيوانات المنوية:</b> تتمايز كل طليعة إلى حيوان منوي ناضج. فالخلية الأم الواحدة تعطي <b>4 حيوانات منوية</b>.'],
+ f:['<b>1. الخلية البيضية الأولية (2ن = 46):</b> في المبيض، تتضاعف مادتها الوراثية وتدخل في المنصف الأول.',
+  '<b>2. بعد المنصف الأول:</b> انقسام غير متساوٍ للسيتوبلازم ينتج خلية بيضية ثانوية كبيرة (ن = 23) وجسماً قطبياً أول صغيراً.',
+  '<b>3. دخول الحيوان المنوي:</b> لا يكتمل المنصف الثاني إلا بعد دخول الحيوان المنوي إلى الخلية البيضية الثانوية.',
+  '<b>4. بعد المنصف الثاني:</b> تتكوّن بويضة واحدة كبيرة (ن = 23) وجسم قطبي ثانٍ صغير. فالخلية الأم تعطي <b>بويضة واحدة فقط</b>.']};
+const CI={m0:['الخلية التناسلية الأولية','2ن = 46. تقع على الجدار القاعدي للأنبوب المنوي وتنقسم متساوياً لزيادة العدد.'],m1:['الخلية المنوية الأولية','2ن = 46 بعد تضاعف المادة الوراثية، وتدخل في المنصف الأول.'],m2:['الخلية المنوية الثانوية','ن = 23 (نصف العدد)، ما زالت كروموسوماتها مضاعفة وتدخل المنصف الثاني.'],m3:['الطليعة المنوية','ن = 23. خلية كروية صغيرة غير مكتملة النضج، تتمايز إلى حيوان منوي.'],m4:['الحيوان المنوي الناضج','ن = 23. له رأس وعنق وقطعة وسطى وذيل للحركة.'],
+ f0:['الخلية البيضية الأولية','2ن = 46 بعد تضاعف المادة الوراثية، في المبيض.'],f1:['الخلية البيضية الثانوية','ن = 23. خلية كبيرة تحتفظ بمعظم السيتوبلازم، ويتوقف انقسامها حتى دخول الحيوان المنوي.'],fp1:['الجسم القطبي الأول','خلية صغيرة (ن = 23) تتكوّن في المنصف الأول لتخلّص الخلية من نصف الكروموسومات.'],f2:['الخلية البيضية الثانوية','تنتظر دخول الحيوان المنوي لتكمل المنصف الثاني.'],fs:['الحيوان المنوي','يخترق الخلية البيضية الثانوية فيُكمل المنصف الثاني.'],f3:['البويضة','ن = 23. خلية كبيرة أحادية العدد تنتج من انقسام السيتوبلازم غير المتساوي.'],fp2:['الجسم القطبي الثاني','خلية صغيرة (ن = 23) تتكوّن في المنصف الثاني.']};
+let sex='m',step=0,rs=[0,0,0,0,0];
+const rsv=[1,0,0,0,0];
+function sync(){const S=sexes[sex];sexes.m.g.visible=sex==='m';sexes.f.g.visible=sex==='f';
+  ['m','f'].forEach(function(k){sexes[k].lab.forEach(function(l,i){ov.set(l,k===sex&&i<=step);l.d.classList.toggle('on',i===step)});sexes[k].tr.forEach(function(l,i){ov.set(l,k===sex&&i<step)})});
+  $('s3i').innerHTML=STEP[sex][step]+'<div style="margin-top:6px;color:var(--muted)">الخطوة '+(step+1)+' من '+S.rows.length+'</div>';v.dirty=true}
+function setStep(n){const S=sexes[sex];step=Math.max(0,Math.min(S.rows.length-1,n));sync()}
+document.querySelectorAll('#gsex button').forEach(function(b){b.onclick=function(){sex=b.dataset.s;document.querySelectorAll('#gsex button').forEach(function(x){x.classList.toggle('on',x===b)});rs=[1,0,0,0,0];step=0;sync()}});
+$('s3n').onclick=function(){setStep(step+1)};$('s3p').onclick=function(){setStep(step-1)};
+v.onpick=function(p){if(!p||!CI[p])return;$('s3i').innerHTML='<b>'+CI[p][0]+':</b> '+CI[p][1];v.dirty=true};
+v.pick=v.pick.filter(function(x){return true});
+function fit3(){fit(v,21.5,15,-.2,.36)}fit3();
+v.onframe=function(t){let c=false;const S=sexes[sex];
+  for(let i=0;i<S.rg.length;i++){const tg=i<=step?1:0,d=tg-rs[i];if(Math.abs(d)>.003){rs[i]+=d*.14;c=true}else rs[i]=tg;const s=Math.max(.001,sm(Math.max(0,Math.min(1,rs[i]))));S.rg[i].visible=rs[i]>.01;S.rg[i].scale.setScalar(s)}
+  if(sex==='m'&&step===4){for(let i=0;i<4;i++)sps[i].rotation.z=.16*Math.sin(t*.004+i*1.7);c=true}
+  return c};
+sync();
+})();
+
+/* ============ 4) الحيوان المنوي ============ */
+(function(){
+const box=$('s4'),v=C3D.viewer(box,{yaw:0,pitch:8,r:30,ty:0,floor:false,maxYaw:70,rmin:6,rmax:60});
+if(!v){box.innerHTML=NOGL;return}
+const ov=OV(v,box);fit(v,7.5,19.5,1.4);const baseR=function(){return v.r0||30};
+const HM=new T.MeshPhysicalMaterial({color:0xcfd8dc,roughness:.2,transparent:true,opacity:.5,clearcoat:1,depthWrite:false,emissive:0});
+const NM=C3D.phys(0x3949ab,.35),AM=C3D.phys(0xffb74d,.3),FM=C3D.phys(0x90a4ae,.35),MM=C3D.phys(0xf57c00,.35),SH=new T.MeshPhysicalMaterial({color:0xffe0b2,roughness:.3,transparent:true,opacity:.35,depthWrite:false}),TM=C3D.phys(0x78909c,.35),CM=C3D.std(0x5d4037,.5);
+const parts={};
+function part(k,col){const g=new T.Group();g.userData.part=k;v.scene.add(g);v.pick.push(g);parts[k]={g:g,x0:0,mats:col||[]};return g}
+/* الرأس */
+const head=part('head',[HM,NM,AM]);head.position.x=-5.2;
+const hb=new T.Mesh(SPH,HM);hb.scale.set(2.0,1.25,.8);hb.renderOrder=3;head.add(hb);
+const nu=new T.Mesh(SPH,NM);nu.scale.set(1.45,.95,.55);nu.position.x=.25;head.add(nu);
+const ac=new T.Mesh(new T.SphereGeometry(1,28,16,0,Math.PI*2,0,Math.PI*.42),AM);ac.rotation.z=Math.PI/2;ac.scale.set(1.2,1.3,.84);ac.position.x=-1.35;ac.scale.set(1.28,1.3,.86);head.add(ac);
+/* العنق */
+const neck=part('neck',[FM,CM]);neck.position.x=-2.85;
+const nk=new T.Mesh(new T.CylinderGeometry(.34,.4,.62,16),FM);nk.rotation.z=Math.PI/2;neck.add(nk);
+[-.12,.12].forEach(function(x){const c=new T.Mesh(SPH,CM);c.scale.setScalar(.14);c.position.set(x,.05,0);neck.add(c)});
+/* القطعة الوسطى */
+const mid=part('mid',[MM,SH,FM]);mid.position.x=-.7;
+const sh=new T.Mesh(new T.CylinderGeometry(.5,.5,3.5,20,1,true),SH);sh.rotation.z=Math.PI/2;sh.renderOrder=3;mid.add(sh);
+const ax=new T.Mesh(new T.CylinderGeometry(.16,.16,3.5,10),FM);ax.rotation.z=Math.PI/2;mid.add(ax);
+const tor=new T.TorusGeometry(.42,.14,10,20);for(let i=0;i<9;i++){const m=new T.Mesh(tor,MM);m.rotation.y=Math.PI/2;m.rotation.x=i*.22;m.position.x=-1.55+i*.385;mid.add(m)}
+/* الذيل */
+const tail=part('tail',[TM]);tail.position.x=1.05;
+const NS=30,seg_=[];for(let i=0;i<NS;i++){const f=i/(NS-1),m=new T.Mesh(SPH,TM);const r=.2-.14*f;m.scale.set(.2,r,r);m.position.x=i*.3;tail.add(m);seg_.push(m)}
+let wig=true;
+$('s4w').onclick=function(){wig=!wig;this.textContent=wig?'⏸ إيقاف الحركة':'▶ تشغيل الحركة';v.dirty=true};
+const PI={head:['الرأس','يحتوي على النواة (ن = 23 كروموسوماً) والإنزيمات التي تساعد على اختراق البويضة (الجسيم الطرفي).',-5.2,.5,'p'],
+ neck:['العنق','يصل الرأس بالقطعة الوسطى.',-2.85,.38,'t'],
+ mid:['القطعة الوسطى','تحتوي على ميتوكوندريا كثيرة تزوّد الذيل بالطاقة اللازمة للحركة.',-.7,.5,'y'],
+ tail:['الذيل','سوط للحركة، يدفع الحيوان المنوي نحو البويضة.',5.2,.75,'g']};
+const TGS={};Object.keys(PI).forEach(function(k){const p=PI[k];TGS[k]=ov.add(p[0],p[4],p[2],(k==='head'?1.9:k==='tail'?1.2:-1.5),0)});
+$('sps').innerHTML='<button data-k="all" class="on">الكل</button>'+Object.keys(PI).map(function(k){return '<button data-k="'+k+'">'+PI[k][0]+'</button>'}).join('');
+let sel='all',ex=0,exT=0,txT=1.4,rT=1,rc=1,tt=0;
+const INFO0='اختر جزءاً من الحيوان المنوي أو اضغط عليه في المجسّم.';
+function select(k){sel=k;document.querySelectorAll('#sps button').forEach(function(b){b.classList.toggle('on',b.dataset.k===k)});
+  if(k==='all'){txT=1.4;rT=1;$('s4i').innerHTML='<b>الحيوان المنوي:</b> خلية جنسية أحادية العدد (ن = 23) لها <b>رأس</b> و<b>عنق</b> و<b>قطعة وسطى</b> و<b>ذيل</b>. '+INFO0}
+  else{const p=PI[k];txT=p[2]+(k==='tail'?-1:0);rT=p[3];$('s4i').innerHTML='<b>'+p[0]+':</b> '+p[1]}
+  Object.keys(parts).forEach(function(q){parts[q].mats.forEach(function(m){if(m.emissive)m.emissive.setHex(q===k?0x553300:0)})});v.dirty=true}
+document.querySelectorAll('#sps button').forEach(function(b){b.onclick=function(){select(b.dataset.k)}});
+v.onpick=function(p){if(p&&PI[p])select(p)};
+$('s4r').oninput=function(){exT=+this.value;v.dirty=true};
+v.onframe=function(t){let c=false;
+  if(Math.abs(exT-ex)>.002){ex+=(exT-ex)*.2;c=true}
+  parts.head.g.position.x=-5.2-1.8*ex;parts.neck.g.position.x=-2.85-.9*ex;parts.tail.g.position.x=1.05+1.8*ex;
+  const r=baseR()*rT;if(Math.abs(v.r-r)>.05&&!v.drag){v.r+=(r-v.r)*.12;c=true}
+  if(Math.abs(v.tx-txT)>.02&&!v.drag){v.tx+=(txT-v.tx)*.12;c=true}
+  if(wig){tt=t*.006;for(let i=0;i<NS;i++){const f=i/(NS-1);seg_[i].position.y=Math.sin(i*.55-tt)*.55*Math.min(1,f*2.2)*f*1.3}c=true}
+  return c};
+select('all');
+})();
+
+/* ============ الأسئلة ============ */
+C3D.quiz('qbox','qscore','q',[
+ {q:'ينتج عن الانقسام المنصف لخلية أم واحدة:',o:['خليتان متطابقتان وراثياً مع الأم','4 خلايا كل منها نصف العدد الكروموسومي (ن)','4 خلايا فيها العدد الكروموسومي نفسه (2ن)','خلية واحدة أحادية المجموعة'],a:1,e:'يحدث الانقسام المنصف في الخلايا الجنسية وينتج 4 خلايا كل منها أحادية المجموعة (ن)، أي فيها نصف عدد كروموسومات الخلية الأم.'},
+ {q:'يحدث العبور في الطور:',o:['الاستوائي الثاني','الانفصالي الثاني','التمهيدي الأول','النهائي الثاني'],a:2,e:'يحدث العبور في التمهيدي الأول، ويتبادل فيه كروماتيدان غير شقيقين أجزاء بينهما، وينتج تنوعاً وراثياً.'},
+ {q:'ماذا يحدث في الانقسام المنصف الأول؟',o:['تنفصل الكروماتيدات الشقيقة','تتضاعف المادة الوراثية من جديد','تنفصل الكروموسومات المتناظرة فيتنصّف العدد الكروموسومي','تتكوّن 4 خلايا مباشرة'],a:2,e:'في المرحلة الأولى تقترن الكروموسومات المتناظرة ويحدث العبور ثم تنفصل الكروموسومات المتناظرة، فينخفض العدد من 2ن إلى ن. أما الكروماتيدات الشقيقة فتنفصل في المرحلة الثانية.'},
+ {q:'الترتيب الصحيح لتكوين الحيوانات المنوية:',o:['منوية ثانوية ← منوية أولية ← طلائع ← حيوانات منوية','طلائع ← منوية ثانوية ← منوية أولية ← حيوانات منوية','منوية أولية ← طلائع ← منوية ثانوية ← حيوانات منوية','منوية أولية (2ن) ← منوية ثانوية (ن) ← طلائع (ن) ← حيوانات منوية'],a:3,e:'خلية منوية أولية (2ن) ← خليتان ثانويتان (ن) ← 4 طلائع منوية (ن) ← 4 حيوانات منوية.'},
+ {q:'الخلية الأم الواحدة في الذكر والأنثى على الترتيب تعطي:',o:['4 حيوانات منوية وبويضة واحدة','حيواناً منوياً واحداً وبويضة واحدة','4 حيوانات منوية و4 بويضات','بويضة واحدة و4 حيوانات منوية'],a:0,e:'الخلية الأم الواحدة تعطي 4 حيوانات منوية، لكنها تعطي بويضة واحدة فقط.'},
+ {q:'يكتمل الانقسام المنصف الثاني في الخلية البيضية الثانوية:',o:['في المبيض مباشرة','قبل التبويض','لا يكتمل أبداً','بعد دخول الحيوان المنوي'],a:3,e:'المنصف الأول ينتج خلية بيضية ثانوية وجسماً قطبياً أول، والمنصف الثاني لا يكتمل إلا بعد دخول الحيوان المنوي.'},
+ {q:'من أهمية الانقسام المنصف:',o:['النمو وإصلاح الأنسجة','ثبات العدد الكروموسومي عند الإخصاب وزيادة التنوع الوراثي','إنتاج خلايا متطابقة تماماً','زيادة عدد الكروموسومات في كل جيل'],a:1,e:'يحافظ الانقسام المنصف على ثبات العدد الكروموسومي للنوع مع الإخصاب (23 + 23 = 46)، ويزيد التنوع الوراثي بالعبور.'}
+]);
+C3D.tabs([{id:'st',l:'🔄 مراحل الانقسام'},{id:'co',l:'🧬 العبور'},{id:'gm',l:'⚥ تكوين الغاميتات'},{id:'sp',l:'🔬 الحيوان المنوي'},{id:'qz',l:'✍️ أسئلة'}]);
+</script></body></html>

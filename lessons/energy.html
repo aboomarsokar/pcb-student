@@ -31,12 +31,14 @@
    <div>المحتوى الحراري H: تعبير عن الطاقة المخزنة في المادة. وحرارة التفاعل ΔH = H(النواتج) − H(المتفاعلات).</div>
    <div>المعادلة الكيميائية الحرارية: معادلة موزونة يُذكر فيها مقدار الحرارة. في الطارد تُكتب الحرارة في جهة النواتج أو ΔH بإشارة سالبة، وفي الماص تُكتب في جهة المتفاعلات أو ΔH بإشارة موجبة.</div></div></div>
 </section>
+<section id="lab" class="pane hidden"><div class="card"><h2>🧪 مختبر الحرارة</h2><p class="hint">اذوِّب مواد صلبة وعادِل حمضاً بقاعدة وراقب مقياس الحرارة لتعرف التفاعل الطارد والماص.</p></div><div class="labroot"></div></section>
 <section id="qz" class="pane hidden">
   <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
 </section>
 </main>
 <script src="lib/three.min.js"></script><script type="application/json" id="cmapdata">{"center": {"ar": "الطاقة في التفاعلات الكيميائية", "en": "Energy in Chemical Reactions"}, "branches": [{"t": {"ar": "حفظ الطاقة", "en": "Conservation of Energy"}, "icon": "bulb", "pts": [{"ar": "التفاعلات تصاحبها طاقة بأشكال مختلفة", "en": "Reactions are accompanied by energy in various forms"}, {"ar": "الطاقة لا تفنى ولا تُستحدث", "en": "Energy is neither destroyed nor created"}, {"ar": "الطاقة الكلية قبل التفاعل تساوي بعده", "en": "Total energy before equals that after"}]}, {"t": {"ar": "المحتوى الحراري", "en": "Enthalpy"}, "icon": "atom", "pts": [{"ar": "المحتوى الحراري H هو الطاقة المخزّنة في المادة", "en": "Enthalpy H is energy stored in a substance"}, {"ar": "حرارة التفاعل ΔH = H للنواتج − H للمتفاعلات", "en": "ΔH = H(products) − H(reactants)"}]}, {"t": {"ar": "تفاعل طارد للطاقة", "en": "Exothermic Reaction"}, "icon": "sunmed", "pts": [{"ar": "المتفاعلات أعلى طاقة من النواتج وΔH سالبة", "en": "Reactants higher than products; ΔH negative"}, {"ar": "تنتقل الحرارة إلى الوسط فترتفع درجته", "en": "Heat passes to surroundings, raising temperature"}, {"ar": "مثل تعادل HCl مع NaOH", "en": "e.g. neutralization of HCl with NaOH"}]}, {"t": {"ar": "تفاعل ماص للطاقة", "en": "Endothermic Reaction"}, "icon": "stopwatch", "pts": [{"ar": "النواتج أعلى طاقة من المتفاعلات وΔH موجبة", "en": "Products higher than reactants; ΔH positive"}, {"ar": "يمتص حرارة من الوسط فتنخفض درجته", "en": "Absorbs heat from surroundings, lowering temperature"}, {"ar": "مثل التفكك الحراري لكربونات الكالسيوم", "en": "e.g. thermal decomposition of calcium carbonate"}]}, {"t": {"ar": "المعادلة الكيميائية الحرارية", "en": "Thermochemical Equation"}, "icon": "notes", "pts": [{"ar": "معادلة موزونة تبيّن كمية الحرارة", "en": "A balanced equation stating the heat amount"}, {"ar": "الطارد: الحرارة في طرف النواتج أو ΔH سالبة", "en": "Exothermic: heat on products side, or negative ΔH"}, {"ar": "الماص: الحرارة في طرف المتفاعلات أو ΔH موجبة", "en": "Endothermic: heat on reactants side, or positive ΔH"}]}], "formula": {"ar": "ΔH = H(النواتج) − H(المتفاعلات)", "en": "ΔH = H(products) − H(reactants)"}}</script>
 <script src="lib/cmap.js"></script>
+<script src="lib/lab.js"></script>
 <script src="lib/c3d.js"></script>
 <script>
 C3D.init({ns:'en',accent:'#D32F2F',accentDark:'#EF5350'});
@@ -89,5 +91,6 @@ C3D.quiz('qbox','qscore','q',[
  {q:'في التفاعل الماص تُكتب الحرارة في المعادلة الحرارية:',o:['في جهة النواتج','في جهة المتفاعلات (أو ΔH موجبة)','لا تُكتب','على السهم فقط بإشارة سالبة'],a:1,e:'في الماص تُكتب الحرارة في جهة المتفاعلات أو ΔH بإشارة موجبة.'},
  {q:'ينص قانون حفظ الطاقة على أن:',o:['الطاقة تفنى في التفاعل','الطاقة تُستحدث أثناء التفاعل','الطاقة لا تفنى ولا تُستحدث والطاقة الكلية قبل التفاعل = بعده','الطاقة الناتجة أكبر دائماً'],a:2,e:'الطاقة لا تفنى ولا تُستحدث، والطاقة الكلية قبل التفاعل تساوي بعده.'}
 ]);
-C3D.tabs([{id:'dg',l:'📈 مخطط الطاقة'},{id:'cal',l:'🧮 حساب الطاقة'},{id:'fac',l:'📘 المفاهيم'},{id:'qz',l:'✍️ أسئلة'}]);
+Lab.lazy('lab',{subs:['H2O','NaOH_s','NH4NO3','CaO','HCl','NaOH_aq','UI'],vessels:['tube','beaker'],hint:"اذوِّب مواد صلبة وعادِل حمضاً بقاعدة وراقب مقياس الحرارة لتعرف التفاعل الطارد والماص.",missions:[{t:"اجعل التفاعل طارداً: ذوّب NaOH في الماء وراقب ارتفاع الحرارة",ok:function(S){return !!(S.eqs.naoh_s)}},{t:"اجعل التفاعل ماصاً: ذوّب NH₄NO₃ في الماء وراقب انخفاض الحرارة",ok:function(S){return !!(S.eqs.nh4no3)}},{t:"نفّذ تعادل HCl مع NaOH وراقب الكاشف العام",ok:function(S){return !!(S.eqs.naoh_hcl)}}]});
+C3D.tabs([{id:'dg',l:'📈 مخطط الطاقة'},{id:'cal',l:'🧮 حساب الطاقة'},{id:'fac',l:'📘 المفاهيم'},{id:'lab',l:'🧪 مختبر'},{id:'qz',l:'✍️ أسئلة'}]);
 </script></body></html>
