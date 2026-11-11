@@ -99,7 +99,8 @@ const fitList=[];
 /* ملاءمة الكاميرا لحجم الإطار: H ارتفاع المشهد، xr عرض المشهد، xc مركزه، f نسبة عرض مخصصة للتسميات */
 function fit(v,H,xr,xc,f){f=f||0;const k=2*Math.tan(15*Math.PI/180);
   function go(){const w=v.box.clientWidth,h=v.box.clientHeight;if(!w||!h)return;const asp=w/h;v.r0=Math.max(H/k,xr/((1-f)*k*asp))*1.03;v.r=v.r0;const Wv=k*v.r0*asp;v.tx=f?xc-xr/2+Wv/2:xc;v.tx0=v.tx;v.dirty=true}
-  let lw=0;new ResizeObserver(function(){const w=v.box.clientWidth;if(w&&w!==lw){lw=w;go()}}).observe(v.box);go()}
+  let lw=0;new ResizeObserver(function(){const w=v.box.clientWidth;if(w&&w!==lw){lw=w;go()}}).observe(v.box);go();
+  return function(h2,x2,c2,f2){H=h2;xr=x2;xc=c2;f=f2||0;go()}}
 /* عناصر HTML مثبّتة على نقاط في المشهد */
 function OV(v,box){const it=[],P=new T.Vector3();
   const o={add:function(html,cls,x,y,z){const d=mk('div','tg '+(cls||''),html);box.appendChild(d);const r={d:d,x:x||0,y:y||0,z:z||0,on:true,fr:/\bfr\b/.test(cls||''),rdy:false};it.push(r);return r},
@@ -120,10 +121,10 @@ const sm=x=>x*x*(3-2*x);
 (function(){
 const box=$('s1'),v=C3D.viewer(box,{yaw:0,pitch:7,r:30,ty:0,floor:false,maxYaw:50,rmin:12,rmax:60});
 if(!v){box.innerHTML=NOGL;return}
-const ov=OV(v,box);fit(v,14.2,16.4,0);
-const LG={u:1.0,m:1.3,t:.7},SH={u:.7,m:.8,t:.5},R=.28;
+const ov=OV(v,box);fit(v,13.8,16.4,0);
+const LG={u:1.0,m:1.3,t:.7},SH={u:.7,m:.8,t:.5},R=.28,CS=1.2;
 /* الخلايا والنواة */
-const cmat=new T.MeshPhysicalMaterial({color:0x8fd3e6,roughness:.12,transparent:true,opacity:.2,clearcoat:1,clearcoatRoughness:.1,side:T.DoubleSide,depthWrite:false});
+const cmat=new T.MeshPhysicalMaterial({color:0x8fd3e6,roughness:.12,transparent:true,opacity:.26,clearcoat:1,clearcoatRoughness:.1,side:T.DoubleSide,depthWrite:false});
 const cg=new T.SphereGeometry(1,40,28),cells=[];
 for(let i=0;i<4;i++){const m=new T.Mesh(cg,cmat);m.renderOrder=2;m.userData.noPick=1;v.scene.add(m);cells.push(m)}
 const nmat=new T.MeshPhysicalMaterial({color:0xb39ddb,roughness:.3,transparent:true,opacity:.3,depthWrite:false});
@@ -131,7 +132,7 @@ const nuc=new T.Mesh(cg,nmat);nuc.renderOrder=1;v.scene.add(nuc);
 /* الكروموسومات */
 const chr=[];const defs=[[LG,RED],[LG,BLUE],[SH,RED],[SH,BLUE]];
 for(let i=0;i<4;i++){const a=[];for(let k=0;k<2;k++){const g=chromatid(defs[i][0],defs[i][1],R);v.scene.add(g);a.push(g)}chr.push(a)}
-const FIB=new T.MeshBasicMaterial({color:0xe8c14a,transparent:true,opacity:.9}),fib=[];
+const FIB=new T.MeshBasicMaterial({color:0xd4a017,transparent:true,opacity:.9}),fib=[];
 for(let i=0;i<8;i++){const m=cyl(FIB,.045);m.userData.noPick=1;v.scene.add(m);fib.push(m)}
 const sk=spark();v.scene.add(sk);
 /* الوسوم (2ن / ن) */
@@ -142,18 +143,18 @@ function S(cells,nu,chs,sk){return{c:Float64Array.from([].concat.apply([],cells)
 const C0=[0,0,5.4,5.4,1],h0=[0,0,5.4,5.4,0];
 function one(a){return[a,[a[0],a[1],a[2],a[3],0],[a[0],a[1],a[2],a[3],0],[a[0],a[1],a[2],a[3],0]]}
 const c1=function(rx,ry){return[[0,0,rx,ry,1],[0,0,rx,ry,0],[0,0,rx,ry,0],[0,0,rx,ry,0]]};
-const c2=function(){return[[-4,0,3.3,4.8,1],[4,0,3.3,4.8,1],[-4,0,3.3,4.8,0],[4,0,3.3,4.8,0]]};
+const c2=function(){return[[-4,0,3.3,5.2,1],[4,0,3.3,5.2,1],[-4,0,3.3,5.2,0],[4,0,3.3,5.2,0]]};
 const K=[
- S(c1(5.4,5.4),[1,.3],[H(-1.6,1.3,.5,0,0,.1,.5,0,0),H(1.5,.9,-.6,0,0,.1,.5,0,0),H(1.3,-1.8,1.1,0,0,.1,.5,0,0),H(-1.5,-1.9,-.4,0,0,.1,.5,0,0)],[0,0,0]),
- S(c1(5.4,5.4),[1,.3],[H(-.95,1.6,0,0,0,.2,1,0,0),H(.95,1.6,0,0,0,.2,1,0,0),H(-.95,-2.2,0,0,0,.2,1,0,0),H(.95,-2.2,0,0,0,.2,1,0,0)],[0,0,0]),
- S(c1(5.4,5.4),[1,.22],[H(-.6,1.6,0,0,0,.28,1,0,0),H(.6,1.6,0,0,0,.28,1,0,0),H(-.95,-2.2,0,0,0,.2,1,0,0),H(.95,-2.2,0,0,0,.2,1,0,0)],[0,.05,1]),
- S(c1(6,5),[.85,0],[H(-.7,1.7,0,0,0,.2,1,0,1,-5.6,0,-5.6,0),H(.7,1.7,0,0,0,.2,1,0,1,5.6,0,5.6,0),H(.6,-2.2,0,0,0,.2,1,0,1,5.6,0,5.6,0),H(-.6,-2.2,0,0,0,.2,1,0,1,-5.6,0,-5.6,0)],[0,.05,0]),
- S(c1(7.4,4.8),[0,0],[H(-3,1.7,0,0,0,.2,1,0,1,-7,0,-7,0),H(3,1.7,0,0,0,.2,1,0,1,7,0,7,0),H(3,-2.2,0,0,0,.2,1,0,1,7,0,7,0),H(-3,-2.2,0,0,0,.2,1,0,1,-7,0,-7,0)],[0,.05,0]),
- S(c2(),[0,0],[H(-4,1.5,0,0,0,.2,1,0,0),H(4,1.5,0,0,0,.2,1,0,0),H(4,-2.2,0,0,0,.2,1,0,0),H(-4,-2.2,0,0,0,.2,1,0,0)],[0,.05,0]),
- S(c2(),[0,0],[H(-4.7,.9,.35,0,0,.22,1,0,0),H(3.3,1.1,-.35,0,0,.22,1,0,0),H(4.7,-1.3,.4,0,0,.22,1,0,0),H(-3.2,-1.3,-.45,0,0,.22,1,0,0)],[0,.05,0]),
- S(c2(),[0,0],[H(-4.8,0,0,0,0,.2,1,0,1,-4,-4.7,-4,4.7),H(3,0,0,0,0,.2,1,0,1,4,-4.7,4,4.7),H(4.8,0,0,0,0,.2,1,0,1,4,-4.7,4,4.7),H(-3,0,0,0,0,.2,1,0,1,-4,-4.7,-4,4.7)],[0,.05,0]),
- S([[-4,0,3.2,5.2,1],[4,0,3.2,5.2,1],[-4,0,3.2,5.2,0],[4,0,3.2,5.2,0]],[0,0],[H(-4.8,0,0,0,1.9,.06,1,1,1,-4,-5,-4,5),H(3,0,0,0,1.9,.06,1,1,1,4,-5,4,5),H(4.8,0,0,0,1.9,.06,1,1,1,4,-5,4,5),H(-3,0,0,0,1.9,.06,1,1,1,-4,-5,-4,5)],[0,.05,0]),
- S([[-4,2.6,3,2.4,1],[4,2.6,3,2.4,1],[-4,-2.6,3,2.4,1],[4,-2.6,3,2.4,1]],[0,0],[H(-4.8,0,0,0,2.55,.06,1,1,0),H(3,0,0,0,2.55,.06,1,1,0),H(4.8,0,0,0,2.55,.06,1,1,0),H(-3,0,0,0,2.55,.06,1,1,0)],[0,.05,0])
+ S(c1(5.4,5.4),[1,.3],[H(-1.8,1.8,.5,0,0,.1,.5,0,0),H(1.7,1.1,-.6,0,0,.1,.5,0,0),H(1.4,-2.2,1.1,0,0,.1,.5,0,0),H(-1.9,-2.5,-.4,0,0,.1,.5,0,0)],[0,0,0]),
+ S(c1(5.4,5.4),[1,.3],[H(-1.2,1.9,0,0,0,.24,1,0,0),H(1.2,1.9,0,0,0,.24,1,0,0),H(-1.2,-2.7,0,0,0,.24,1,0,0),H(1.2,-2.7,0,0,0,.24,1,0,0)],[0,0,0]),
+ S(c1(5.4,5.4),[1,.22],[H(-.75,1.9,0,0,0,.3,1,0,0),H(.75,1.9,0,0,0,.3,1,0,0),H(-1.2,-2.7,0,0,0,.24,1,0,0),H(1.2,-2.7,0,0,0,.24,1,0,0)],[0,-.1,1]),
+ S(c1(6.2,5.2),[.85,0],[H(-.85,1.9,0,0,0,.22,1,0,1,-5.8,0,-5.8,0),H(.85,1.9,0,0,0,.22,1,0,1,5.8,0,5.8,0),H(.8,-2.7,0,0,0,.22,1,0,1,5.8,0,5.8,0),H(-.8,-2.7,0,0,0,.22,1,0,1,-5.8,0,-5.8,0)],[0,-.1,0]),
+ S(c1(7.4,5.2),[0,0],[H(-3.2,1.9,0,0,0,.22,1,0,1,-7,0,-7,0),H(3.2,1.9,0,0,0,.22,1,0,1,7,0,7,0),H(3.2,-2.7,0,0,0,.22,1,0,1,7,0,7,0),H(-3.2,-2.7,0,0,0,.22,1,0,1,-7,0,-7,0)],[0,-.1,0]),
+ S(c2(),[0,0],[H(-4,1.8,0,0,0,.22,1,0,0),H(4,1.8,0,0,0,.22,1,0,0),H(4,-2.7,0,0,0,.22,1,0,0),H(-4,-2.7,0,0,0,.22,1,0,0)],[0,-.1,0]),
+ S(c2(),[0,0],[H(-4.8,1.0,.35,0,0,.24,1,0,0),H(3.2,1.2,-.35,0,0,.24,1,0,0),H(4.8,-1.5,.4,0,0,.24,1,0,0),H(-3.1,-1.6,-.45,0,0,.24,1,0,0)],[0,-.1,0]),
+ S(c2(),[0,0],[H(-4.9,0,0,0,0,.22,1,0,1,-4,-5,-4,5),H(3.1,0,0,0,0,.22,1,0,1,4,-5,4,5),H(4.9,0,0,0,0,.22,1,0,1,4,-5,4,5),H(-3.1,0,0,0,0,.22,1,0,1,-4,-5,-4,5)],[0,-.1,0]),
+ S([[-4,0,3.3,5.6,1],[4,0,3.3,5.6,1],[-4,0,3.3,5.6,0],[4,0,3.3,5.6,0]],[0,0],[H(-4.9,0,0,0,2.8,.06,1,1,1,-4,-5.4,-4,5.4),H(3.1,0,0,0,2.8,.06,1,1,1,4,-5.4,4,5.4),H(4.9,0,0,0,2.8,.06,1,1,1,4,-5.4,4,5.4),H(-3.1,0,0,0,2.8,.06,1,1,1,-4,-5.4,-4,5.4)],[0,-.1,0]),
+ S([[-4,2.8,3.1,2.8,1],[4,2.8,3.1,2.8,1],[-4,-2.8,3.1,2.8,1],[4,-2.8,3.1,2.8,1]],[0,0],[H(-4.9,0,0,0,2.8,.06,1,1,0),H(3.1,0,0,0,2.8,.06,1,1,0),H(4.9,0,0,0,2.8,.06,1,1,0),H(-3.1,0,0,0,2.8,.06,1,1,0)],[0,-.1,0])
 ];
 const cur={c:new Float64Array(20),n:new Float64Array(2),h:new Float64Array(52),k:new Float64Array(3)};
 function mix(o,a,b,e){for(let i=0;i<o.length;i++)o[i]=a[i]+(b[i]-a[i])*e}
@@ -181,11 +182,11 @@ v.onframe=function(){let ch=false;const d=tgt-pos;if(Math.abs(d)>.0005){pos+=Mat
   describe();
   for(let c=0;c<4;c++){const o=c*5,m=cells[c],s=cur.c[o+4];if(s<.03){m.visible=false;continue}m.visible=true;m.position.set(cur.c[o],cur.c[o+1],0);const rx=cur.c[o+2]*s,ry=cur.c[o+3]*s;m.scale.set(rx,ry,Math.min(rx,ry)*.85)}
   for(let c=0;c<4;c++){const o=c*5,s=cur.c[o+4],t=tg[c];if(s<.5){ov.set(t,false)}else{ov.set(t,true);t.x=cur.c[o];const ry=cur.c[o+3]*s;t.y=cur.c[o+1]+((c>=2&&cur.c[o+1]<-.5)?-ry-.9:ry+.9)}}
-  nuc.visible=cur.n[1]>.01;if(nuc.visible){nuc.scale.set(3.7*cur.n[0],3.7*cur.n[0],3.7*cur.n[0]);nmat.opacity=cur.n[1]}
+  nuc.visible=cur.n[1]>.01;if(nuc.visible){nuc.scale.set(4.6*cur.n[0],4.6*cur.n[0],4.6*cur.n[0]);nmat.opacity=cur.n[1]}
   const sw=pos>=2.55;if(sw!==co){co=sw;chr[0][1].userData.tip.material=sw?BLUE:RED;chr[1][0].userData.tip.material=sw?RED:BLUE}
   const sg=cur.k[2];sk.visible=sg>.02;if(sk.visible){const p=1+.12*Math.sin(performance.now()*.012);sk.position.set(cur.k[0],cur.k[1],1);sk.scale.setScalar(3.2*sg*p);sk.quaternion.copy(v.cam.quaternion)}
   for(let c=0;c<4;c++){const o=c*13,x=cur.h[o],y=cur.h[o+1],r=cur.h[o+2],sx=cur.h[o+3],sy=cur.h[o+4],sp=cur.h[o+5],th=cur.h[o+6],fl=cur.h[o+7],fa=cur.h[o+8];
-    for(let k=0;k<2;k++){const g=chr[c][k],sg2=k?1:-1;g.position.set(x+sg2*sx,y+sg2*sy,k?.07:-.07);g.rotation.z=r+(k?sp:-sp+fl*Math.PI);g.scale.set(th,1,th)}
+    for(let k=0;k<2;k++){const g=chr[c][k],sg2=k?1:-1;g.position.set(x+sg2*sx,y+sg2*sy,k?.07:-.07);g.rotation.z=r+(k?sp:-sp+fl*Math.PI);g.scale.set(th*CS,CS,th*CS)}
     const vis=fa>.04;
     for(let k=0;k<2;k++){const m=fib[c*2+k];if(!vis){m.visible=false;continue}const sg2=k?1:-1;seg(m,x+sg2*sx,y+sg2*sy,0,cur.h[o+9+k*2],cur.h[o+10+k*2],0)}}
   FIB.opacity=.9*cur.h[8];

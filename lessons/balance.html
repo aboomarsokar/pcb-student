@@ -78,7 +78,8 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
   <div class="tabs" role="tablist" id="tabs">
     <button role="tab" data-t="bal" aria-selected="true">⚖️ وازن المعادلة</button>
     <button role="tab" data-t="calc" aria-selected="false">🧮 احسب بالمعادلة</button>
-      <button role="tab" data-t="map" aria-selected="false">🗺️ مخطط الدرس</button>
+      <button role="tab" data-t="lab" aria-selected="false">🧪 مختبر</button>
+    <button role="tab" data-t="map" aria-selected="false">🗺️ مخطط الدرس</button>
   </div>
 
   <section id="bal" class="pane">
@@ -121,10 +122,13 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
       <div class="score" id="pscore"></div>
     </div>
   </section>
+  <section id="lab" class="pane hidden"><div class="card"><h2>🧪 مختبر التفاعلات</h2><p class="hint">نفّذ التفاعل الذي وزنته بنفسك وراقب الدلائل.</p></div><div class="labroot"></div></section>
   <section id="map" class="pane hidden"></section>
 </main>
 
 <script src="lib/three.min.js"></script>
+<script src="lib/lab.js"></script>
+<script src="lib/c3d.js"></script>
 <script>
 /* ---------- حفظ الإجابات + جسر التطبيق ---------- */
 const ANS={};
@@ -313,12 +317,13 @@ function buildPQ(){const box=$('pq');box.innerHTML='';
 function score(){let sc=0,an=0;PQ.forEach((q,i)=>{const r=ANS['b:pq:'+i];if(r){an++;if(r.k===q.a)sc++}});$('pscore').textContent=an===PQ.length?'نتيجتك: '+sc+' من '+PQ.length+' 🔒':''}
 function refresh(){buildPQ();renderEq()}
 
-document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',String(x===b)));['bal','calc','map'].forEach(id=>{const s=$(id);s.classList.toggle('hidden',id!==b.dataset.t);if(id===b.dataset.t){s.classList.remove('pane');void s.offsetWidth;s.classList.add('pane')}});if(b.dataset.t==='calc')ensureCalc();if(b.dataset.t==='map'&&!window._cmd){window._cmd=1;CMap.mount($('map'),JSON.parse(document.getElementById('cmapdata').textContent))};VW.forEach(v=>v.dirty=true);window.scrollTo({top:0,behavior:'smooth'})});
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',String(x===b)));['bal','calc','lab','map'].forEach(id=>{const s=$(id);s.classList.toggle('hidden',id!==b.dataset.t);if(id===b.dataset.t){s.classList.remove('pane');void s.offsetWidth;s.classList.add('pane')}});if(b.dataset.t==='calc')ensureCalc();if(b.dataset.t==='map'&&!window._cmd){window._cmd=1;CMap.mount($('map'),JSON.parse(document.getElementById('cmapdata').textContent))};VW.forEach(v=>v.dirty=true);window.scrollTo({top:0,behavior:'smooth'})});
 let calcBuilt=false;function ensureCalc(){if(!calcBuilt){calcBuilt=true;buildCalc()}}
 buildEqs();buildBalance();buildPQ();
 loadEq(Math.max(0,EQS.findIndex((e,i)=>!ANS[eqKey(i)])));
 </script>
 <script type="application/json" id="cmapdata">{"center": {"ar": "المعادلة الكيميائية الموزونة", "en": "The Balanced Equation"}, "branches": [{"t": {"ar": "معنى الوزن", "en": "Meaning of Balancing"}, "icon": "ramp", "pts": [{"ar": "يتساوى عدد ذرات كل عنصر في طرفي المعادلة", "en": "Atoms of each element are equal on both sides"}, {"ar": "وهو تطبيق لقانون حفظ الكتلة", "en": "An application of conservation of mass"}]}, {"t": {"ar": "المعاملات", "en": "Coefficients"}, "icon": "notes", "pts": [{"ar": "المعامل عدد يُكتب أمام الصيغة ويضرب ذراتها كلها", "en": "A coefficient before a formula multiplies all its atoms"}, {"ar": "لا نغيّر الأرقام الصغيرة داخل الصيغة أبداً", "en": "Never change the subscripts inside a formula"}, {"ar": "الماء: 2H₂ + O₂ ⟶ 2H₂O", "en": "Water: 2H₂ + O₂ → 2H₂O"}]}, {"t": {"ar": "خطوات الوزن", "en": "Balancing Tips"}, "icon": "bulb", "pts": [{"ar": "ابدأ بالعنصر الذي يرد في أقل عدد من الصيغ", "en": "Start with the element in the fewest formulas"}, {"ar": "أخّر العنصر الذي يرد منفرداً حراً", "en": "Leave the free element appearing alone for last"}, {"ar": "تحقّق من جدول عدد الذرات في الطرفين", "en": "Check the atom counts on both sides"}]}, {"t": {"ar": "الحسابات الكيميائية", "en": "Stoichiometry"}, "icon": "flask", "pts": [{"ar": "تأكد أن المعادلة موزونة", "en": "Make sure the equation is balanced"}, {"ar": "حوّل المعطى (كتلة أو حجم) إلى مولات", "en": "Convert the given mass or volume to moles"}, {"ar": "استخدم نسبة المعاملات لإيجاد مولات المطلوب", "en": "Use the coefficient ratio for the required moles"}, {"ar": "حوّل المولات إلى كتلة أو حجم", "en": "Convert moles to mass or volume"}]}], "formula": {"ar": "المعاملات = نسب المولات (ونسب الحجوم للغازات)", "en": "Coefficients = mole ratios (volume ratios for gases)"}}</script>
 <script src="lib/cmap.js"></script>
+<script>Lab.lazy('lab',{subs:Lab.ALL,vessels:['tube','beaker','crucible'],hint:'نفّذ التفاعل الذي وزنته بنفسك وراقب الدلائل.'})</script>
 </body>
 </html>

@@ -30,12 +30,14 @@
    <div>عدد الموالت = الكتلة (غم) ÷ الكتلة المولية (غم/مول).</div>
    <div>الحجم = عدد الموالت × 22.4 لتر.</div></div></div>
 </section>
+<section id="lab" class="pane hidden"><div class="card"><h2>🧪 مختبر التفاعلات</h2><p class="hint">أضف المواد وراقب تغيّر الكتلة والمعادلة: الكتل المولية تُحسب لك.</p></div><div class="labroot"></div></section>
 <section id="qz" class="pane hidden">
   <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
 </section>
 </main>
 <script src="lib/three.min.js"></script><script type="application/json" id="cmapdata">{"center": {"ar": "المول والكتلة المولية والحجم المولي", "en": "The Mole, Molar Mass and Molar Volume"}, "branches": [{"t": {"ar": "المول", "en": "The Mole"}, "icon": "atom", "pts": [{"ar": "كمية المادة التي تحوي 6.023×10²³ جسيماً", "en": "Amount containing 6.023×10²³ particles"}, {"ar": "الجسيمات ذرات أو جزيئات أو أيونات", "en": "Particles may be atoms, molecules or ions"}, {"ar": "يُسمّى هذا العدد عدد أفوغادرو", "en": "This number is called Avogadro's number"}]}, {"t": {"ar": "الكتلة المولية", "en": "Molar Mass"}, "icon": "ramp", "pts": [{"ar": "كتلة مول واحد بوحدة غ/مول", "en": "Mass of one mole in g/mol"}, {"ar": "تقارب العدد الكتلي للعنصر", "en": "Approximately equal to the element's mass number"}, {"ar": "مول ذرات الأكسجين 16 غ ومول جزيئاته 32 غ", "en": "A mole of O atoms is 16 g; of O₂ molecules, 32 g"}]}, {"t": {"ar": "عدد المولات", "en": "Number of Moles"}, "icon": "notes", "pts": [{"ar": "عدد المولات = الكتلة ÷ الكتلة المولية", "en": "Moles = mass ÷ molar mass"}, {"ar": "56 غ من الحديد تساوي مولاً واحداً", "en": "56 g of iron is exactly one mole"}, {"ar": "عدد الجسيمات = عدد المولات × 6.023×10²³", "en": "Particles = moles × 6.023×10²³"}]}, {"t": {"ar": "الحجم المولي", "en": "Molar Volume"}, "icon": "beaker", "pts": [{"ar": "في الظروف المعيارية: 1 ض.ج. و0°م", "en": "Standard conditions: 1 atm and 0 °C"}, {"ar": "مول أي غاز يشغل 22.4 لتراً", "en": "One mole of any gas occupies 22.4 L"}, {"ar": "لا يعتمد على نوع الغاز لكنه يتغير بالحرارة والضغط", "en": "Independent of gas type; varies with temperature and pressure"}]}], "formula": {"ar": "n = الكتلة ÷ الكتلة المولية ، V = n × 22.4 L", "en": "n = mass ÷ molar mass, V = n × 22.4 L"}}</script>
 <script src="lib/cmap.js"></script>
+<script src="lib/lab.js"></script>
 <script src="lib/c3d.js"></script>
 <script>
 C3D.init({ns:'mo',accent:'#D32F2F',accentDark:'#EF5350'});
@@ -79,5 +81,6 @@ C3D.quiz('qbox','qscore','q',[
  {q:'الحجم الذي يشغله مول واحد من أي غاز في STP يساوي:',o:['11.2 لتر','22.4 لتر','1 لتر','44 لتر'],a:1,e:'الحجم المولي في الظروف المعيارية 22.4 لتراً.'},
  {q:'ما حجم 2 مول من غاز في STP؟',o:['22.4 لتر','11.2 لتر','44.8 لتر','2 لتر'],a:2,e:'الحجم = 2 × 22.4 = 44.8 لتر.'}
 ]);
-C3D.tabs([{id:'mol',l:'🔢 عدّاد المول'},{id:'cube',l:'🧊 الحجم المولي'},{id:'fac',l:'📘 العلاقات'},{id:'qz',l:'✍️ أسئلة'}]);
+Lab.lazy('lab',{subs:Lab.ALL,vessels:['tube','beaker','crucible'],hint:"أضف المواد وراقب تغيّر الكتلة والمعادلة: الكتل المولية تُحسب لك."});
+C3D.tabs([{id:'mol',l:'🔢 عدّاد المول'},{id:'cube',l:'🧊 الحجم المولي'},{id:'fac',l:'📘 العلاقات'},{id:'lab',l:'🧪 مختبر'},{id:'qz',l:'✍️ أسئلة'}]);
 </script></body></html>

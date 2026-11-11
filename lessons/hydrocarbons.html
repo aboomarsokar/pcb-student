@@ -33,12 +33,14 @@
    <div>الألكينات (CₙH₂ₙ): غير مشبعة فيها رابطة ثنائية. تفاعلاتها: الاحتراق والإضافة (الهدرجة بوجود Ni أو Pt، وإضافة الهالوجين).</div>
    <div>البلمرة: اتحاد عدد كبير من المونومرات لتكوين البوليمر. صناعية: البولي إيثيلين (من الإيثيلين) وPVC (من فينيل كلوريد). وطبيعية: السليلوز (القطن) والنشا (البطاطا والأرز والقمح).</div></div></div>
 </section>
+<section id="lab" class="pane hidden"><div class="card"><h2>🧪 مختبر التفاعلات</h2><p class="hint">جرّب كل المواد المتاحة وشاهد دلائل التفاعل بنفسك.</p></div><div class="labroot"></div></section>
 <section id="qz" class="pane hidden">
   <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
 </section>
 </main>
 <script src="lib/three.min.js"></script><script type="application/json" id="cmapdata">{"center": {"ar": "الهيدروكربونات", "en": "Hydrocarbons"}, "branches": [{"t": {"ar": "الكربون ومصادره", "en": "Carbon and Sources"}, "icon": "globe", "pts": [{"ar": "الجرافيت طبقات تنفصل بسهولة والماس الأقسى", "en": "Graphite has easily separated layers; diamond is hardest"}, {"ar": "الهيدروكربونات مركّبات من الكربون والهيدروجين فقط", "en": "Hydrocarbons contain only carbon and hydrogen"}, {"ar": "مصدرها: النفط، الغاز الطبيعي، الصخر الزيتي", "en": "Sources: petroleum, natural gas, oil shale"}]}, {"t": {"ar": "الألكانات", "en": "Alkanes"}, "icon": "tube", "pts": [{"ar": "مشبعة وروابطها كلها أحادية", "en": "Saturated, with all single bonds"}, {"ar": "صيغتها العامة CₙH₂ₙ₊₂ ، ومنها البروبان C₃H₈", "en": "General formula CₙH₂ₙ₊₂, e.g. propane C₃H₈"}, {"ar": "لا تذوب في الماء وتغلي أعلى بزيادة ذرات C", "en": "Insoluble in water; boiling point rises with carbons"}, {"ar": "تفاعلاتها: الاحتراق والاستبدال بالهالوجينات", "en": "Reactions: combustion and halogen substitution"}]}, {"t": {"ar": "الألكينات", "en": "Alkenes"}, "icon": "beaker", "pts": [{"ar": "غير مشبعة وفيها رابطة ثنائية", "en": "Unsaturated, with a double bond"}, {"ar": "صيغتها العامة CₙH₂ₙ وأقلّها ذرتا كربون", "en": "General formula CₙH₂ₙ; at least two carbons"}, {"ar": "تفاعلاتها: الاحتراق والإضافة والهدرجة", "en": "Reactions: combustion, addition, hydrogenation"}]}, {"t": {"ar": "كشف البروم", "en": "Bromine Test"}, "icon": "flask", "pts": [{"ar": "محلول البروم الأحمر لا يتغير مع الألكان", "en": "Red bromine stays unchanged with an alkane"}, {"ar": "يزول لونه مع الألكين لتفاعل الإضافة", "en": "Its color vanishes with an alkene by addition"}, {"ar": "زوال اللون يدل على وجود الرابطة الثنائية", "en": "Color loss shows the presence of a double bond"}]}, {"t": {"ar": "البلمرة", "en": "Polymerization"}, "icon": "cell", "pts": [{"ar": "اتحاد عدد كبير من المونومرات لتكوين بوليمر", "en": "Many monomers join to form a polymer"}, {"ar": "صناعية: بولي إيثيلين وPVC", "en": "Industrial: polyethylene and PVC"}, {"ar": "طبيعية: السليلوز في القطن والنشا في البطاطا", "en": "Natural: cellulose in cotton, starch in potatoes"}]}], "formula": {"ar": "ألكان CₙH₂ₙ₊₂ ، ألكين CₙH₂ₙ", "en": "Alkane CₙH₂ₙ₊₂ , Alkene CₙH₂ₙ"}}</script>
 <script src="lib/cmap.js"></script>
+<script src="lib/lab.js"></script>
 <script src="lib/c3d.js"></script>
 <script>
 C3D.init({ns:'hc',accent:'#D32F2F',accentDark:'#EF5350'});
@@ -95,5 +97,6 @@ C3D.quiz('qbox','qscore','q',[
  {q:'ما التفاعلات المميزة للألكينات؟',o:['الإضافة (كالهدرجة وإضافة الهالوجين)','الاستبدال فقط','التعادل','الترسيب'],a:0,e:'تفاعلات الألكينات: الاحتراق والإضافة (الهدرجة بوجود Ni أو Pt، وإضافة الهالوجين).'},
  {q:'البلمرة هي:',o:['فصل مكونات النفط','اتحاد عدد كبير من المونومرات لتكوين بوليمر','احتراق الهيدروكربون','إضافة الهيدروجين للألكين'],a:1,e:'البلمرة تفاعل يتحد فيه عدد كبير من المونومرات لتكوين البوليمر، كالبولي إيثيلين من الإيثيلين.'}
 ]);
-C3D.tabs([{id:'wk',l:'🧪 ورشة الجزيئات'},{id:'br',l:'🧴 كاشف البروم'},{id:'src',l:'🏭 المصادر والبلمرة'},{id:'qz',l:'✍️ أسئلة'}]);
+Lab.lazy('lab',{subs:Lab.ALL,vessels:['tube','beaker','crucible'],hint:"جرّب كل المواد المتاحة وشاهد دلائل التفاعل بنفسك."});
+C3D.tabs([{id:'wk',l:'🧪 ورشة الجزيئات'},{id:'br',l:'🧴 كاشف البروم'},{id:'src',l:'🏭 المصادر والبلمرة'},{id:'lab',l:'🧪 مختبر'},{id:'qz',l:'✍️ أسئلة'}]);
 </script></body></html>
