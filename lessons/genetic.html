@@ -361,7 +361,7 @@ function goStep(k){
   $('aDone').classList.toggle('hidden', !last);
   $('sPrev').classList.toggle('hidden', k === 0);
   { const n = steps[k]; n.classList.remove('rv','in'); void n.offsetWidth; n.classList.add('rv'); requestAnimationFrame(() => n.classList.add('in')); }
-  $('stepCount').textContent = (k + 1) + ' / ' + steps.length;
+  $('stepCount').style.direction='ltr'; $('stepCount').textContent = (k + 1) + ' / ' + steps.length;
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 const SCENE_NAMES = {sc_dna:'نموذج DNA', sc_mut:'نموذج الطفرة في DNA', sc_nuc:'نموذج النيوكليوسوم', sc_nucl:'نموذج النيوكليوتيد', sc_fork:'نموذج شوكة التضاعف', sc_chrom:'نموذج الكروموسوم', sc_rna:'نموذج RNA'};
@@ -481,6 +481,7 @@ const SEQ = 'ATGCCGTAGCTAGGCATC';
 function hexRgb(h){ h=h.replace('#',''); return [0,2,4].map(i=>parseInt(h.substr(i,2),16)); }
 function mixc(c, to, k){ const a=hexRgb(c); const b = to==='w' ? [255,255,255] : [0,0,0];
   return 'rgb('+a.map((v,i)=>Math.round(v+(b[i]-v)*k)).join(',')+')'; }
+const __mixc=mixc,_mcache={}; mixc=function(c,to,k){const key=c+'|'+to+'|'+k;return _mcache[key]||(_mcache[key]=__mixc(c,to,k))};
 function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
 function proj(p, yaw, pitch, cx, cy, S){
   const cyw=Math.cos(yaw), syw=Math.sin(yaw);
@@ -672,7 +673,7 @@ const SCENE_DEF = {
 const SCENES = [];
 function renderScene(sc){
   const cv=sc.cv, W=cv.clientWidth, H=cv.clientHeight; if(!W||!H) return;
-  const dpr=Math.min(2, window.devicePixelRatio||1);
+  const dpr=Math.min(1.5, window.devicePixelRatio||1);
   if (cv.width!==Math.round(W*dpr) || cv.height!==Math.round(H*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
   const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
   const st=sc.st; const scene=sc.def.build(st);
@@ -719,9 +720,17 @@ function renderScene(sc){
   });
 }
 let sceneLoopOn=false;
-function sceneLoop(){
-  SCENES.forEach(sc=>{ if(!sc.visible) return; if(!sc.drag) sc.st.yaw += 0.004; renderScene(sc); });
+let lastFrame=0;
+function sceneLoop(t){
   requestAnimationFrame(sceneLoop);
+  if(document.hidden||t-lastFrame<33) return; lastFrame=t; /* نحو 30 إطاراً في الثانية لتخفيف الحمل */
+  SCENES.forEach(sc=>{ if(!sc.visible) return;
+    const st=sc.st;
+    if (sc.def.anim){ if (st.play) st.t = (st.t + 0.0032) % 1; if (sc.ui && st.play){ sc.ui.range.value = Math.round(st.t*1000); sc.ui.phase.textContent = animPhaseName(st.t); } }
+    else if(!sc.drag){ sc.autoT=(sc.autoT||0); if(sc.autoT<200){ st.yaw += 0.008; sc.autoT++; } }
+    else sc.autoT=200;
+    const sig=st.yaw+'|'+st.pitch+'|'+st.t+'|'+st.stage+'|'+st.mut+'|'+sc.cv.clientWidth+'|'+sc.cv.clientHeight;
+    if(sig!==sc._sig){ sc._sig=sig; renderScene(sc); } });
 }
 const sceneIO = ('IntersectionObserver' in window) ? new IntersectionObserver(es=>es.forEach(e=>{ if(e.target._sc) e.target._sc.visible=e.isIntersecting; })) : null;
 function makeScene(key, canvas, toggleBtn){
