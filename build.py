@@ -90,7 +90,7 @@ def main() -> None:
             sys.exit(f"ملفٌّ مفقود: {jp.relative_to(ROOT)}")
         return "<script>" + jp.read_text(encoding="utf-8").replace("</script", "<\\/script") + "</script>"
 
-    html = re.sub(r'<script src="(lib/(?:icons|voice)\.js)"></script>', inline_main_lib, html)
+    html = re.sub(r'<script src="(lib/(?:icons|voice|bg)\.js)"></script>', inline_main_lib, html)
 
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_bytes(html.encode("utf-8"))
