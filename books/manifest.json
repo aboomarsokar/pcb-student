@@ -1,11 +1,4 @@
 {
- "books": [
-  {
-   "id": "phys-book",
-   "s": 0,
-   "t": "كتاب الفيزياء",
-   "u": "https://drive.google.com/file/d/1BKLr4FVwDakcVpEiEVBgK55ptKZ1SkL5/view?usp=drivesdk"
-  }
- ],
+ "books": [],
  "packs": []
 }
