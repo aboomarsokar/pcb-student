@@ -90,7 +90,11 @@ def main() -> None:
             sys.exit(f"ملفٌّ مفقود: {jp.relative_to(ROOT)}")
         return "<script>" + jp.read_text(encoding="utf-8").replace("</script", "<\\/script") + "</script>"
 
-    html = re.sub(r'<script src="(lib/(?:icons|voice|bg)\.js)"></script>', inline_main_lib, html)
+    html = re.sub(r'<script src="(lib/(?:icons|voice|bg|reader)\.js)"></script>', inline_main_lib, html)
+
+    mf = ROOT / "books" / "manifest.json"
+    if mf.is_file():
+        html = html.replace("/*LIBM*/null", json.dumps(json.loads(mf.read_text(encoding="utf-8")), ensure_ascii=False), 1)
 
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_bytes(html.encode("utf-8"))
