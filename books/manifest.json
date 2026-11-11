@@ -1,4 +1,11 @@
 {
  "books": [],
- "packs": []
+ "packs": [
+  {
+   "id": "phys10-pack",
+   "s": 0,
+   "t": "رزمة الفيزياء – الصف العاشر",
+   "u": "https://drive.google.com/file/d/1dEj0ER-4Zo6kXE8qeGzr3FUoHq2wRll6/view?usp=drivesdk"
+  }
+ ]
 }
