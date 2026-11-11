@@ -147,5 +147,5 @@ C3D.quiz('qbox','qscore','q',[
  {q:'لماذا تُعالج آثار المطر الحمضي في البحيرات بكربونات الكالسيوم؟',o:['لأنها مركب قاعدي يتفاعل مع الحمض ويقلل تركيزه','لأنها تزيد حموضة الماء','لأنها تبخّر الماء','لأنها تحلل الأحماض إلى معادن'],a:0,e:'كربونات الكالسيوم مركب قاعدي يتفاعل مع الحمض فيقلل تركيزه.'}
 ]);
 var labDone=0;
-C3D.tabs([{id:'bone',l:'🦴 جسمك'},{id:'lab',l:'🧪 مختبر الجير'},{id:'cyc',l:'🔥 دورة الجير'},{id:'ore',l:'🪨 الخامات'},{id:'qz',l:'✍️ أسئلة'}],function(id){if(id==='lab'&&!labDone){labDone=1;Lab.mount($('labroot'),{subs:Lab.ALL,vessels:['tube','crucible','beaker'],hint:'ابدأ بوضع قطعة من الحجر الجيري في أنبوب الاختبار أو البوتقة، ثم أشعل الموقد وارفع الحرارة.',missions:[{t:'حلّل الحجر الجيري بالحرارة (فوق 850°م) إلى جير حيّ CaO',ok:function(S){return !!S.eqs.decomp}},{t:'أطفئ الجير الحيّ بالماء ولاحظ الحرارة والبخار',ok:function(S){return !!S.eqs.slake}},{t:'اكشف غاز CO₂ بماء الجير أو بمرور CO₂ فيه',ok:function(S){return !!S.eqs.tube2||!!S.eqs.carb1||!!S.eqs.carb2}}]})}});
+C3D.tabs([{id:'bone',l:'🦴 جسمك'},{id:'lab',l:'🧪 مختبر الجير'},{id:'cyc',l:'🔥 دورة الجير'},{id:'ore',l:'🪨 الخامات'},{id:'qz',l:'✍️ أسئلة'}],function(id){if(id==='lab'&&!labDone){labDone=1;Lab.mount($('labroot'),{exps:['decomp','slake','carbacid']})}});
 </script></body></html>

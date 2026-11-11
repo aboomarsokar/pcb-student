@@ -33,7 +33,6 @@
   <div class="row"><label>المرحلة:</label><input type="range" id="sr" min="0" max="3" step="1" value="0"><span class="val" id="sv"></span></div>
   <div class="card info" id="sinfo"></div>
 </section>
-<section id="lab" class="pane hidden"><div class="card"><h2>🧪 مختبر التفاعلات</h2><p class="hint">جرّب المواد وراقب دلائل التفاعل.</p></div><div class="labroot"></div></section>
 <section id="qz" class="pane hidden">
   <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
 </section>
@@ -41,7 +40,6 @@
 <script src="lib/three.min.js"></script>
 <script type="application/json" id="cmapdata">{"center": {"ar": "السيليكون", "en": "Silicon"}, "branches": [{"t": {"ar": "ذرة السيليكون", "en": "The Silicon Atom"}, "icon": "atom", "pts": [{"ar": "عدده الذري 14، أي 14 بروتوناً", "en": "Atomic number 14, so 14 protons"}, {"ar": "توزيعه الإلكتروني: 2، 8، 4", "en": "Electron arrangement: 2, 8, 4"}, {"ar": "الدورة الثالثة والمجموعة الرابعة", "en": "Period 3, group 4"}]}, {"t": {"ar": "الخواص والوجود", "en": "Properties and Occurrence"}, "icon": "globe", "pts": [{"ar": "ثاني أكثر العناصر وفرة في القشرة بعد الأكسجين", "en": "Second most abundant in the crust after oxygen"}, {"ar": "صلب رمادي داكن بلمعان شبه فلزي، وهو شبه فلز", "en": "Dark gray solid with semi-metallic luster; a metalloid"}, {"ar": "لا يوجد حراً بل على شكل سيليكا وسيليكات", "en": "Not free in nature; occurs as silica and silicates"}]}, {"t": {"ar": "شبه موصل", "en": "Semiconductor"}, "icon": "wave", "pts": [{"ar": "الفلز موصل جيد والعازل ضعيف التوصيل", "en": "Metals conduct well; insulators conduct poorly"}, {"ar": "السيليكون يقع بينهما في المقاومة الكهربائية", "en": "Silicon's resistance lies in between"}, {"ar": "توصيله يزداد بارتفاع درجة الحرارة", "en": "Its conductivity rises as temperature rises"}]}, {"t": {"ar": "من الرمل إلى الشريحة", "en": "Sand to Chip"}, "icon": "microscope", "pts": [{"ar": "الرمل مكوّنه الرئيس السيليكا والسيليكات", "en": "Sand is mainly silica and silicates"}, {"ar": "يُستخلص السيليكون من السيليكا على هيئة سبيكة", "en": "Silicon is extracted from silica as an ingot"}, {"ar": "تُقطع السبيكة إلى رقائق ثم تُصنع الدارات المتكاملة", "en": "The ingot is cut into wafers, then made into circuits"}]}, {"t": {"ar": "الاستخدامات", "en": "Uses"}, "icon": "bulb", "pts": [{"ar": "يُستخدم في الثنائيات والترانزستورات", "en": "Used in diodes and transistors"}, {"ar": "وفي شرائح الحاسوب والدارات المتكاملة", "en": "And in computer chips and integrated circuits"}, {"ar": "مهم في التكنولوجيا وعلم المعلومات", "en": "Important in technology and information science"}]}], "formula": {"ar": "السيليكا: SiO₂ (الكوارتز)", "en": "Silica: SiO₂ (quartz)"}}</script>
 <script src="lib/cmap.js"></script>
-<script src="lib/lab.js"></script>
 <script src="lib/c3d.js"></script>
 <script>
 C3D.init({ns:'si',accent:'#D32F2F',accentDark:'#EF5350'});
@@ -91,6 +89,5 @@ C3D.quiz('qbox','qscore','q',[
  {q:'على أي صورة يوجد السيليكون في الطبيعة؟',o:['عنصر حر في الصخور','غاز في الجو','سيليكا SiO₂ وسيليكات','سائل في البحار'],a:2,e:'لا يوجد حراً، وإنما على شكل سيليكا SiO₂ (الكوارتز) وسيليكات.'},
  {q:'أي مما يلي يدخل في صناعته السيليكون؟',o:['الترانزستورات والرقائق الحاسوبية والدارات المتكاملة','الأسمنت فقط','النحاس','الحديد'],a:0,e:'يدخل السيليكون في صناعة الثنائيات والترانزستورات والرقائق الحاسوبية والدارات المتكاملة.'}
 ]);
-Lab.lazy('lab',{subs:Lab.ALL,vessels:['tube','beaker','crucible'],hint:"جرّب المواد وراقب دلائل التفاعل."});
-C3D.tabs([{id:'idn',l:'🪪 هويته'},{id:'semi',l:'🌡️ شبه موصل'},{id:'chip',l:'💻 الرقاقة'},{id:'lab',l:'🧪 مختبر'},{id:'qz',l:'✍️ أسئلة'}]);
+C3D.tabs([{id:'idn',l:'🪪 هويته'},{id:'semi',l:'🌡️ شبه موصل'},{id:'chip',l:'💻 الرقاقة'},{id:'qz',l:'✍️ أسئلة'}]);
 </script></body></html>
