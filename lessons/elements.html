@@ -67,10 +67,12 @@ if(tv){
   const SX=1.42,SZ=1.42,W=18*SX,H=11.2*SZ;
   const base=C3D.mesh(new T.BoxGeometry(W+1.4,.5,H+1),C3D.std(0x2d3236,.5,.4),(17*SX)/2,-.3,(10.6*SZ)/2-.2);base.userData.noPick=1;tv.scene.add(base);
   tv.tx=(17*SX)/2;tv.tz=(10.6*SZ)/2-1.5;
+  const GB=new T.BoxGeometry(1.24,.7,1.24),GP=new T.PlaneGeometry(1.2,1.2),MC={};
+  function lab(o){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');x.textAlign='center';x.fillStyle='#101418';x.font='700 26px sans-serif';x.fillText(o.z,24,26);x.font='800 62px sans-serif';x.fillText(o.s,64,92);const t=new T.CanvasTexture(c);t.anisotropy=1;return t}
   E.forEach((o,i)=>{const col=CAT[o.c][1],g=new T.Group();g.userData.part=i;
-    const b=C3D.mesh(new T.BoxGeometry(1.24,.7,1.24),C3D.phys(col,.35,.1),0,.35,0);g.add(b);
-    const t=C3D.plane(o.s,1.1,.8,{pw:128,ph:96,size:64,color:'#101418'});t.rotation.x=-Math.PI/2;t.position.set(0,.72,.12);g.add(t);
-    const n=C3D.plane(String(o.z),.7,.38,{pw:96,ph:48,size:34,color:'#101418'});n.rotation.x=-Math.PI/2;n.position.set(-.3,.725,-.42);g.add(n);
+    const mt=MC[o.c]||(MC[o.c]=C3D.phys(col,.35,.1));
+    const b=new T.Mesh(GB,mt);b.position.y=.35;g.add(b);
+    const t=new T.Mesh(GP,new T.MeshBasicMaterial({map:lab(o),transparent:true,depthWrite:false}));t.rotation.x=-Math.PI/2;t.position.set(0,.72,0);t.userData.noPick=1;g.add(t);
     const p=pos(o);g.position.set(p[0]*SX,0,p[1]*SZ);tv.scene.add(g);tv.pick.push(g);tiles.push({g,b,y:0,t:0})});
   // أماكن اللانثانيدات والأكتينيدات في الجدول الرئيسي
   [[2,5,'57–71'],[2,6,'89–103']].forEach(a=>{const g=new T.Group(),m=C3D.mesh(new T.BoxGeometry(1.24,.4,1.24),C3D.phys(a[2]==='57–71'?0xF48FB1:0xBCAAA4,.5,.05),0,.2,0);m.userData.noPick=1;g.add(m);const t=C3D.plane(a[2],1.2,.5,{pw:160,ph:64,size:34,color:'#101418'});t.rotation.x=-Math.PI/2;t.position.y=.42;g.add(t);g.position.set(a[0]*SX,0,a[1]*SZ);tv.scene.add(g)});
