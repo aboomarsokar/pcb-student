@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>الجهاز التناسلي والتكاثر</title><base href="../"><script src="lib/bg.js"></script><script src="lib/icons.js"></script>
+<style>
+.tg{position:absolute;left:0;top:0;opacity:0;pointer-events:none;direction:rtl;white-space:nowrap;font-size:.74rem;line-height:1.35;padding:1px 8px;border-radius:9px;color:#fff;background:#37474f;font-weight:800;box-shadow:0 2px 0 rgba(0,0,0,.28);text-align:center;will-change:transform}
+.tg.r{background:#c62828}.tg.b{background:#1565c0}.tg.g{background:#2e7d32}.tg.y{background:#f9a825;color:#2a2016}.tg.p{background:#6a1b9a}.tg.t{background:#00796b}
+.stage3.mid{height:310px}.stage3.tall{height:400px}
+@media (min-width:700px){.stage3.tall{height:520px}.stage3.mid{height:400px}}
+.vs{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.vs button{padding:6px 14px;font-size:.93rem;border-radius:999px;box-shadow:0 3px 0 var(--edge)}.vs button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.pi h3{margin:0}.pi .en{direction:ltr;text-align:right;color:var(--muted);font-size:.88rem}.pi p{margin:4px 0 0}
+canvas.chart{width:100%;height:170px;display:block;border:1px solid var(--line);border-radius:14px;background:var(--card);margin-top:10px}
+.sw{display:inline-flex;gap:6px;align-items:center;margin:0 6px 0 0;font-size:.88rem}.sw i{display:inline-block;width:14px;height:14px;border-radius:50%}
+.nogl{padding:40px 16px;text-align:center;color:var(--muted)}
+</style></head>
+<body><main>
+<h1>🧬 الجهاز التناسلي والتكاثر</h1>
+<div class="tabs" id="tabs"></div>
+
+<section id="ml" class="pane">
+  <div class="card">
+    <h2>♂ الجهاز التناسلي الذكري</h2>
+    <p class="hint" style="margin:0">اسحب المجسّم لتديره، واضغط على أي عضو (أو اختره من الأزرار) لتعرف وظيفته. جرّب تتبّع مسار الحيوانات المنوية.</p>
+    <div class="vs" id="mvw"></div>
+    <div class="stage3 tall" id="ms"></div>
+    <div class="row" style="justify-content:center" id="mrow"><button class="main" id="mplay">▶ تتبّع مسار الحيوانات المنوية</button></div>
+    <div class="fb hidden" id="mcap"></div>
+    <div class="chips" id="mch"></div>
+    <div class="fb pi" id="mi">اضغط على عضو في المجسّم لتظهر معلوماته هنا.</div>
+  </div>
+</section>
+
+<section id="fm" class="pane hidden">
+  <div class="card">
+    <h2>♀ الجهاز التناسلي الأنثوي</h2>
+    <p class="hint" style="margin:0">اضغط على أي جزء لتعرف وظيفته، ثم شغّل «رحلة الخلية البيضية» لترى مسارها من المبيض إلى الرحم.</p>
+    <div class="stage3 tall" id="fs"></div>
+    <div class="row" style="justify-content:center"><button class="main" id="fplay">▶ رحلة الخلية البيضية</button></div>
+    <div class="fb hidden" id="fcap"></div>
+    <div class="chips" id="fch"></div>
+    <div class="fb pi" id="fi">اضغط على جزء في المجسّم لتظهر معلوماته هنا.</div>
+  </div>
+</section>
+
+<section id="cy" class="pane hidden">
+  <div class="card">
+    <h2>🗓️ الدورة الشهرية</h2>
+    <p class="hint" style="margin:0">حرّك مؤشر اليوم (1 إلى 28) أو شغّل الدورة. راقب نمو حويصلة غراف والتبويض والجسم الأصفر وتغيّر بطانة الرحم مع منحنيات الهرمونات.</p>
+    <div class="stage3 mid" id="cs"></div>
+    <div class="row" style="justify-content:center;margin-bottom:0"><button id="cp">⏪ اليوم السابق</button><button class="main" id="cplay">▶ تشغيل الدورة</button><button id="cn">اليوم التالي ⏩</button></div>
+    <div class="row"><label>اليوم:</label><input type="range" id="cd" min="1" max="28" step="1" value="1"><span class="val" id="cv"></span></div>
+    <div class="fb" id="cinfo"></div>
+    <canvas class="chart" id="chart"></canvas>
+    <div class="leg" id="cleg"></div>
+  </div>
+</section>
+
+<section id="fp" class="pane hidden">
+  <div class="card">
+    <h2>👶 الإخصاب والحمل والتوائم</h2>
+    <p class="hint" style="margin:0">اختر المشهد، ثم حرّك المؤشر أو شغّل العرض. اسحب المجسّم لتديره.</p>
+    <div class="vs" id="pv"></div>
+    <div class="vs hidden" id="tv"></div>
+    <div class="stage3 tall" id="ps"></div>
+    <div class="row" style="margin-bottom:0"><button class="main" id="pplay">▶ تشغيل</button><input type="range" id="pr" min="0" max="100" step="1" value="0" style="flex:1"><span class="val" id="pvv"></span></div>
+    <div class="fb" id="pi"></div>
+  </div>
+</section>
+
+<section id="qz" class="pane hidden">
+  <div class="card"><h2>✍️ اختبر نفسك</h2><p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p><div id="qbox"></div><div class="score" id="qscore"></div></div>
+</section>
+</main>
+<script src="lib/three.min.js"></script><script type="application/json" id="cmapdata">{"center":{"ar":"الجهاز التناسلي والتكاثر","en":"Reproductive System and Reproduction"},"branches":[{"t":{"ar":"الجهاز الذكري","en":"Male System"},"icon":"tube","pts":[{"ar":"الخصيتان تنتجان الحيوانات المنوية والتستوستيرون","en":"Testes make sperm and testosterone"},{"ar":"البربخ: يكتمل فيه نضج الحيوانات المنوية وتُخزَّن","en":"Epididymis: sperm mature and are stored"},{"ar":"الغدد الملحقة (الحويصلتان المنويتان والبروستات وغدتا كوبر) تفرز السائل المنوي","en":"Accessory glands secrete the seminal fluid"}]},{"t":{"ar":"الجهاز الأنثوي","en":"Female System"},"icon":"cell","pts":[{"ar":"المبيضان: الخلية البيضية والإستروجين والبروجسترون","en":"Ovaries: egg cell, estrogen, progesterone"},{"ar":"قناتا البيض: الإخصاب غالباً في الثلث الأول","en":"Oviducts: fertilization mostly in the first third"},{"ar":"الرحم مكان نمو الجنين والمهبل قناة الولادة","en":"Uterus: fetus grows; vagina: birth canal"}]},{"t":{"ar":"الحيوان المنوي","en":"Sperm Cell"},"icon":"microscope","pts":[{"ar":"الرأس فيه النواة والأكروسوم","en":"Head: nucleus and acrosome"},{"ar":"القطعة الوسطى فيها ميتوكوندريا كثيرة للطاقة","en":"Midpiece: many mitochondria for energy"},{"ar":"الذيل السوطي للسباحة","en":"Flagellum tail for swimming"}]},{"t":{"ar":"الدورة الشهرية","en":"Menstrual Cycle"},"icon":"stopwatch","pts":[{"ar":"FSH ينشّط نمو حويصلة غراف","en":"FSH stimulates Graafian follicle growth"},{"ar":"LH يحفّز التبويض","en":"LH triggers ovulation"},{"ar":"مراحلها: الطمث ثم النمو ثم الإفراز","en":"Phases: menstruation, growth, secretion"}]},{"t":{"ar":"الإخصاب والحمل","en":"Fertilization and Pregnancy"},"icon":"dna","pts":[{"ar":"حيوان منوي واحد يخترق البويضة","en":"One sperm penetrates the egg"},{"ar":"يتكوّن الزايجوت بـ 46 كروموسوماً","en":"The zygote has 46 chromosomes"},{"ar":"الحمل نحو 38 أسبوعاً","en":"Pregnancy lasts about 38 weeks"}]},{"t":{"ar":"التوائم","en":"Twins"},"icon":"globe","pts":[{"ar":"متطابقة: من بويضة واحدة وحيوان منوي واحد","en":"Identical: one egg and one sperm"},{"ar":"غير متطابقة: من بويضتين مختلفتين","en":"Fraternal: two different eggs"}]}],"formula":{"ar":"بويضة (23) + حيوان منوي (23) = زايجوت (46 كروموسوماً)","en":"Egg (23) + Sperm (23) = Zygote (46 chromosomes)"}}</script>
+<script src="lib/cmap.js"></script>
+<script src="lib/c3d.js"></script>
+<script>
+C3D.init({ns:'br',accent:'#2E7D32',accentDark:'#66BB6A'});
+const T=C3D.T,$=C3D.$,mk=C3D.mk;
+const SPH=new T.SphereGeometry(1,32,22);
+const sm=x=>x<=0?0:x>=1?1:x*x*(3-2*x),cl=(x,a,b)=>Math.max(a,Math.min(b,x)),lerp=(a,b,t)=>a+(b-a)*t;
+function M(c,r,op,side){const m=new T.MeshStandardMaterial({color:c,roughness:r==null?.5:r,metalness:0});if(op!=null&&op<1){m.transparent=true;m.opacity=op;m.depthWrite=op>.75}if(side)m.side=T.DoubleSide;return m}
+function ell(a,b,c,mat,x,y,z){const m=new T.Mesh(SPH,mat);m.scale.set(a,b,c);m.position.set(x||0,y||0,z||0);return m}
+function V3(p){return new T.Vector3(p[0],p[1],p[2])}
+function tube(pts,r,mat,seg,rs){const c=new T.CatmullRomCurve3(pts.map(V3));const m=new T.Mesh(new T.TubeGeometry(c,seg||48,r,rs||10,false),mat);m.userData.curve=c;return m}
+function grp(){const g=new T.Group();for(let i=0;i<arguments.length;i++)g.add(arguments[i]);return g}
+const UP=new T.Vector3(0,1,0),VA=new T.Vector3();let cylG=null;
+function cyl(mat,r){cylG=cylG||new T.CylinderGeometry(1,1,1,8);const m=new T.Mesh(cylG,mat);m.userData.r=r;return m}
+function seg(m,ax,ay,az,bx,by,bz){VA.set(bx-ax,by-ay,bz-az);const L=VA.length();if(L<.001){m.visible=false;return}m.visible=true;m.position.set((ax+bx)/2,(ay+by)/2,(az+bz)/2);m.scale.set(m.userData.r,L,m.userData.r);m.quaternion.setFromUnitVectors(UP,VA.multiplyScalar(1/L))}
+function fit(v,H,xr,xc,ty){const k=2*Math.tan(15*Math.PI/180);
+  function go(){const w=v.box.clientWidth,h=v.box.clientHeight;if(!w||!h)return;const asp=w/h;v.r0=Math.max(H/k,xr/(k*asp))*1.04;v.r=v.r0;v.tx=xc;if(ty!=null)v.ty=ty;v.dirty=true}
+  let lw=0;new ResizeObserver(()=>{const w=v.box.clientWidth;if(w&&w!==lw){lw=w;go()}}).observe(v.box);go();
+  return function(h2,x2,c2,t2){H=h2;xr=x2;xc=c2;ty=t2;go()}}
+function OV(v,box){const it=[],P=new T.Vector3();
+  const o={add(html,cls,x,y,z){const d=mk('div','tg '+(cls||''),html);box.appendChild(d);const r={d,x:x||0,y:y||0,z:z||0,on:true,rdy:false};it.push(r);return r},
+    set(r,on){if(r.on!==on){r.on=on;r.d.style.display=on?'':'none'}},
+    upd(){const w=box.clientWidth,h=box.clientHeight;for(let i=0;i<it.length;i++){const r=it[i];if(!r.on)continue;P.set(r.x,r.y,r.z).project(v.cam);const px=(P.x*.5+.5)*w,py=(-P.y*.5+.5)*h;
+      r.d.style.transform='translate('+px.toFixed(1)+'px,'+py.toFixed(1)+'px) translate(-50%,-50%)';if(!r.rdy){r.rdy=true;r.d.style.opacity='1'}}}};
+  const r0=v.render;v.render=function(){r0();o.upd()};return o}
+function nogl(box){box.innerHTML='<div class="nogl">تعذّر تشغيل العرض ثلاثي الأبعاد على هذا المتصفح.</div>'}
+
+/* ---------- أطلس الأجزاء: اختيار + إبراز + بطاقة معلومات ---------- */
+function Atlas(v,box,o){
+  const P={},ov=OV(v,box),lb=ov.add('','y',0,0,0),views={};let cur=null,on=null,vi=null;ov.set(lb,false);
+  const bb=new T.Box3(),cc=new T.Vector3();
+  function reg(id,g,n,en,t){g.userData.part=id;const ms=[];g.traverse(x=>{if(x.isMesh&&x.material&&x.material.emissive)ms.push(x)});P[id]={g,ms,n,en,t};return g}
+  function hl(id,s){const p=P[id];if(!p)return;p.ms.forEach(m=>{m.material.emissive.setHex(0xffb300);m.material.emissiveIntensity=s?.55:0})}
+  function sel(id){if(on)hl(on,0);on=id;const info=$(o.info);
+    if(!id||!P[id]){ov.set(lb,false);info.innerHTML=o.hint;v.dirty=true;sync();return}
+    const p=P[id];hl(id,1);bb.setFromObject(p.g);bb.getCenter(cc);lb.x=cc.x;lb.y=cc.y;lb.z=cc.z;lb.d.textContent=p.n;ov.set(lb,true);
+    info.innerHTML='<h3>'+p.n+'</h3><div class="en">'+p.en+'</div><p>'+p.t+'</p>';v.dirty=true;sync()}
+  function sync(){$(o.chips).querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===on))}
+  function show(id){vi=id;sel(null);const vw=views[id];for(const k in views)views[k].g.visible=k===id;
+    v.pick=vw.parts.map(p=>P[p].g);const ch=$(o.chips);ch.innerHTML='';
+    vw.parts.forEach(p=>{const b=mk('button','',P[p].n);b.dataset.id=p;b.onclick=()=>sel(on===p?null:p);ch.appendChild(b)});
+    if($(o.views))$(o.views).querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
+    if(vw.cam)vw.cam();v.dirty=true;if(o.onview)o.onview(id)}
+  v.onpick=id=>sel(id);
+  if(o.views){const vb=$(o.views);Object.keys(o.vdefs).forEach(k=>{const b=mk('button','',o.vdefs[k]);b.dataset.id=k;b.onclick=()=>show(k);vb.appendChild(b)})}
+  return {reg,show,sel,views,P,ov,cur:()=>vi}}
+
+/* ================= 1) الجهاز الذكري ================= */
+const mv=C3D.viewer($('ms'),{yaw:0,pitch:8,r:28,ty:.5,floor:false,rmin:10,rmax:60});
+let mAt=null,mPath=null;
+if(!mv)nogl($('ms'));else{
+  const ft=fit(mv,13.5,12,0,.4);
+  mAt=Atlas(mv,$('ms'),{views:'mvw',vdefs:{sys:'الجهاز الذكري',tes:'مقطع في الخصية',spm:'الحيوان المنوي'},chips:'mch',info:'mi',hint:'اضغط على عضو في المجسّم لتظهر معلوماته هنا.',
+    onview:id=>{$('mrow').style.display=id==='sys'?'':'none';if(id!=='sys')stopPath()}});
+  const A=mAt,R=A.reg,add=(id,g)=>{A.views[id]={g,parts:[]};mv.scene.add(g);return g},partOf=(vid,id)=>A.views[vid].parts.push(id);
+  /* --- المجسّم العام --- */
+  const gs=add('sys',new T.Group());
+  const skin=new T.MeshPhysicalMaterial({color:0xf0b79b,roughness:.5,transparent:true,opacity:.3,depthWrite:false,side:T.DoubleSide});
+  const gScr=new T.Group();gScr.add(ell(3.9,2.6,1.9,skin,0,-3.4,.1));gs.add(R('scr',gScr,'كيس الصفن','Scrotum','كيس جلدي يحمل الخصيتين خارج تجويف الجسم، فتبقى حرارتهما أقل قليلاً من حرارة الجسم، وهذا مناسب لتكوين الحيوانات المنوية.'));partOf('sys','scr');
+  const gBl=grp(ell(1.75,1.5,1.5,M(0xf2d27a,.4,.75),0,5.3,0));gs.add(R('bl',gBl,'المثانة','Urinary bladder','عضو من الجهاز البولي يخزّن البول مؤقتاً، وتخرج منها قناة البول التي تمرّ في البروستات ثم في القضيب.'));
+  const gPr=grp(ell(1.15,.85,.95,M(0xc8704a,.55),0,2.85,0));gs.add(R('pr',gPr,'البروستات','Prostate gland','إحدى الغدد الملحقة، تحيط ببداية قناة البول، وتفرز سائلاً يدخل في تركيب السائل المنوي.'));
+  const gSv=new T.Group(),gCw=new T.Group(),gTe=new T.Group(),gEp=new T.Group(),gVd=new T.Group();
+  const mSv=M(0xdb9b5a,.6),mCw=M(0x8bc34a,.5),mTe=M(0xdcaa8c,.45),mEp=M(0xb5543f,.55),mVd=M(0xf6e7c1,.45);
+  for(const s of[-1,1]){
+    const sv=ell(.55,1.15,.5,mSv,s*1.15,4.0,-1.25);sv.rotation.z=s*.45;gSv.add(sv);
+    gCw.add(ell(.32,.32,.32,mCw,s*.62,1.35,-.15));
+    const te=ell(1.05,1.55,.95,mTe,s*2.05,-3.45,0);te.rotation.z=-s*.12;gTe.add(te);
+    const pe=[];for(let i=0;i<=64;i++){const u=i/64,a=u*52;pe.push([s*(3.2+.14*Math.sin(a)),-1.9-3.0*u,-.1+.16*Math.cos(a)])}
+    gEp.add(tube(pe,.2,mEp,200,8));
+    const vp=[[s*3.0,-4.9,-.3],[s*1.6,-4.2,-1.25],[s*1.25,-2.6,-1.3],[s*1.15,0,-1.1],[s*1.9,3.2,-1.1],[s*2.15,5.6,-1.2],[s*1.55,6.5,-1.55],[s*1.1,5.2,-1.75],[s*.7,3.7,-1.2],[s*.4,3.0,-.45]];
+    gVd.add(tube(vp,.11,mVd,120,8));
+  }
+  gs.add(R('sv',gSv,'الحويصلتان المنويتان','Seminal vesicles','غدتان ملحقتان خلف المثانة، تفرزان سائلاً غنياً بالسكر يمدّ الحيوانات المنوية بالطاقة، ويدخل في تركيب السائل المنوي.'));
+  gs.add(R('cw',gCw,'غدتا كوبر','Cowper (bulbourethral) glands','غدتان صغيرتان ملحقتان تحت البروستات، تفرزان سائلاً مخاطياً يرطّب قناة البول ويهيئها قبل مرور الحيوانات المنوية.'));
+  gs.add(R('tes',gTe,'الخصيتان','Testes','غدتان تناسليتان بيضاويتان داخل كيس الصفن. تنتجان الحيوانات المنوية (في الأنابيب المنوية) وهرمون التستوستيرون (تفرزه الخلايا البينية).'));
+  gs.add(R('epi',gEp,'البربخ','Epididymis','قناة طويلة ملتفة ملتصقة بكل خصية؛ يكتمل فيها نضج الحيوانات المنوية وتكتسب الحركة، وتُخزَّن فيها.'));
+  gs.add(R('vd',gVd,'الوعاء الناقل','Vas deferens','أنبوب عضلي يصعد من البربخ ويلتف خلف المثانة، فينقل الحيوانات المنوية نحو قناة البول.'));
+  const upts=[[0,3.9,0],[0,2.6,0],[0,1.1,.05],[0,-.6,.95],[0,-2.9,1.65],[0,-4.9,2.05]];
+  const ur=tube(upts,.17,M(0xe0a24b,.4),60,8);const gUr=grp(ur);
+  gs.add(R('ur',gUr,'قناة البول (الإحليل)','Urethra','تبدأ من المثانة وتمرّ داخل القضيب؛ تخرج منها الحيوانات المنوية مع السائل المنوي، ويخرج منها البول أيضاً.'));
+  const pen=tube([[0,1.0,.1],[0,-.6,.95],[0,-2.9,1.65],[0,-4.9,2.05]],.78,skin,40,14);const glans=ell(.82,.7,.82,skin,0,-5.0,2.07);gs.add(grp(pen,glans));
+  ['bl','pr','sv','cw','tes','epi','vd','ur'].forEach(p=>partOf('sys',p));
+  /* خرزات مسار الحيوانات المنوية */
+  const pcurve=(function(){const s=1,pts=[[s*1.9,-3.2,.15],[s*2.4,-3.5,.2],[s*3.1,-2.4,.0]];for(let i=0;i<=24;i++){const u=i/24,a=u*52;pts.push([s*(3.2+.14*Math.sin(a)),-2.0-2.9*u,-.1+.16*Math.cos(a)])}
+    return pts.concat([[s*3.0,-4.9,-.3],[s*1.6,-4.2,-1.25],[s*1.25,-2.6,-1.3],[s*1.15,0,-1.1],[s*1.9,3.2,-1.1],[s*2.15,5.6,-1.2],[s*1.55,6.5,-1.55],[s*1.1,5.2,-1.75],[s*.7,3.7,-1.2],[s*.4,3.0,-.45],[0,2.6,0],[0,1.1,.05],[0,-.6,.95],[0,-2.9,1.65],[0,-4.95,2.05]]).map(V3)})();
+  const pc=new T.CatmullRomCurve3(pcurve);const beadM=new T.MeshStandardMaterial({color:0xfff176,emissive:0xffa000,emissiveIntensity:.8,roughness:.3});
+  const beads=[];for(let i=0;i<5;i++){const b=new T.Mesh(SPH,beadM);b.scale.setScalar(.24);b.visible=false;gs.add(b);beads.push(b)}
+  const cap=$('mcap'),tmp=new T.Vector3();let pt=0,run=false,lastS=-1;
+  const STG=[[0,.2,'الأنابيب المنوية: تتكوّن فيها الحيوانات المنوية داخل الخصية.'],[.2,.4,'البربخ: يكتمل نضجها وتكتسب الحركة وتُخزَّن.'],[.4,.7,'الوعاء الناقل: ينقلها صاعداً ثم خلف المثانة نحو قناة البول.'],[.7,1.01,'قناة البول: تضيف الغدد الملحقة (الحويصلتان المنويتان والبروستات وغدتا كوبر) إفرازاتها فيتكوّن السائل المنوي.']];
+  function stopPath(){run=false;pt=0;beads.forEach(b=>b.visible=false);lastS=-1;cap.classList.add('hidden');$('mplay').textContent='▶ تتبّع مسار الحيوانات المنوية';mv.dirty=true}
+  $('mplay').onclick=()=>{if(run){stopPath();return}run=true;pt=0;cap.classList.remove('hidden');$('mplay').textContent='⏹ إيقاف';lastS=-1;mv.auto=0};
+  mv.onframe=t=>{if(!mAt||mAt.cur()==='tes'&&0)return false;let ch=false;
+    if(run){pt+=.0021;if(pt>1.25)pt=0;
+      for(let i=0;i<beads.length;i++){const u=pt-i*.022;if(u<=0||u>=1){beads[i].visible=false;continue}beads[i].visible=true;pc.getPointAt(u,tmp);beads[i].position.copy(tmp)}
+      const hd=cl(pt,0,.999);let si=0;for(let k=0;k<STG.length;k++)if(hd>=STG[k][0])si=k;if(si!==lastS){lastS=si;cap.innerHTML='<b>'+(si+1)+'/4</b> '+STG[si][2]}ch=true}
+    return ch};
+  /* --- مقطع في الخصية --- */
+  const gt=add('tes',new T.Group());
+  const shell=new T.Mesh(new T.SphereGeometry(1,48,32,0,Math.PI*2,0,Math.PI),new T.MeshStandardMaterial({color:0xe8cdb8,roughness:.55,side:T.DoubleSide,transparent:true,opacity:.3,depthWrite:false}));shell.scale.set(3.6,4.4,2.6);gt.add(shell);const clp=new T.Plane(new T.Vector3(0,0,-1),1.3);shell.material.clippingPlanes=[clp];
+  const inner=ell(3.4,4.2,2.4,M(0xe9b9a3,.7,1,true),0,0,-.2);inner.material.clippingPlanes=[clp];gt.add(inner);
+  let sd=7;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;
+  const gTb=new T.Group(),mTb=M(0xf7e19a,.45);
+  for(let k=0;k<9;k++){const a=-1.3+k*.33,pts=[],n=14,ex=Math.sin(a)*2.4,ey=-Math.cos(a)*3.0-.3;
+    for(let i=0;i<=n;i++){const u=i/n,x=lerp(ex,0,u)+Math.sin(u*14+k)*.28*(1-u*.4),y=lerp(ey,2.7,u*u*.6+u*.4)+Math.cos(u*11+k*2)*.28*(1-u*.4),z=.55+Math.sin(u*9+k)*.5;pts.push([x,y,z])}
+    gTb.add(tube(pts,.17,mTb,90,8))}
+  gt.add(R('tub',gTb,'الأنابيب المنوية','Seminiferous tubules','أنابيب دقيقة ملتفة كثيرة داخل كل خصية، تتكوّن فيها الحيوانات المنوية (تبدأ من خلايا منوية أولية تنقسم انقساماً منصفاً).'));partOf('tes','tub');
+  const gLy=new T.Group(),mLy=M(0xff9800,.45);const lyM=new T.InstancedMesh(SPH,mLy,70),dm=new T.Object3D();
+  for(let i=0;i<70;i++){const a=rnd()*6.28,r=Math.sqrt(rnd());dm.position.set(Math.cos(a)*r*2.9,Math.sin(a)*r*3.7,.25+rnd()*1.0);dm.scale.setScalar(.13);dm.updateMatrix();lyM.setMatrixAt(i,dm.matrix)}
+  gLy.add(lyM);gt.add(R('ley',gLy,'الخلايا البينية (خلايا ليديج)','Interstitial (Leydig) cells','خلايا صماء تقع في الفراغات بين الأنابيب المنوية، وتفرز هرمون التستوستيرون.'));partOf('tes','ley');
+  const gEp2=grp(tube((function(){const p=[];for(let i=0;i<=60;i++){const u=i/60,a=u*40;p.push([3.2+.18*Math.sin(a)+.3*Math.sin(u*3),2.6-5.0*u+.0,-.1+.18*Math.cos(a)])}return p})(),.22,mEp,160,8));
+  gt.add(R('epi2',gEp2,'البربخ','Epididymis','تنتقل الحيوانات المنوية من الأنابيب المنوية إلى البربخ الملتصق بالخصية، ويكتمل نضجها فيه وتُخزَّن.'));partOf('tes','epi2');
+  const gVd2=grp(tube([[3.2,-2.4,-.1],[3.5,-3.8,-.6],[2.2,-5.0,-.6],[.8,-4.6,-.5],[1.2,-1.0,-1.0],[1.0,4.6,-1.0]],.15,mVd,80,8));gt.add(R('vd2',gVd2,'الوعاء الناقل','Vas deferens','يخرج من ذيل البربخ ويصعد ليحمل الحيوانات المنوية نحو قناة البول.'));partOf('tes','vd2');
+  gt.rotation.y=-.3;gt.position.x=-.4;gt.visible=false;
+  /* --- الحيوان المنوي --- */
+  function makeSperm(S,N,detail){const g=new T.Group(),segs=[],L=6.2*S;
+    const hd=M(0xf6d9cc,.4,.42),nu=M(0x7b1fa2,.4),ac=M(0x26c6da,.35),mi=M(0x90a4ae,.5),mt=M(0xff8f00,.45),tl=M(0xe8c3ae,.5);
+    const head=ell(1.05*S,.66*S,.46*S,hd,0,0,0);
+    const nuc=ell(.82*S,.5*S,.34*S,nu,-.06*S,0,0);
+    const acG=new T.SphereGeometry(1,28,16,0,Math.PI*2,0,1.0);acG.rotateZ(-Math.PI/2);const acr=new T.Mesh(acG,ac);acr.scale.set(1.12*S,.72*S,.5*S);acr.material.side=T.DoubleSide;
+    const midG=new T.Group(),mc=new T.Mesh(new T.CylinderGeometry(.24*S,.2*S,1.0*S,16),mi);mc.rotation.z=Math.PI/2;mc.position.x=-1.55*S;midG.add(mc);
+    if(detail){const tg=new T.TorusGeometry(.26*S,.07*S,8,18);for(let i=0;i<7;i++){const r=new T.Mesh(tg,mt);r.rotation.y=Math.PI/2;r.position.x=-1.15*S-i*.14*S;midG.add(r)}}
+    for(let i=0;i<N;i++){const m=cyl(tl,S*(.11-.07*i/N));g.add(m);segs.push(m)}
+    g.add(head,nuc,acr,midG);
+    const o={g,segs,head,nuc,acr,mid:midG,wave(t,amp){let px=-2.05*S,py=0;for(let i=0;i<N;i++){const u=(i+1)/N,nx=-2.05*S-L*u,ny=Math.sin(u*9-t*7)*amp*S*u;seg(segs[i],px,py,0,nx,ny,0);px=nx;py=ny}}};
+    o.tailG=new T.Group();segs.forEach(s=>{g.remove(s);o.tailG.add(s)});o.headG=head;return o}
+  const gsp=add('spm',new T.Group());const SP=makeSperm(1.5,26,true);
+  /* الأجزاء القابلة للاختيار تُنقل من مجموعة الحيوان المنوي إلى مجموعات مسجّلة */
+  SP.g.remove(SP.nuc,SP.acr,SP.mid);gsp.add(SP.g);SP.g.position.set(2.2,-.5,0);SP.g.rotation.z=.42;
+  const mkp=(id,obj,n,en,t)=>{const h=new T.Group();h.add(obj);SP.g.add(R(id,h,n,en,t))};
+  mkp('acr',SP.acr,'الأكروسوم','Acrosome','غلاف يغطي مقدمة الرأس يحتوي إنزيمات هاضمة تساعد الحيوان المنوي على اختراق أغشية البويضة.');
+  mkp('nuc',SP.nuc,'النواة','Nucleus','تحمل المادة الوراثية للأب: 23 كروموسوماً (ن)، أي نصف العدد الموجود في الخلايا الجسمية.');
+  mkp('mid',SP.mid,'القطعة الوسطى','Midpiece','تحتوي ميتوكوندريا كثيرة تنتج الطاقة (ATP) اللازمة لحركة الذيل وسباحة الحيوان المنوي.');
+  SP.g.add(R('tail',SP.tailG,'الذيل (السوط)','Flagellum (tail)','ذيل طويل سوطي يتحرك بحركة موجية فيدفع الحيوان المنوي إلى الأمام.'));
+  ['acr','nuc','mid','tail'].forEach(p=>partOf('spm',p));
+  gsp.visible=false;
+  const lm=mv.onframe;let tt=0;
+  mv.onframe=t=>{let ch=lm?lm(t):false;if(mv.R&&!mv.R.localClippingEnabled){mv.R.localClippingEnabled=true;ch=true}if(gsp.visible){tt+=.016;SP.wave(tt,.9);ch=true}return ch};
+  const vc={sys:()=>{ft(12.8,10.5,0,.5);mv.yaw=22;mv.pitch=10},tes:()=>{ft(9.6,9.2,0,0);mv.yaw=0;mv.pitch=4},spm:()=>{ft(8,14.4,-1.3,-1.8);mv.yaw=0;mv.pitch=8}};
+  Object.keys(vc).forEach(k=>A.views[k].cam=vc[k]);
+  A.show('sys');mv.auto=.12;
+}
+
+/* ================= 2) الجهاز الأنثوي ================= */
+const fv=C3D.viewer($('fs'),{yaw:0,pitch:6,r:28,ty:.3,floor:false,rmin:10,rmax:60});
+let fAt=null;
+if(!fv)nogl($('fs'));else{
+  const ft=fit(fv,8.8,11.4,0,-.2);
+  fAt=Atlas(fv,$('fs'),{chips:'fch',info:'fi',hint:'اضغط على جزء في المجسّم لتظهر معلوماته هنا.'});
+  const A=fAt,R=A.reg;const gF=new T.Group();fv.scene.add(gF);A.views.f={g:gF,parts:[]};
+  const mUt=new T.MeshStandardMaterial({color:0xe58b94,roughness:.55,transparent:true,opacity:.6,side:T.DoubleSide,depthWrite:false});
+  const mIn=M(0xb23a48,.6,1,true),mOv=M(0xe8a98c,.5),mOd=M(0xf0a0a8,.5),mFi=M(0xff8a80,.6),mVg=new T.MeshStandardMaterial({color:0xd9737d,roughness:.6,transparent:true,opacity:.7,side:T.DoubleSide,depthWrite:false});
+  const up=[[0,-.1],[.5,0],[.52,.7],[.8,1.5],[1.25,2.4],[1.38,3.0],[1.0,3.45],[0,3.6]].map(p=>new T.Vector2(p[0],p[1]));
+  const ug=new T.LatheGeometry(up,40);const uOut=new T.Mesh(ug,mUt);uOut.scale.set(1,1,.62);
+  const ui=up.map(p=>new T.Vector2(p.x*.55,p.y*.9+.15));const uIn=new T.Mesh(new T.LatheGeometry(ui,32),mIn);uIn.scale.set(1,1,.45);uIn.position.y=.05;
+  const gUt=grp(uOut,uIn);gF.add(R('ut',gUt,'الرحم','Uterus','عضو عضلي مجوّف على شكل إجاصة؛ هو مكان نمو الجنين، تنغرس فيه البويضة المخصّبة ببطانته.'));
+  const gCx=grp(ell(.5,.62,.4,M(0xc95f70,.6),0,-.15,0));gF.add(R('cx',gCx,'عنق الرحم','Cervix','الجزء الضيق السفلي من الرحم، يصل الرحم بالمهبل.'));
+  const gVg=grp(tube([[0,-.55,0],[0,-2,.1],[0,-3.4,.3],[0,-4.5,.5]],.62,mVg,30,16));gF.add(R('vg',gVg,'المهبل','Vagina','قناة عضلية تصل الرحم بخارج الجسم، وهي قناة الولادة.'));
+  const gOv=new T.Group(),gOd=new T.Group(),gFi=new T.Group(),odP=[];
+  const finTip=[];
+  for(const s of[-1,1]){
+    const ov=ell(.8,1.15,.62,mOv,s*4.15,1.7,0);ov.rotation.z=s*.35;gOv.add(ov);
+    [[-.2,.5,.52],[.3,-.2,.55],[-.1,-.7,.45]].forEach(p=>gOv.add(ell(.2,.2,.2,M(0xfff3e0,.4),s*4.15+p[0]*s,1.7+p[1],p[2])));
+    const od=[[s*.8,3.05,0],[s*1.3,3.45,0],[s*2.1,3.65,0],[s*2.9,3.55,0],[s*3.5,3.2,0],[s*3.9,2.8,.05]];const oc=tube(od,.2,mOd,50,10);gOd.add(oc);if(s===1)odP.push(...od);
+    for(let i=0;i<8;i++){const a=i/8*6.283,ox=Math.cos(a)*.55,oz=Math.sin(a)*.55,dir=new T.Vector3(ox*.9+s*.05,-1,oz).normalize(),c=new T.Mesh(new T.ConeGeometry(.1,.75,6),mFi);
+      c.quaternion.setFromUnitVectors(UP,dir);c.position.set(s*3.9+ox*.28,2.8,oz*.28).addScaledVector(dir,.3);gFi.add(c)}
+  }
+  gF.add(R('ov',gOv,'المبيضان','Ovaries','غدتان تناسليتان على جانبي الرحم؛ تنتجان الخلية البيضية، وتفرزان هرمَي الإستروجين والبروجسترون.'));
+  gF.add(R('od',gOd,'قناتا البيض','Oviducts (fallopian tubes)','أنبوبان يصلان كل مبيض بالرحم، يحدث فيهما الإخصاب غالباً في الثلث الأول (الأقرب للمبيض)، وتدفع أهدابهما الخلية البيضية نحو الرحم.'));
+  gF.add(R('fi',gFi,'نهاية قناة البيض (الأهداب)','Fimbriae','نهاية القناة المفتوحة قرب المبيض تلتقط الخلية البيضية بعد التبويض.'));
+  ['ut','cx','vg','ov','od','fi'].forEach(p=>A.views.f.parts.push(p));
+  /* رحلة الخلية البيضية */
+  const egg=ell(.45,.45,.45,new T.MeshStandardMaterial({color:0xfff0c8,roughness:.3,emissive:0xffb74d,emissiveIntensity:.5}),0,0,0);egg.visible=false;gF.add(egg);
+  const ring=new T.Mesh(new T.TorusGeometry(.5,.07,8,28),new T.MeshBasicMaterial({color:0xffd54f,transparent:true,opacity:.9}));ring.visible=false;gF.add(ring);
+  const wp=[[4.4,1.9,.35],[4.1,2.4,.2],[3.9,2.75,.1],[3.5,3.2,0],[2.9,3.55,0],[2.1,3.65,0],[1.3,3.45,0],[.8,3.05,0],[.55,2.3,.05],[.75,1.8,.1]].map(V3);
+  const ec=new T.CatmullRomCurve3(wp,false,'catmullrom',.3),tp=new T.Vector3();
+  ring.position.copy(wp[3]);ring.rotation.set(0,0,0);egg.scale.setScalar(1);
+  const STs=[[0,1,2.2,'التبويض: تتحرر الخلية البيضية من حويصلة غراف الناضجة في المبيض.'],[1,2,2,'تلتقطها نهاية قناة البيض (الأهداب) وتوجّهها إلى داخل القناة.'],[2,3,1.6,'تتحرك الخلية البيضية في قناة البيض نحو الرحم.'],[3,3,3.2,'الإخصاب: يحدث غالباً في الثلث الأول من قناة البيض (الأقرب للمبيض) إذا التقت الخلية البيضية بحيوان منوي، فيتكوّن الزايجوت.'],[3,8,5,'يبدأ الزايجوت بالانقسام وهو يتحرك في القناة نحو الرحم.'],[8,9,2.2,'ينغرس الجنين المبكر في بطانة الرحم ويبدأ الحمل.']];
+  const total=STs.reduce((a,s)=>a+s[2],0),fc=$('fcap');let fr=false,ft0=0,fls=-1;
+  function stopEgg(){fr=false;egg.visible=false;ring.visible=false;fc.classList.add('hidden');$('fplay').textContent='▶ رحلة الخلية البيضية';fv.dirty=true}
+  $('fplay').onclick=()=>{if(fr){stopEgg();return}fr=true;ft0=0;fls=-1;fc.classList.remove('hidden');$('fplay').textContent='⏹ إيقاف';fv.auto=0};
+  fv.onframe=t=>{if(!fr)return false;ft0+=.016;if(ft0>total+1.2)ft0=0;let a=ft0,si=0;for(;si<STs.length-1&&a>STs[si][2];si++)a-=STs[si][2];if(ft0>=total){si=STs.length-1;a=STs[si][2]}
+    const S=STs[si],u=cl(a/S[2],0,1),k=lerp(S[0],S[1],sm(u))/(wp.length-1);ec.getPoint(k,tp);egg.position.copy(tp);egg.visible=true;
+    const zy=si>=4;egg.material.color.setHex(zy?0xe1bee7:0xfff0c8);egg.scale.setScalar(si===5?.9+.15*u:zy?.8:.9);
+    ring.visible=si===3;if(si===3){ring.scale.setScalar(1+.18*Math.sin(ft0*7));ring.material.opacity=.6+.3*Math.sin(ft0*7)}
+    if(si!==fls){fls=si;fc.innerHTML='<b>'+(si+1)+'/'+STs.length+'</b> '+S[3]}return true};
+  A.views.f.cam=()=>{ft(8.8,11.4,0,-.2);fv.yaw=0;fv.pitch=6};
+  A.show('f');fv.auto=.12;
+}
+
+/* ================= 3) الدورة الشهرية ================= */
+const cv=C3D.viewer($('cs'),{yaw:0,pitch:6,r:28,ty:0,floor:false,rmin:10,rmax:60,maxYaw:60});
+let D=1,tgtD=1,playing=false,chartDirty=true;
+const CH=[['FSH','#8E24AA','ينشّط نمو حويصلة غراف'],['LH','#F57C00','ذروته تحفّز التبويض'],['الإستروجين','#E91E63','تفرزه الحويصلة وينمّي بطانة الرحم'],['البروجسترون','#1E88E5','يفرزه الجسم الأصفر ويحافظ على البطانة']];
+const gz=(d,m,s)=>Math.exp(-.5*((d-m)/s)*((d-m)/s));
+const HORM=[d=>.22+.28*gz(d,4,3)+.5*gz(d,13.5,1.1),d=>.1+1*gz(d,13.7,.85)+.06*gz(d,22,5),d=>.1+.75*gz(d,12.7,2.5)+.4*gz(d,21.5,3.2),d=>.04+.95*gz(d,21.5,3.4)];
+(function(){const l=$('cleg');CH.forEach(c=>{const s=mk('span','','<b style="color:'+c[1]+'">●</b> '+c[0]+': '+c[2]);s.style.textAlign='right';l.appendChild(s)})})();
+const cth=d=>{d=cl(d,1,28.99);return d<5?.55-.3*sm((d-1)/4):d<14?.25+.55*sm((d-5)/9):d<25?.8+.35*sm((d-14)/11):1.15-.6*sm((d-25)/3.99)};
+function drawChart(){const cv2=$('chart'),w=cv2.clientWidth,h=cv2.clientHeight;if(!w)return;const dp=Math.min(2,devicePixelRatio||1);if(cv2.width!==Math.round(w*dp)){cv2.width=Math.round(w*dp);cv2.height=Math.round(h*dp)}
+  const g=cv2.getContext('2d'),st=getComputedStyle(document.documentElement),ink=st.getPropertyValue('--ink').trim()||'#222',mu=st.getPropertyValue('--muted').trim()||'#666',ac=st.getPropertyValue('--accent').trim()||'#2e7d32';
+  g.setTransform(dp,0,0,dp,0,0);g.clearRect(0,0,w,h);const L=8,Rr=8,Tp=24,B=22,X=d=>L+(d-1)/27*(w-L-Rr),Y=v=>h-B-v/1.15*(h-B-Tp);
+  const ph=[[1,5.5,'الطمث','rgba(198,40,40,.16)'],[5.5,14.5,'النمو','rgba(46,125,50,.14)'],[14.5,28,'الإفراز','rgba(245,124,0,.15)']];
+  g.font='700 11px "PCB Naskh",sans-serif';g.textAlign='center';ph.forEach(p=>{g.fillStyle=p[3];g.fillRect(X(p[0]),Tp-14,X(p[1])-X(p[0]),h-B-Tp+14);g.fillStyle=mu;g.fillText(p[2],(X(p[0])+X(p[1]))/2,Tp-3)});
+  g.strokeStyle=mu;g.globalAlpha=.6;g.beginPath();g.moveTo(L,h-B);g.lineTo(w-Rr,h-B);g.stroke();g.globalAlpha=1;g.fillStyle=mu;[1,7,14,21,28].forEach(d=>g.fillText(d,X(d),h-6));
+  HORM.forEach((f,i)=>{g.strokeStyle=CH[i][1];g.lineWidth=2.4;g.beginPath();for(let d=1;d<=28.001;d+=.5){const x=X(d),y=Y(f(d));d===1?g.moveTo(x,y):g.lineTo(x,y)}g.stroke()});
+  g.strokeStyle=ink;g.lineWidth=1.5;g.setLineDash([4,3]);const xd=X(D);g.beginPath();g.moveTo(xd,Tp-12);g.lineTo(xd,h-B);g.stroke();g.setLineDash([]);
+  HORM.forEach((f,i)=>{g.fillStyle=CH[i][1];g.beginPath();g.arc(xd,Y(f(D)),4.2,0,6.283);g.fill()});
+  g.fillStyle=ac;g.fillRect(xd-12,h-B+1,24,14);g.fillStyle='#fff';g.fillText(Math.round(D),xd,h-B+12)}
+if(!cv)nogl($('cs'));else{
+  const ft=fit(cv,7.2,13,0,-.1);const ov=OV(cv,$('cs'));
+  const gO=new T.Group(),gU=new T.Group();gO.position.x=-3.7;gU.position.x=3.7;cv.scene.add(gO,gU);
+  const slab=ell(2.5,2.15,.95,M(0xe9a99a,.6),0,0,-.1);gO.add(slab);
+  const mFol=new T.MeshStandardMaterial({color:0xffe9a8,roughness:.4,transparent:true,opacity:.9}),mFlu=new T.MeshStandardMaterial({color:0xb3e5fc,roughness:.15,transparent:true,opacity:.7,depthWrite:false});
+  const fol=new T.Group(),fo=ell(1,1,1,mFol),fl=ell(.8,.8,.8,mFlu);fol.add(fo,fl);const oo=ell(.2,.2,.2,new T.MeshStandardMaterial({color:0xfff8e1,roughness:.3,emissive:0xffb74d,emissiveIntensity:.35}),0,0,0);fol.add(oo);fol.position.set(.45,.2,.55);gO.add(fol);
+  const sib=[],sibP=[[-1.3,.9,.55,.7],[-.9,-1.0,.55,.55],[1.5,-1.0,.55,.62]];sibP.forEach(p=>{const s=ell(1,1,1,mFol);s.add(ell(.75,.75,.75,mFlu));s.position.set(p[0],p[1],p[2]);gO.add(s);sib.push(s)});
+  const cLut=ell(1,1,1,new T.MeshStandardMaterial({color:0xffc400,roughness:.6}),.45,.2,.5);cLut.visible=false;gO.add(cLut);
+  const mPr=[];for(let i=0;i<5;i++){const s=ell(.1,.1,.1,M(0xfff3e0,.4),(i-2)*.55-.2,-1.5+((i*37)%5)*.1,.5);gO.add(s)}
+  const eggO=ell(.22,.22,.22,new T.MeshStandardMaterial({color:0xfff8e1,roughness:.3,emissive:0xffb74d,emissiveIntensity:.5}),0,0,0);eggO.visible=false;gO.add(eggO);
+  const myo=new T.Mesh(new T.BoxGeometry(1,1,1),M(0x9c3a3a,.7));myo.scale.set(4.5,1.0,2.4);myo.position.set(0,-1.7,0);gU.add(myo);
+  const endo=new T.Mesh(new T.BoxGeometry(1,1,1),M(0xe46a77,.55));gU.add(endo);
+  const gl=[];for(let i=0;i<7;i++){const c=cyl(M(0xffe0b2,.5),.07);c.visible=false;gU.add(c);gl.push(c)}
+  const bl=[],mBl=M(0xc62828,.35);for(let i=0;i<12;i++){const b=ell(.1,.13,.1,mBl);gU.add(b);bl.push(b)}
+  ov.add('المبيض','g',-3.7,2.7,0);const lEn=ov.add('بطانة الرحم','r',3.7,1.9,0);
+  const lFo=ov.add('حويصلة غراف','y',-3.7,-2.7,0),lCl=ov.add('الجسم الأصفر','y',-3.7,-2.7,0);
+  let ph0=-1;const PH=[[1,5.99,'الطمث (الأيام 1–5)','تتفكك بطانة الرحم المتجددة وتخرج مع الدم من المهبل، ويكون الإستروجين والبروجسترون منخفضين، بينما يبدأ FSH بتنشيط نمو حويصلة غراف.'],[6,13.99,'مرحلة النمو (الأيام 6–14)','ينشّط FSH نمو حويصلة غراف فتفرز الإستروجين، فيرتفع ويعيد بناء بطانة الرحم فتزداد سماكتها.'],[14,14.99,'التبويض (اليوم 14 تقريباً)','يرتفع LH ارتفاعاً حاداً فيحفّز التبويض: تنفجر حويصلة غراف وتتحرر الخلية البيضية نحو قناة البيض.'],[15,28.99,'مرحلة الإفراز (الأيام 15–28)','يتحول ما تبقى من الحويصلة إلى الجسم الأصفر الذي يفرز البروجسترون، فتزداد سماكة البطانة وتفرز غدتها. وإن لم يحدث إخصاب يضمر الجسم الأصفر فتنخفض الهرمونات وتبدأ دورة جديدة.']];
+  function setD(d){D=d;const r=1+Math.round(cl(d,1,28))-1;$('cd').value=Math.round(cl(d,1,28));$('cv').textContent='اليوم '+Math.round(cl(d,1,28));
+    /* المبيض */
+    const fr=D<=14?.3+.7*Math.pow(sm((D-1)/13),1.2):0;fol.visible=D<14.3||D<15&&false;
+    let fs=fr;if(D>13.5)fs=.97*(1-sm((D-13.7)/.8));fol.visible=fs>.02;fol.scale.setScalar(Math.max(.01,fs));
+    fol.children[2].scale.setScalar(.2*(0.9+.0));oo.scale.setScalar(.12+.1*sm((D-1)/13));
+    sib.forEach((s,i)=>{const k=D<8?sm((D-1)/6)*sibP[i][3]:sibP[i][3]*(1-sm((D-8)/3));s.visible=k>.05;s.scale.setScalar(Math.max(.01,k*.75))});
+    const eg=cl((D-13.7)/1.3,0,1);eggO.visible=D>13.7&&D<16.2;eggO.position.set(.45+eg*2.6,.2+eg*1.9,.55+eg*.4);eggO.scale.setScalar(1);
+    const lu=D<15?0:D<22?sm((D-15)/6):1-.9*sm((D-24)/4);cLut.visible=D>=14.7;cLut.scale.set(.2+.7*lu,.2+.7*lu,.4+.5*lu);cLut.material.color.setHex(D>25?0xbcaaa4:0xffc400);
+    ov.set(lFo,D<14.3&&D>=1);ov.set(lCl,D>=15);lFo.y=lCl.y=.2+Math.max(1.5,fs*1.1+.7);lFo.x=lCl.x=-3.7+.45;lFo.d.textContent='حويصلة غراف';lCl.d.textContent=D>25?'الجسم الأصفر (يضمر)':'الجسم الأصفر';
+    /* الرحم */
+    const th=cth(D);endo.scale.set(4.5,th,2.4);endo.position.set(0,-1.2+th/2,0);endo.material.color.setHex(D<6?0xc94c58:0xe46a77);
+    gl.forEach((c,i)=>{const sec=sm((D-14)/5)*(D<26?1:1-sm((D-26)/2.5));c.visible=sec>.05;const x=-1.8+i*.6;c.position.set(0,0,0);seg(c,x,-1.2+.1,.4*((i%2)?1:-1),x+.1*((i%2)?1:-1),-1.2+th*.85*sec,.4*((i%2)?1:-1))});
+    lEn.y=-1.2+th+.75;
+    const ib=D<6;bl.forEach(b=>b.visible=ib);
+    /* الوصف */
+    let pi=0;for(let k=0;k<PH.length;k++)if(D>=PH[k][0])pi=k;if(D>=14&&D<15)pi=2;else if(D>=15)pi=3;else if(D>=6)pi=1;else pi=0;
+    if(pi!==ph0||1){ph0=pi;$('cinfo').innerHTML='<b>'+PH[pi][2]+'</b><br>'+PH[pi][3]}
+    chartDirty=true;cv.dirty=true}
+  $('cd').oninput=e=>{playing=false;$('cplay').textContent='▶ تشغيل الدورة';tgtD=+e.target.value};
+  $('cp').onclick=()=>{playing=false;$('cplay').textContent='▶ تشغيل الدورة';tgtD=Math.max(1,Math.round(tgtD)-1)};
+  $('cn').onclick=()=>{playing=false;$('cplay').textContent='▶ تشغيل الدورة';tgtD=Math.min(28,Math.round(tgtD)+1)};
+  $('cplay').onclick=()=>{playing=!playing;$('cplay').textContent=playing?'⏸ إيقاف مؤقت':'▶ تشغيل الدورة';cv.auto=0;if(playing&&tgtD>=28){tgtD=1;D=1}};
+  let bt=0;
+  cv.onframe=t=>{let ch=false;
+    if(playing){tgtD+=.016*2.2;if(tgtD>28.99){tgtD=1;D=1}D=tgtD}else if(Math.abs(D-tgtD)>.005){D+=(tgtD-D)*.18;if(Math.abs(D-tgtD)<.01)D=tgtD}else if(D!==tgtD)D=tgtD;else if(!ch&&D===lastD)return chartDirty?(drawChart(),chartDirty=false,false):false;
+    lastD=D;setD(D);
+    bt+=.016;if(D<6){bl.forEach((b,i)=>{const u=(bt*.45+i*.083)%1;b.position.set(-1.9+((i*53)%9)*.45,-.2-u*1.9-0,.2*((i%3)-1));b.scale.set(.1,.13,.1)})}
+    drawChart();chartDirty=false;return true};
+  let lastD=-1;
+  $('chart').parentNode.addEventListener('click',()=>{chartDirty=true});
+  new ResizeObserver(()=>{chartDirty=true;cv.dirty=true}).observe($('chart'));
+  new MutationObserver(()=>{chartDirty=true;cv.dirty=true}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  try{matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{chartDirty=true;cv.dirty=true})}catch(e){}
+  setD(1);
+}
+
+/* ================= 4) الإخصاب والحمل والتوائم ================= */
+const pvw=C3D.viewer($('ps'),{yaw:0,pitch:6,r:28,ty:0,floor:false,rmin:8,rmax:60,maxYaw:70});
+let pMode='fert',pP=0,pPlay=false,twMode='id',pwk=0;
+if(!pvw)nogl($('ps'));else{
+  const ft=fit(pvw,8,12,0,0),ov=OV(pvw,$('ps')),sc=pvw.scene;
+  /* --- الإخصاب --- */
+  const gFz=new T.Group();sc.add(gFz);
+  const eggM=new T.MeshStandardMaterial({color:0xffcc80,roughness:.45,transparent:true,opacity:.95}),zonaM=new T.MeshStandardMaterial({color:0xfff3e0,roughness:.2,transparent:true,opacity:.28,depthWrite:false,side:T.DoubleSide});
+  gFz.add(ell(2.1,2.1,2.1,eggM),ell(2.5,2.5,2.5,zonaM));
+  const corona=new T.InstancedMesh(SPH,M(0xffb74d,.5),46),dm=new T.Object3D();for(let i=0;i<46;i++){const y=1-i/45*2,r=Math.sqrt(1-y*y),a=i*2.39996;dm.position.set(Math.cos(a)*r*2.75,y*2.75,Math.sin(a)*r*2.75);dm.scale.setScalar(.2);dm.updateMatrix();corona.setMatrixAt(i,dm.matrix)}gFz.add(corona);
+  const pnM=M(0x3949ab,.4),pfM=M(0xd81b60,.4),pzM=M(0x8e24aa,.4);
+  const pnM_=ell(.5,.5,.5,pnM),pnF=ell(.5,.5,.5,pfM),pnZ=ell(.8,.8,.8,pzM);gFz.add(pnM_,pnF,pnZ);
+  const ys=[-1.5,-.7,0,.75,1.5,.25],zs=[.5,-.6,0,.55,-.4,-.9],sp=[];
+  function sperm(S,N){const mh=M(0xf6d9cc,.4),o={};o.g=new T.Group();o.h=ell(.9*S,.55*S,.4*S,M(0xd7ccc8,.4));const nn=ell(.7*S,.42*S,.3*S,M(0x5e35b1,.4));const acG=new T.SphereGeometry(1,16,10,0,6.283,0,1);acG.rotateZ(-Math.PI/2);const ac=new T.Mesh(acG,M(0x26c6da,.4,1,true));ac.scale.set(.98*S,.6*S,.42*S);
+    o.segs=[];const tl=M(0xe8c3ae,.5);for(let i=0;i<N;i++){const m=cyl(tl,S*(.1-.06*i/N));o.g.add(m);o.segs.push(m)}o.g.add(o.h,nn,ac);o.N=N;o.S=S;o.heads=[o.h,nn,ac];
+    o.wave=function(t,amp,ph){let px=-1.0*S,py=0;const L=5.2*S;for(let i=0;i<N;i++){const u=(i+1)/N,nx=-1.0*S-L*u,ny=Math.sin(u*9-t*8+ph)*amp*S*u;seg(o.segs[i],px,py,0,nx,ny,0);px=nx;py=ny}};return o}
+  for(let i=0;i<6;i++){const s=sperm(.5,14);gFz.add(s.g);sp.push(s)}
+  const l23m=ov.add('ن = 23','b',0,0,0),l23f=ov.add('ن = 23','r',0,0,0),l46=ov.add('2ن = 46','p',0,0,0);
+  const lEgg=ov.add('الخلية البيضية (ن = 23)','y',0,3.45,0),lSp=ov.add('حيوان منوي','b',0,0,0);
+  const FT=[[0,.38,'تسبح الحيوانات المنوية نحو الخلية البيضية في قناة البيض، وتحيط بها خلايا الإكليل.'],[.38,.6,'يلتصق حيوان منوي واحد بالغلاف، فتتحرر إنزيمات الأكروسوم وتُهضم الأغلفة، ويخترق الخلية البيضية حيوان منوي واحد فقط.'],[.6,.82,'يدخل رأس الحيوان المنوي، فتتكوّن نواتان: نواة الأب (ن=23) ونواة الأم (ن=23)، وتتوقف بقية الحيوانات المنوية عن الدخول.'],[.82,1.01,'تندمج النواتان فيتكوّن الزايجوت (2ن = 46 كروموسوماً)، وهو أول خلية في حياة الإنسان الجديد.']];
+  function updF(p){const ap=sm(p/.38),win=2;
+    sp.forEach((s,i)=>{const y=ys[i],z=zs[i],cx=-Math.sqrt(Math.max(0,2.9*2.9-y*y-z*z))-.15,st=-11-i*.9;let x=lerp(st,cx,ap);
+      if(i===win){x=p<.38?x:lerp(cx,-1.1,sm((p-.38)/.22));const hid=p>.62;s.heads.forEach(h=>h.visible=!hid);
+        s.segs.forEach(m=>m.visible=!hid&&true);}
+      s.g.position.set(x,y,z);if(i!==win||p<=.62){s.g.visible=true}else{s.g.visible=true}
+      s.g.userData.t=x});
+    const pm=cl((p-.62)/.28,0,1),mx=lerp(-1.1,-.42,sm(pm)),fx=lerp(1.0,.42,sm(pm));
+    const fuse=p>.9?sm((p-.9)/.1):0;
+    pnM_.visible=p>.62&&p<.95;pnF.visible=p<.95;pnM_.position.set(mx,0,0);pnF.position.set(fx,.15*(1-pm),0);
+    const sc2=p>.62?Math.min(1,(p-.62)/.08):0;pnM_.scale.setScalar(.5*sc2+.001);pnF.scale.setScalar(.5);
+    pnZ.visible=p>.93;pnZ.scale.setScalar(.8*sm((p-.93)/.07)+.001);
+    ov.set(l23m,pnM_.visible);l23m.x=mx;l23m.y=.95;ov.set(l23f,pnF.visible);l23f.x=fx;l23f.y=-.95;ov.set(l46,pnZ.visible);l46.x=0;l46.y=1.25;
+    const w=sp[win].g.position;ov.set(lSp,p<.6);lSp.x=w.x-1.4;lSp.y=w.y+.8;
+    let si=0;for(let k=0;k<FT.length;k++)if(p>=FT[k][0])si=k;$('pi').innerHTML='<b>'+(si+1)+'/4</b> '+FT[si][2]}
+  /* --- الحمل --- */
+  const gPg=new T.Group();sc.add(gPg);const wg=new T.Group();gPg.add(wg);wg.position.y=-3.4;
+  const wp=[[0,0],[.32,.1],[.36,.8],[.6,1.3],[1.05,2.0],[1.5,2.8],[1.78,3.7],[1.6,4.6],[1.05,5.2],[0,5.5]].map(p=>new T.Vector2(p[0],p[1]));
+  const wall=new T.Mesh(new T.LatheGeometry(wp,40,Math.PI/2,Math.PI),new T.MeshStandardMaterial({color:0xc4586b,roughness:.6,side:T.DoubleSide}));wg.add(wall);
+  const wallOut=new T.Mesh(new T.LatheGeometry(wp,40,-Math.PI/2,Math.PI),new T.MeshStandardMaterial({color:0xe58b94,roughness:.55,side:T.DoubleSide,transparent:true,opacity:.18,depthWrite:false}));wg.add(wallOut);
+  const sac=ell(1.25,1.25,1.25,new T.MeshStandardMaterial({color:0xb3e5fc,roughness:.08,transparent:true,opacity:.28,depthWrite:false,side:T.DoubleSide}),0,3.6,0);wg.add(sac);
+  const plc=ell(1.0,1.05,.24,M(0xa31f34,.7),0,4.0,-1.5);plc.rotation.x=.12;wg.add(plc);
+  const fet=new T.Group();wg.add(fet);fet.position.set(0,3.55,0);const sk=M(0xe8a07f,.5);
+  fet.add(ell(.55,.42,.4,sk,0,0,0));const hd=ell(.4,.4,.4,sk,.68,.32,0);fet.add(hd);fet.add(ell(.34,.22,.22,sk,-.6,-.28,.12),ell(.28,.17,.17,sk,-.95,.1,.1),ell(.22,.13,.13,sk,.2,.35,.35),ell(.2,.12,.12,sk,.38,-.05,.38));
+  const cord=tube([[0,3.4,-.3],[.3,3.7,-.8],[-.2,3.9,-1.2],[0,4.0,-1.4]],.07,M(0xd7b4a6,.5),24,6);wg.add(cord);
+  const blast=new T.Group();[[0,0,0],[.2,.1,.1],[-.15,.18,0],[.05,-.2,.1],[.1,.05,-.18],[-.18,-.08,.12],[.22,-.1,-.1]].forEach(p=>blast.add(ell(.12,.12,.12,M(0xce93d8,.4),p[0],p[1],p[2])));blast.position.set(0,4.3,-1.45);wg.add(blast);
+  const lW=ov.add('الأسبوع 0','g',0,-3.8,0);
+  const WT=[[0,.4,'الزايجوت ينقسم أثناء انتقاله في قناة البيض نحو الرحم.'],[.4,1.5,'ينغرس الجنين المبكر في بطانة الرحم ويستمر بالانقسام والنمو.'],[1.5,4,'تتكوّن الأغشية والمشيمة (تغذي الجنين) والحبل السري، وتبدأ الأعضاء الأولى بالتشكل.'],[4,8,'يبدأ القلب بالنبض وتتشكل الأطراف والدماغ والأجهزة الرئيسة (طور الجنين المبكر).'],[8,20,'تتكامل الأعضاء ويكبر الجنين بسرعة، وتبدأ حركته تُحَسّ قرابة منتصف الحمل.'],[20,37.9,'يواصل الجنين النمو وزيادة الوزن وتنضج أجهزته، خصوصاً الرئتين، استعداداً للولادة.'],[37.9,39,'اكتمال النمو بعد نحو 38 أسبوعاً من الحمل، فتبدأ الولادة عبر المهبل (قناة الولادة).']];
+  const LT=[[0,0],[1,.015],[4,.03],[8,.07],[12,.16],[20,.45],[30,.78],[38,1]];
+  const Lw=w=>{for(let i=1;i<LT.length;i++)if(w<=LT[i][0])return lerp(LT[i-1][1],LT[i][1],(w-LT[i-1][0])/(LT[i][0]-LT[i-1][0]));return 1};
+  function updP(w){const L=Lw(w),W=.34+.66*Math.pow(L,.55),sacS=.12+.88*Math.pow(L,.5);
+    wg.scale.setScalar(W);wallOut.visible=wall.visible=true;
+    const early=w<1.5;sac.visible=!early;sac.scale.setScalar(sacS);sac.position.y=3.6*(1)*1;
+    fet.visible=w>=1.5;fet.scale.setScalar(Math.max(.02,sacS*(.4+.7*L)*1.0));plc.visible=w>=3;plc.scale.set(.2+.8*sm(w/14),(.2+.8*sm(w/14))*1.05,.24);cord.visible=w>=4;
+    blast.visible=early;blast.scale.setScalar(w<.4?.5:1.1);blast.position.set(0,w<.4?5.0:4.3,w<.4?-.8:-1.45);if(w<.4){blast.position.set(0,5.1-w*.0,-.2)}
+    lW.y=-3.6-0;lW.d.textContent='الأسبوع '+Math.round(w)+(w>=8?' — جنين':'')+(w>=37.9?' (اكتمال)':'');
+    let si=0;for(let k=0;k<WT.length;k++)if(w>=WT[k][0])si=k;$('pi').innerHTML=WT[si][2];}
+  /* --- التوائم --- */
+  const gTw=new T.Group();sc.add(gTw);
+  const eM=new T.MeshStandardMaterial({color:0xffe6b0,roughness:.4}),emA=M(0x26a69a,.4),emB=M(0xec407a,.4),emC=M(0x42a5f5,.4);
+  const tE=[0,1].map(i=>{const g=new T.Group(),b=ell(1,1,1,eM);g.add(b);gTw.add(g);return {g,b}});
+  const tS=[0,1].map(i=>{const s=sperm(.3,12);gTw.add(s.g);return s});
+  const tZ=[0,1].map(i=>{const g=new T.Group();[[0,0,0],[.5,.2,0],[-.45,.25,.1],[.05,-.5,.1],[.1,.1,.5],[-.1,.1,-.45]].forEach(p=>g.add(ell(.42,.42,.42,eM,p[0],p[1],p[2])));gTw.add(g);return g});
+  const tl1=ov.add('','y',0,0,0),tl2=ov.add('','y',0,0,0),tl3=ov.add('','p',0,0,0);
+  const TT={id:[[0,.28,'بويضة واحدة وحيوان منوي واحد يلتقيان.'],[.28,.5,'يتكوّن زايجوت واحد (2ن = 46).'],[.5,.75,'ينقسم الزايجوت وينفصل إلى جنينين.'],[.75,1.01,'التوائم المتطابقة: من بويضة واحدة وحيوان منوي واحد، لذلك يتطابقان وراثياً وفي الجنس.']],
+    fr:[[0,.28,'بويضتان تُخصَّبان بحيوانين منويين مختلفين.'],[.28,.5,'يتكوّن زايجوتان مختلفان.'],[.5,.75,'ينمو كل زايجوت إلى جنين مستقل.'],[.75,1.01,'التوائم غير المتطابقة: من بويضتين مختلفتين وحيوانين منويين، فقد تختلف في الجنس والصفات الوراثية.']]};
+  function updT(p){const id=twMode==='id',ap=sm(p/.28),fz=sm((p-.25)/.1),sp2=sm((p-.5)/.25),gr=sm((p-.5)/.3);
+    tE.forEach((e,i)=>{const x0=id?0:(i?2.6:-2.6);e.g.position.set(x0,0,0);e.g.visible=(id?i===0:true)&&p<.3;e.b.scale.setScalar(1.15)});
+    tS.forEach((s,i)=>{const x0=id?0:(i?2.6:-2.6),ex=x0-Math.sqrt(1.3*1.3)-.2;s.g.visible=(id?i===0:true)&&p<.3;s.g.position.set(lerp(x0-9,ex,ap),(id?0:0),0);s.wave(p*30,.9,i)});
+    tZ.forEach((z,i)=>{const show=p>=.28&&(id?true:true)&&(id?(i===0||p>=.5):true);z.visible=show;const x0=id?0:(i?2.6:-2.6),x1=id?(i?2.5:-2.5):x0;const px=lerp(id?0:x0,x1,sp2);z.position.set(px,0,0);const gs=.55+.5*gr;z.scale.setScalar(p<.5?.9:gs);
+      z.children.forEach(c=>c.material=(p<.5?eM:(id?emA:(i?emB:emC))));
+    });
+    ov.set(tl1,p>=.5);tl1.x=tZ[0].position.x;tl1.y=-1.9;tl1.d.textContent=id?'جنين 1':'جنين 1 (بويضة 1)';ov.set(tl2,p>=.5);tl2.x=tZ[1].position.x;tl2.y=-1.9;tl2.d.textContent=id?'جنين 2':'جنين 2 (بويضة 2)';
+    ov.set(tl3,p>=.28&&p<.5);tl3.x=id?0:0;tl3.y=1.7;tl3.d.textContent=id?'زايجوت واحد (46)':'زايجوتان (46 لكل منهما)';
+    const L=TT[twMode];let si=0;for(let k=0;k<L.length;k++)if(p>=L[k][0])si=k;$('pi').innerHTML='<b>'+(si+1)+'/4</b> '+L[si][2]}
+  const hide=()=>{[l23m,l23f,l46,lEgg,lSp,lW,tl1,tl2,tl3].forEach(l=>ov.set(l,false))};
+  function apply(){const p=pP;if(pMode==='fert'){updF(p);ov.set(lEgg,true);$('pvv').textContent=Math.round(p*100)+'%'}else if(pMode==='preg'){const w=p*38;updP(w);ov.set(lW,true);$('pvv').textContent=Math.round(w)+' أسبوعاً'}else{updT(p);$('pvv').textContent=Math.round(p*100)+'%'}pvw.dirty=true}
+  function setMode(m){pMode=m;pPlay=false;$('pplay').textContent='▶ تشغيل';hide();gFz.visible=m==='fert';gPg.visible=m==='preg';gTw.visible=m==='twin';$('tv').classList.toggle('hidden',m!=='twin');
+    $('pv').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===m));pP=0;$('pr').value=0;
+    if(m==='fert'){ft(7.2,8.2,0,0);pvw.yaw=0;pvw.pitch=4;ov.set(lEgg,true)}else if(m==='preg'){ft(7.6,6.6,0,0.2);pvw.yaw=-18;pvw.pitch=4}else{ft(6,10.5,0,0);pvw.yaw=0;pvw.pitch=4}apply()}
+  [['fert','الإخصاب'],['preg','الحمل'],['twin','التوائم']].forEach(a=>{const b=mk('button','',a[1]);b.dataset.id=a[0];b.onclick=()=>setMode(a[0]);$('pv').appendChild(b)});
+  [['id','متطابقة'],['fr','غير متطابقة']].forEach(a=>{const b=mk('button',a[0]==='id'?'on':'',a[1]);b.dataset.id=a[0];b.onclick=()=>{twMode=a[0];$('tv').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));pP=0;$('pr').value=0;apply()};$('tv').appendChild(b)});
+  $('pr').oninput=e=>{pPlay=false;$('pplay').textContent='▶ تشغيل';pP=+e.target.value/100;apply()};
+  $('pplay').onclick=()=>{pPlay=!pPlay;$('pplay').textContent=pPlay?'⏸ إيقاف مؤقت':'▶ تشغيل';pvw.auto=0;if(pPlay&&pP>=1){pP=0}};
+  let ptm=0;
+  pvw.onframe=t=>{let ch=false;ptm+=.016;
+    if(pPlay){pP+=pMode==='preg'?.0016:.0034;if(pP>=1){pP=1;pPlay=false;$('pplay').textContent='▶ تشغيل'}$('pr').value=Math.round(pP*100);apply();ch=true}
+    if(pMode==='fert'){sp.forEach((s,i)=>{if(s.g.visible)s.wave(ptm*1,.9,i*1.3)});ch=true}
+    if(pMode==='twin'&&pP<.3){tS.forEach((s,i)=>s.wave(ptm*1,.9,i));ch=true}
+    return ch};
+  setMode('fert');
+}
+
+C3D.quiz('qbox','qscore','q',[
+ {q:'العضو الذي ينتج الحيوانات المنوية في الجهاز التناسلي الذكري:',o:['البربخ','البروستات','الخصية','الحالب'],a:2,e:'الخصيتان غدتان تناسليتان تنتجان الحيوانات المنوية (في الأنابيب المنوية) والتستوستيرون.'},
+ {q:'تفرز الخلايا البينية (خلايا ليديج) في الخصية:',o:['الحيوانات المنوية','الإستروجين','السائل المنوي','التستوستيرون'],a:3,e:'الخلايا البينية تقع بين الأنابيب المنوية وتفرز هرمون التستوستيرون، أما الحيوانات المنوية فتتكوّن في الأنابيب المنوية.'},
+ {q:'تحتوي القطعة الوسطى في الحيوان المنوي على:',o:['النواة والأكروسوم','ميتوكوندريا كثيرة','جهاز جولجي فقط','السوط فقط'],a:1,e:'القطعة الوسطى فيها ميتوكوندريا كثيرة تمدّ الذيل بالطاقة اللازمة للسباحة، والنواة والأكروسوم في الرأس.'},
+ {q:'يحدث الإخصاب غالباً في:',o:['الرحم','المهبل','المبيض','الثلث الأول من قناة البيض'],a:3,e:'يلتقي الحيوان المنوي بالخلية البيضية غالباً في الثلث الأول من قناة البيض (الأقرب للمبيض).'},
+ {q:'أي الهرمونات التالية يحفّز التبويض؟',o:['البروجسترون','FSH','LH','التستوستيرون'],a:2,e:'ارتفاع LH المفاجئ في منتصف الدورة يحفّز التبويض، أما FSH فينشّط نمو حويصلة غراف.'},
+ {q:'عدد كروموسومات الزايجوت البشري:',o:['23','46','44','92'],a:1,e:'الزايجوت ينتج من اندماج بويضة (23) وحيوان منوي (23) فيصبح فيه 46 كروموسوماً.'},
+ {q:'التوائم المتطابقة تنتج من:',o:['بويضتين وحيوانين منويين','بويضة واحدة وحيوانين منويين','بويضة واحدة وحيوان منوي واحد','حيوان منوي واحد وبويضتين'],a:2,e:'التوائم المتطابقة من بويضة واحدة وحيوان منوي واحد، أما غير المتطابقة فمن بويضتين مختلفتين.'}
+]);
+C3D.tabs([{id:'ml',l:'♂ الجهاز الذكري'},{id:'fm',l:'♀ الجهاز الأنثوي'},{id:'cy',l:'🗓️ الدورة الشهرية'},{id:'fp',l:'👶 الإخصاب والحمل'},{id:'qz',l:'✍️ أسئلة'}]);
+</script></body></html>
