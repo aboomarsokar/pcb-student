@@ -90,7 +90,7 @@ def main() -> None:
             sys.exit(f"ملفٌّ مفقود: {jp.relative_to(ROOT)}")
         return "<script>" + jp.read_text(encoding="utf-8").replace("</script", "<\\/script") + "</script>"
 
-    html = re.sub(r'<script src="(lib/(?:icons|voice|bg|reader)\.js)"></script>', inline_main_lib, html)
+    html = re.sub(r'<script src="(lib/(?:icons|voice|bg|reader|i18n|en_main)\.js)"></script>', inline_main_lib, html)
 
     mf = ROOT / "books" / "manifest.json"
     if mf.is_file():
