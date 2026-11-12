@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#EFE3CC" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#5A4636" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="PCB">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><meta name="format-detection" content="telephone=no">
 <title>PCB - نسخة الطالب v43</title>
 <style>
 :root{--bg:#EFE3CC;--card:#FBF5E8;--text:#2A2016;--muted:#5C4B38;--bd:#C9B28C;--pri:#5A3E1A;--ink:#2A2016;--c1:#1565C0;--c1b:#E6D3AE;--c2:#D32F2F;--c2b:#F1D9D0;--c3:#2E7D32;--c3b:#dcebd9;
@@ -15,7 +19,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:"PCB Naskh","Noto Naskh Arabic","Amiri","Traditional Arabic",system-ui,sans-serif;font-weight:600}
 body.sp{background:linear-gradient(135deg,#a8743a 0%,#6f8f5e 52%,#c0504a 100%)}
-#app{max-width:480px;margin:0 auto;min-height:100vh;padding:16px 16px 96px}
+#app{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;padding:16px 16px 96px}
 .sp #app{padding-bottom:20px}
 .col{display:flex;flex-direction:column;gap:14px}
 .ctr{align-items:center;justify-content:center;text-align:center;min-height:90vh}
@@ -147,6 +151,29 @@ input[type=text]{width:100%;padding:14px;border-radius:12px;border:1.5px solid v
 #calc.cx{touch-action:none!important}
 #calc.cx .cxg{touch-action:manipulation}
 #calc.cx .cxk{ -webkit-tap-highlight-color:transparent; touch-action:manipulation}
+
+/* ===== تجاوب: جوال / آيباد / لابتوب ===== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+@media (min-width:760px){
+ #app{max-width:920px;padding-inline:28px}
+ .subs{display:grid!important;grid-template-columns:repeat(3,1fr);gap:14px}
+ .subs .sc.im{height:240px!important;min-height:240px!important}
+ .q4{grid-template-columns:repeat(4,1fr);gap:12px}.q2{gap:14px}
+ .avh{margin-bottom:6px}
+ .ban.bim{max-width:640px;margin-inline:auto;width:100%}
+ .mdl .mbx{max-width:620px;border-radius:22px;margin-bottom:5vh}
+ .mdl{align-items:center}
+}
+@media (min-width:1180px){
+ #app{max-width:1160px}
+ .subs .sc.im{height:300px!important;min-height:300px!important}
+ .q4 div{min-height:96px;font-size:14px}
+ .ban.bim{max-width:700px}
+}
+@media (orientation:landscape) and (max-height:520px){
+ #app{max-width:760px}.hd{font-size:17px}
+}
+@media (hover:hover){.sc,.gi,.gc,.q4 div,.gb{transition:transform .15s}.sc:hover,.gi:hover,.gc:hover,.q4 div:hover,.gb:hover{transform:translateY(-2px)}}
 </style>
 <script src="lib/bg.js"></script><script src="lib/icons.js"></script><script src="lib/reader.js"></script></head>
 <body>
@@ -219,7 +246,7 @@ function draw(){
   $("app").innerHTML=h;window.scrollTo(0,0);mdraw();if(V=="sp")spLoad();
 }
 function mdraw(){var t=T(),d=document.documentElement.getAttribute("data-theme"),dk=d=="dark"||(d!="light"&&matchMedia("(prefers-color-scheme:dark)").matches);
-  $("menu").innerHTML='<h2>'+t.menu+'</h2><div class="mi" onclick="tl()"><span>'+t.lang+'</span><span class="tg">'+t.L+'</span></div><div class="mi" onclick="td()"><span>🌙 '+t.dark+'</span><span class="sw'+(dk?' on':'')+'"></span></div><div class="mi" onclick="notif=!notif;draw()"><span>🔔 '+t.notif+'</span><span class="sw'+(notif?' on':'')+'"></span></div>'+(notif?'<div class="n">'+t.n1+'</div><div class="n">'+t.n2+'</div>':'')+'<div class="mi" style="flex-direction:column;align-items:flex-start;gap:6px"><span>📖 '+t.cont+'</span><small class="sub">'+t.contT+'</small></div><div class="mi" onclick="sh()"><span>📤 '+t.share+'</span></div><div class="mi" onclick="shareApp()"><span>📤 '+(rtl()?'مشاركة التطبيق':'Share app')+'</span></div><div class="mi" onclick="bgPick()"><span>🎨 لون الخلفية</span></div><div class="mi" onclick="tourStart()"><span>🎓 جولة تعريفية بالتطبيق</span></div><div class="mi" onclick="lo()"><span>🚪 تسجيل الخروج / Log out</span></div><div class="cr2"><div class="k">تحت إشراف</div><div class="n">عبد الهادي كاظم الزميلي | حازم الخولي</div></div><p class="ft">'+ftx()+'</p>'}
+  $("menu").innerHTML='<h2>'+t.menu+'</h2><div class="mi" onclick="tl()"><span>'+t.lang+'</span><span class="tg">'+t.L+'</span></div><div class="mi" onclick="td()"><span>🌙 '+t.dark+'</span><span class="sw'+(dk?' on':'')+'"></span></div><div class="mi" onclick="notif=!notif;draw()"><span>🔔 '+t.notif+'</span><span class="sw'+(notif?' on':'')+'"></span></div>'+(notif?'<div class="n">'+t.n1+'</div><div class="n">'+t.n2+'</div>':'')+'<div class="mi" style="flex-direction:column;align-items:flex-start;gap:6px"><span>📖 '+t.cont+'</span><small class="sub">'+t.contT+'</small></div><div class="mi" onclick="sh()"><span>📤 '+t.share+'</span></div><div class="mi" onclick="shareApp()"><span>📤 '+(rtl()?'مشاركة التطبيق':'Share app')+'</span></div><div class="mi" onclick="bgPick()"><span>🎨 لون الخلفية</span></div><div class="mi" onclick="pwaInstall()"><span>📲 تثبيت التطبيق على جهازك</span></div><div class="mi" onclick="tourStart()"><span>🎓 جولة تعريفية بالتطبيق</span></div><div class="mi" onclick="lo()"><span>🚪 تسجيل الخروج / Log out</span></div><div class="cr2"><div class="k">تحت إشراف</div><div class="n">عبد الهادي كاظم الزميلي | حازم الخولي</div></div><p class="ft">'+ftx()+'</p>'}
 function mn(o){$("menu").classList.toggle("open",o);$("veil").classList.toggle("on",o)}
 function tl(){lang=lang=="ar"?"en":"ar";try{localStorage.setItem("pcbLang",lang)}catch(e){}if(window.Voice)Voice.setLang(lang);if(typeof cxTheme=="function")cxTheme();draw()}
 function bgPick(){mn(false);var old=$("mdl");if(old)old.remove();var B=window.Bg;if(!B)return;var g=B.get(),dk=B.isDark();
@@ -234,6 +261,19 @@ function libGo(k){libKind=k?"packs":"books";nav("libs")}
 function libSub(i){libSubj=i;nav("libi")}
 function libOpen(id){var it=(libData()[libKind]||[]).filter(function(x){return x.id==id})[0];if(!it||!window.Reader)return;if(it.u){Reader.openLink({title:it.t,url:it.u});return}Reader.open({key:libKind+id,title:it.t,n:it.n,rtl:true,pageUrl:function(p){return "books/"+it.id+"/p-"+String(p).padStart(3,"0")+".webp"}})}
 try{if(!LIBM&&/^https?:/.test(location.protocol))fetch("books/manifest.json",{cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j){LIBM=j;if(V=="libs"||V=="libi")draw()}}).catch(function(){})}catch(e){}
+var DIP=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();DIP=e});
+window.addEventListener("appinstalled",function(){DIP=null;try{toast("✅ تم تثبيت التطبيق")}catch(e){}});
+function pwaInstall(){mn(false);var sa=window.matchMedia&&matchMedia("(display-mode: standalone)").matches||navigator.standalone;if(sa){try{toast("التطبيق مثبَّت ويعمل بملء الشاشة")}catch(e){}return}
+ if(DIP){DIP.prompt();DIP.userChoice.then(function(){DIP=null});return}
+ var ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1),web=/^https?:/.test(location.protocol),old=$("mdl");if(old)old.remove();
+ var d=document.createElement("div");d.id="mdl";d.className="mdl";d.setAttribute("dir","rtl");
+ var url=web?location.origin+location.pathname.replace(/[^\/]*$/,""):"https://aboomarsokar.github.io/pcb-student/";
+ var steps=!web?'<p>التثبيت يلزمه الرابط المنشور على الإنترنت (وليس الملف المُرسَل). افتح هذا الرابط في المتصفح:</p><p dir="ltr" style="word-break:break-all;font-weight:800">'+url+'</p><p>ثم اختر «تثبيت التطبيق» من القائمة.</p>':
+  ios?'<ol><li>افتح الصفحة في متصفح <b>Safari</b>.</li><li>اضغط زر المشاركة <b>⬆︎</b> أسفل الشاشة.</li><li>اختر <b>«إضافة إلى الشاشة الرئيسية»</b> ثم «إضافة».</li></ol>':
+  '<ol><li>افتح قائمة المتصفح <b>⋮</b> (أعلى اليمين).</li><li>اختر <b>«تثبيت التطبيق»</b> أو <b>«إضافة إلى الشاشة الرئيسية»</b>.</li><li>أكّد بالضغط على «تثبيت».</li></ol>';
+ d.innerHTML='<div class="mbx"><div class="mhd"><b>📲 تثبيت التطبيق</b><span class="mx" onclick="$(\'mdl\').remove()">✕</span></div><div style="line-height:2">'+steps+'<p class="sub">بعد التثبيت يظهر بأيقونته على الشاشة الرئيسية ويعمل بملء الشاشة، وبلا إنترنت بعد أول فتح (الكتب والرزم تحتاج اتصالاً).</p></div></div>';
+ document.body.appendChild(d)}
+try{if("serviceWorker" in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register("sw.js").catch(function(){})}catch(e){}
 function td(){var r=document.documentElement,d=r.getAttribute("data-theme"),dk=d=="dark"||(d!="light"&&matchMedia("(prefers-color-scheme:dark)").matches);r.setAttribute("data-theme",dk?"light":"dark");mdraw()}
 function pk(i){nm=$("nm").value;sel=i;draw()}
 function ent(){nm=$("nm").value.trim();var t=T();if(nm.split(/\s+/).filter(Boolean).length<3){$("err").textContent=t.e1;return}if(sel<0){$("err").textContent=t.e2;return}try{localStorage.setItem("pcb",JSON.stringify({n:nm,s:sel}))}catch(e){}H=[];V="home";draw()}
