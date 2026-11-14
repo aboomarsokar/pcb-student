@@ -5,7 +5,7 @@
 <h1>⚛️ العناصر الكيميائية في حياتنا</h1>
 <div class="tabs" id="tabs"></div>
 <section id="tbl" class="pane">
-  <p class="hint">الجدول الدوري كاملاً (118 عنصراً): اسحب لتحريكه، وبإصبعين تكبّر، واضغط على عنصر لتعرف بطاقته. اختر نوع العناصر لتبرزها.</p>
+  <p class="hint">الجدول الدوري كاملاً (118 عنصراً): اسحب لتحريكه، وبإصبعين تكبّر، واضغط على عنصر لتعرف بطاقته. اختر نوع العناصر لتبرزها.</p><p class="hint" style="margin-top:-4px">على كل مربع: <b>العدد الذري Z</b> أعلى اليسار، <b>الرمز</b> في الوسط، و<b>العدد الكتلي A</b> أسفله.</p>
   <div class="row"><input type="text" id="srch" placeholder="ابحث باسم العنصر أو رمزه أو عدده الذري" style="flex:1;padding:9px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:700"><button id="rotb">تدوير</button><button id="rstb">↺</button></div>
   <div class="chips" id="cats"></div>
   <div class="stage3" id="tst" style="height:340px"></div>
@@ -53,7 +53,7 @@ if(tv){
   const base=C3D.mesh(new T.BoxGeometry(W+1.4,.5,H+1),C3D.std(0x2d3236,.5,.4),(17*SX)/2,-.3,(10.6*SZ)/2-.2);base.userData.noPick=1;tv.scene.add(base);
   tv.tx=(17*SX)/2;tv.tz=(10.6*SZ)/2-1.5;
   const GB=new T.BoxGeometry(1.24,.7,1.24),GP=new T.PlaneGeometry(1.2,1.2),MC={};
-  function lab(o){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');x.textAlign='center';x.fillStyle='#101418';x.font='700 26px sans-serif';x.fillText(o.z,24,26);x.font='800 62px sans-serif';x.fillText(o.s,64,92);const t=new T.CanvasTexture(c);t.anisotropy=1;return t}
+  function lab(o){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');x.textAlign='center';x.fillStyle='#101418';x.font='700 26px sans-serif';x.fillText(o.z,24,26);x.font='800 58px sans-serif';x.fillText(o.s,64,84);x.fillStyle='#37474f';x.font='700 24px sans-serif';x.fillText(Math.round(o.m),64,118);const t=new T.CanvasTexture(c);t.anisotropy=1;return t}
   E.forEach((o,i)=>{const col=CAT[o.c][1],g=new T.Group();g.userData.part=i;
     const mt=MC[o.c]||(MC[o.c]=C3D.phys(col,.35,.1));
     const b=new T.Mesh(GB,mt);b.position.y=.35;g.add(b);

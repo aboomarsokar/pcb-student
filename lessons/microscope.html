@@ -60,6 +60,9 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .toast.ask{background:var(--soft)}
 
 /* ======= المقارنة ======= */
+.why .wy{border-inline-start:5px solid var(--c);background:var(--soft);border-radius:12px;padding:8px 12px;margin:8px 0;line-height:1.75}.why .wy b{display:block;color:var(--c)}
+.twrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid var(--line)}.ctab{border-collapse:separate;border-spacing:0;min-width:820px;width:100%;font-size:.86rem;line-height:1.6}.ctab th,.ctab td{border-bottom:1px solid var(--line);border-inline-start:1px solid var(--line);padding:8px 10px;text-align:start;vertical-align:top;background:var(--card)}.ctab th{background:var(--soft);font-weight:800;position:sticky;top:0}.ctab td:first-child,.ctab th:first-child{position:sticky;inset-inline-start:0;z-index:1;font-weight:800;min-width:118px;box-shadow:inset -3px 0 0 var(--c,var(--line))}.ctab td:first-child{color:var(--c)}.ctab tr.grp td{background:color-mix(in srgb,var(--accent) 16%,var(--card));font-weight:800;text-align:start;position:static;color:var(--ink);box-shadow:none}.ctab .sg{position:sticky;inset-inline-start:12px;display:inline-block;max-width:calc(100vw - 80px)}
+
 .cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;perspective:1100px}
 .fc{position:relative;height:232px;cursor:pointer;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
 .fc.flip{transform:rotateY(180deg)}
@@ -107,6 +110,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
     <button role="tab" data-t="parts" aria-selected="true">🔬 أجزاء المجهر</button>
     <button role="tab" data-t="types" aria-selected="false">⚖️ أنواع المجاهر</button>
     <button role="tab" data-t="mag" aria-selected="false">🧮 قوة التكبير</button>
+      <button role="tab" data-t="tbl" aria-selected="false">📊 جدول المقارنة</button>
       <button role="tab" data-t="map" aria-selected="false">🗺️ مخطط الدرس</button>
   </div>
 
@@ -126,6 +130,16 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
   <section id="types" class="pane hidden">
     <p class="hint">اضغط على أي بطاقة لتنقلب وتعرف التفاصيل.</p>
     <div class="cmp" id="cmp"></div>
+    <div class="card why" style="margin-top:14px">
+      <h2>🏷️ لماذا سُمّي المجهر بهذا الاسم؟</h2>
+      <p class="hint" style="margin:0 0 6px">اسم كل مجهر يدلّ على طريقة عمله أو على ما يُستعمل فيه.</p>
+      <div class="wy" style="--c:#1565C0"><b>المجهر الضوئي</b><span>سُمّي «ضوئياً» لأنه يكوّن الصورة بالضوء المرئي الذي يمرّ عبر عدسات زجاجية، وهو الاسم العام للمجهر المركب والمجهر التشريحي.</span></div>
+      <div class="wy" style="--c:#1565C0"><b>المجهر الضوئي المركّب</b><span>سُمّي «مركّباً» لأن الصورة تتكوّن بنظامين من العدسات يعملان معاً: العدسة الشيئية تكبّر العينة أولاً، ثم العدسة العينية تكبّر الصورة مرة ثانية، فالتكبير الكلي = تكبير العينية × تكبير الشيئية.</span></div>
+      <div class="wy" style="--c:#2E7D32"><b>المجهر الضوئي التشريحي</b><span>سُمّي «تشريحياً» لأنه يُستعمل في تشريح الكائنات الصغيرة أو بعض أجزائها الخارجية، ويُري الجسم بأبعاده الثلاثة مع مسافة كافية تحت العدسة لتحريك أدوات التشريح.</span></div>
+      <div class="wy" style="--c:#B71C1C"><b>المجهر الإلكتروني</b><span>سُمّي «إلكترونياً» لأنه يستعمل حزمة من الإلكترونات بدل الضوء المرئي، وتصل قوة تكبيره إلى أكثر من مليون مرة.</span></div>
+      <div class="wy" style="--c:#D32F2F"><b>المجهر الإلكتروني الماسح (SEM)</b><span>سُمّي «ماسحاً» لأن حزمة الإلكترونات تمسح سطح العينة نقطةً نقطة، فيرسم صورة ثلاثية الأبعاد لتفاصيل السطح (SEM اختصار Scanning Electron Microscope).</span></div>
+      <div class="wy" style="--c:#6A1B9A"><b>المجهر الإلكتروني النافذ (TEM)</b><span>سُمّي «نافذاً» لأن الإلكترونات تنفذ (تعبر) من خلال شريحة رقيقة جداً من العينة، فتكشف تفاصيلها الداخلية (TEM اختصار Transmission Electron Microscope).</span></div>
+    </div>
     <div class="card" style="margin-top:14px">
       <h2>🧩 صنّف المجهر</h2>
       <p class="hint" style="margin:0 0 4px">اختر نوع المجهر المناسب لكل وصف، ثم اضغط تحقّق. محاولة واحدة فقط.</p>
@@ -152,6 +166,23 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
       <p class="hint" style="margin:0">لكل سؤال محاولة واحدة فقط، ولا يمكن إعادته.</p>
       <div id="pq"></div>
       <div class="score" id="pscore"></div>
+    </div>
+  </section>
+  <section id="tbl" class="pane hidden">
+    <div class="card">
+      <h2>📊 جدول المقارنة بين أنواع المجاهر</h2>
+      <p class="hint" style="margin:0 0 8px">خلاصة الدرس: قارن بين كل الأنواع. اسحب الجدول جانباً إن لم يتّسع على شاشتك.</p>
+      <div class="twrap"><table class="ctab">
+        <thead><tr><th>المجهر</th><th>سبب التسمية</th><th>ما يُستعمل لتكوين الصورة</th><th>العدسات</th><th>العينة</th><th>الصورة</th><th>قوة التكبير</th><th>الاستعمال</th></tr></thead>
+        <tbody>
+        <tr class="grp"><td colspan="8"><span class="sg">المجاهر الضوئية: تستعمل الضوء المرئي</span></td></tr>
+        <tr><td style="--c:#1565C0">المجهر الضوئي المركّب</td><td>نظامان من العدسات (شيئية وعينية) يعملان معاً</td><td>ضوء مرئي</td><td>عدسات زجاجية</td><td>عينات رقيقة جداً تسمح بمرور الضوء، ويمكن رؤية الخلايا وهي حية</td><td>ثنائية الأبعاد</td><td>التكبير الكلي = العينية × الشيئية (حتى نحو 1500 مرة)</td><td>فحص الخلايا والأنسجة الرقيقة</td></tr>
+        <tr><td style="--c:#2E7D32">المجهر الضوئي التشريحي</td><td>يُستعمل في تشريح الكائنات الصغيرة</td><td>ضوء مرئي</td><td>عدسات زجاجية</td><td>كائنات صغيرة أو أجزاء خارجية منها</td><td>ثلاثية الأبعاد</td><td>تكبير منخفض نسبياً</td><td>تشريح الكائنات الصغيرة ورؤيتها بأبعادها الثلاثة</td></tr>
+        <tr class="grp"><td colspan="8"><span class="sg">المجاهر الإلكترونية: تستعمل حزمة من الإلكترونات</span></td></tr>
+        <tr><td style="--c:#D32F2F">المجهر الإلكتروني الماسح (SEM)</td><td>حزمة الإلكترونات تمسح سطح العينة</td><td>حزمة إلكترونات</td><td>عدسات مغناطيسية</td><td>سطح العينة، ولا يمكن مشاهدة عينات حية</td><td>ثلاثية الأبعاد</td><td>أكثر من مليون مرة</td><td>دراسة التفاصيل السطحية للعينة</td></tr>
+        <tr><td style="--c:#6A1B9A">المجهر الإلكتروني النافذ (TEM)</td><td>الإلكترونات تنفذ من خلال العينة الرقيقة</td><td>حزمة إلكترونات</td><td>عدسات مغناطيسية</td><td>شرائح رقيقة جداً (غير حية)</td><td>ثنائية الأبعاد</td><td>أكثر من مليون مرة</td><td>دراسة التفاصيل الداخلية للخلية وبنيتها</td></tr>
+        </tbody></table></div>
+      <div class="warn" style="margin-top:10px"><b>للتذكّر:</b> الضوئي ← ضوء وعدسات زجاجية (المركّب للخلايا الحية الرقيقة، والتشريحي للأجسام الصغيرة بأبعادها الثلاثة). الإلكتروني ← إلكترونات (الماسح للسطح، والنافذ للداخل) وتكبيره أعلى بكثير.</div>
     </div>
   </section>
   <section id="map" class="pane hidden"></section>
@@ -458,7 +489,7 @@ function buildPQ(){const box=$('pq');box.innerHTML='';
 function score(){let sc=0,an=0;PQ.forEach((q,i)=>{const r=ANS['m:mag:'+i];if(r){an++;if(r.k===q.a)sc++}});$('pscore').textContent=an===PQ.length?'نتيجتك: '+sc+' من '+PQ.length+' 🔒':''}
 
 /* ---------- التبويبات والبدء ---------- */
-document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',String(x===b)));['parts','types','mag','map'].forEach(id=>{const s=$(id);s.classList.toggle('hidden',id!==b.dataset.t);if(id===b.dataset.t){s.classList.remove('pane');void s.offsetWidth;s.classList.add('pane')}});if(b.dataset.t==='map'&&!window._cmd){window._cmd=1;CMap.mount($('map'),JSON.parse(document.getElementById('cmapdata').textContent))};window.scrollTo({top:0,behavior:'smooth'})});
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',String(x===b)));['parts','types','mag','tbl','map'].forEach(id=>{const s=$(id);s.classList.toggle('hidden',id!==b.dataset.t);if(id===b.dataset.t){s.classList.remove('pane');void s.offsetWidth;s.classList.add('pane')}});if(b.dataset.t==='map'&&!window._cmd){window._cmd=1;CMap.mount($('map'),JSON.parse(document.getElementById('cmapdata').textContent))};window.scrollTo({top:0,behavior:'smooth'})});
 function refreshLocked(){buildCls();buildPQ();renderQ();const s=qStat();if(s.tt===TARGETS.length){$('bQuiz').textContent='انتهى الاختبار 🔒';$('bQuiz').disabled=true}else if(s.tt>0&&!quiz){$('bQuiz').textContent='تابع الاختبار ('+s.tt+'/'+TARGETS.length+')'}}
 $('bQuiz').onclick=startQuiz;
 if(!GL)buildScope();buildChips();select(null);buildTypes();buildMag();refreshLocked();apply();requestAnimationFrame(loop);
