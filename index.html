@@ -1676,6 +1676,14 @@ o.onclick=function(){back2();if(i>=3){var u=APPURL[i];if(u){window.open(u,"_blan
 })();
 </script>
 <script>
+/*PCB-G10: مواد الصف العاشر بلافتاتها */
+(function(){var G10=[[5,"images/gs10-math.webp"],[1,"images/gs10-chem.webp"],[0,"images/gs10-physics.webp"],[2,"images/gs10-bio.webp"],[6,"images/gs10-english.webp"],[3,"images/gs10-arabic.webp"],[4,"images/gs10-islamic.webp"]];
+hm=function(){var t=T();document.documentElement.lang=lang;document.documentElement.dir=rtl()?"rtl":"ltr";document.body.className="";
+$("app").innerHTML='<div class="hd"><div class="ic bg" onclick="mn(true)"><div><i></i><i></i><i></i></div></div><span>'+(rtl()?"الصف الأول الثانوي":"Grade 10")+'</span><div class="ic fsb" id="fsb" onclick="fsToggle()" title="ملء الشاشة" role="button">⛶</div></div><div class="col"><p class="sub" style="font-weight:700;text-align:center;margin:0 0 6px">'+t.hello+' '+ex((nm||"").split(/\s+/)[0]||"")+' ⭐</p><div class="grs">'+G10.map(function(g){return '<div class="gr" onclick="op('+g[0]+')" role="button"><img alt="" src="'+g[1]+'"></div>'}).join("")+'</div></div>'+nvb("home");
+window.scrollTo(0,0);try{mdraw()}catch(e){}};
+})();
+</script>
+<script>
 /*PCB-FS*/
 (function(){var R=document.documentElement;
 function fsEl(){return document.fullscreenElement||document.webkitFullscreenElement||null}
